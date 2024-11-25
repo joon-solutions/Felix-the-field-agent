@@ -1,0 +1,4 @@
+.vscode
+.env
+beck-test*
+venv
