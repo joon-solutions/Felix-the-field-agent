@@ -1,4 +1,4442 @@
+# All explores and tables here are from system__activity model.
+# In this README, the words "view" and "table" are used interchangebly.
+# Examples are looked from the view dashboard_layout.
+# ----------------------------------------------------
+# The top level name is the explore_name. i.e. dashboard
+# The 2nd level name is the view_name. Also BigQuery table name i.e. dashboard_layout
+# Within the view_name is the attributes of the view
+# - model: model_name containing the view
+# - view: When running Looker query API to extract data, this view must be used in the
+#         "view" parameter to get data for this view_name. Data in this field may be
+#          different from the view_name. i.e. dashboard
+# - view_display_name: The name of this view as you can see on Looker UI
+#                      when going to Explore mode
+# - explore_name: The name of the explore containing this view
+# - explore_display_name: The name of the explore as you can see on Looker UI
+#                         when going to Explore mode
+# - primary_key: table primary key, used in BigQuery to perform MERGE DDL command.
+#                 primary_key can be a string with table name
+#                 and schema field name (i.e. dashboard_layout.id) or a list of
+#                 schema field name only (i.e. ["user_id","role_id"] for user_facts_role)
+# - possible_cursor_field: The list of datetime columns that can be picked to use
+#                 as a cursor field
+# - cursor_field: Name of the column to be used as cursor field. A cursor field is a
+#                 timestamp type column in the table. It can be used to filter
+#                 records after a certain time. This is used to perform incremental load.
+#                 If cursor_field is null, it means the table does not have a field to
+#                 filter records. Extraction will always extract all records.
+#                 If you want to leave cursor_field null, make sure the total number of
+#                 records is lower than the ROW_LIMIT in Workflow `main-extract-looker`
+# - fields: List of dimensions that can be extracted from the view
+# - schema: List of columns in BigQuery table. IMPORTANT: the order of columns in "schema"
+#           should match the order of columns in "fields".
+#           Each column contains these fields:
+#           - name: Column name in BigQuery table
+#           - type: Column data type in BigQuery table
+#           - description: Column description in BigQuery table. Taken from the API
+
+api_usage:
+  api_usage:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: API Usage
+    explore_name: api_usage
+    fields:
+    - api_usage.endpoint
+    - api_usage.count
+    - api_usage.id
+    - api_usage.created_date
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: api_usage.id
+    schema:
+    - description: 'Display Name: API Usage Endpoint. Description: The API endpoint
+        used.'
+      name: endpoint
+      type: STRING
+    - description: 'Display Name: API Usage Endpoint calls per day. Description: Daily
+        endpoint usage count.'
+      name: count
+      type: FLOAT64
+    - description: 'Display Name: API Usage ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: API Usage Created Date. Description: When the API
+        endpoint was used.'
+      name: created_date
+      type: DATETIME
+    view: api_usage
+    view_display_name: API Usage
+compliance_user_permissions:
+  compliance_user_permissions:
+    batch_cursor_field: null
+    count_measure: compliance_user_permissions.count
+    cursor_field: compliance_user_permissions.created_time
+    cursor_value_offset: null
+    explore_display_name: User Permissions Summary (Updated daily)
+    explore_name: compliance_user_permissions
+    fields:
+    - compliance_user_permissions.access_data_dim
+    - compliance_user_permissions.administer_dim
+    - compliance_user_permissions.can_copy_print_dim
+    - compliance_user_permissions.clear_cache_refresh_dim
+    - compliance_user_permissions.create_alerts_dim
+    - compliance_user_permissions.create_prefetches_dim
+    - compliance_user_permissions.create_public_looks_dim
+    - compliance_user_permissions.create_table_calculations_dim
+    - compliance_user_permissions.created_time
+    - compliance_user_permissions.deploy_dim
+    - compliance_user_permissions.develop_dim
+    - compliance_user_permissions.download_without_limit_dim
+    - compliance_user_permissions.download_with_limit_dim
+    - compliance_user_permissions.embed_browse_spaces_dim
+    - compliance_user_permissions.embed_save_shared_space_dim
+    - compliance_user_permissions.explore_dim
+    - compliance_user_permissions.follow_alerts_dim
+    - compliance_user_permissions.id
+    - compliance_user_permissions.embed
+    - compliance_user_permissions.login_special_email_dim
+    - compliance_user_permissions.manage_homepage_dim
+    - compliance_user_permissions.manage_models_dim
+    - compliance_user_permissions.manage_spaces_dim
+    - compliance_user_permissions.manage_stereo_dim
+    - compliance_user_permissions.mobile_app_access_dim
+    - compliance_user_permissions.permissions
+    - compliance_user_permissions.save_content_dim
+    - compliance_user_permissions.schedule_external_look_emails_dim
+    - compliance_user_permissions.schedule_look_emails_dim
+    - compliance_user_permissions.see_alerts_dim
+    - compliance_user_permissions.see_datagroups_dim
+    - compliance_user_permissions.see_drill_overlay_dim
+    - compliance_user_permissions.see_logs_dim
+    - compliance_user_permissions.see_lookml_dashboards_dim
+    - compliance_user_permissions.see_lookml_dim
+    - compliance_user_permissions.see_looks_dim
+    - compliance_user_permissions.see_pdts_dim
+    - compliance_user_permissions.see_queries_dim
+    - compliance_user_permissions.see_sql_dim
+    - compliance_user_permissions.see_schedules_dim
+    - compliance_user_permissions.see_system_activity_dim
+    - compliance_user_permissions.see_user_dashboards_dim
+    - compliance_user_permissions.see_users_dim
+    - compliance_user_permissions.send_outgoing_webhook_dim
+    - compliance_user_permissions.send_to_integration_dim
+    - compliance_user_permissions.send_to_s3_dim
+    - compliance_user_permissions.send_to_sftp_dim
+    - compliance_user_permissions.sudo_dim
+    - compliance_user_permissions.support_access_toggle_dim
+    - compliance_user_permissions.update_datagroups_dim
+    - compliance_user_permissions.use_sql_runner_dim
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - compliance_user_permissions.created_time
+    primary_key: compliance_user_permissions.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Compliance User Permissions Access Data Dim. Description:
+        Daily count of users with access_data permission'
+      name: access_data_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Administer Dim. Description:
+        Daily count of users with administer permission'
+      name: administer_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Can Copy Print Dim.
+        Description: Daily count of users with can_copy_print permission'
+      name: can_copy_print_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Clear Cache Refresh
+        Dim. Description: Daily count of users with clear_cache_refresh permission'
+      name: clear_cache_refresh_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Create Alerts Dim. Description:
+        Daily count of users with create_alerts permission'
+      name: create_alerts_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Create Prefetches Dim.
+        Description: Daily count of users with create_prefetches permission'
+      name: create_prefetches_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Create Public Looks
+        Dim. Description: Daily count of users with create_public_looks permission'
+      name: create_public_looks_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Create Table Calculations
+        Dim. Description: Daily count of users with create_table_calculations permission'
+      name: create_table_calculations_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Created Time. Description: '
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Compliance User Permissions Deploy Dim. Description:
+        Daily count of users with deploy permission'
+      name: deploy_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Develop Dim. Description:
+        Daily count of users with develop permission'
+      name: develop_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Download Without Limit
+        Dim. Description: Daily count of users with download_without_limit permission'
+      name: download_without_limit_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Download with Limit
+        Dim. Description: Daily count of users with download_with_limit permission'
+      name: download_with_limit_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Embed Browse Spaces
+        Dim. Description: Daily count of users with embed_browse_spaces permission'
+      name: embed_browse_spaces_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Embed Save Shared Space
+        Dim. Description: Daily count of users with embed_save_shared_space permission'
+      name: embed_save_shared_space_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Explore Dim. Description:
+        Daily count of users with explore permission'
+      name: explore_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Follow Alerts Dim. Description:
+        Daily count of users with follow_alerts permission'
+      name: follow_alerts_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Compliance User Permissions Is Embed (Yes / No).
+        Description: Yes indicates that given counts are of embed users'
+      name: embed
+      type: BOOL
+    - description: 'Display Name: Compliance User Permissions Login Special Email
+        Dim. Description: Daily count of users with login_special_email permission'
+      name: login_special_email_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Manage Homepage Dim.
+        Description: Daily count of users with manage_homepage permission'
+      name: manage_homepage_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Manage Models Dim. Description:
+        Daily count of users with manage_models permission'
+      name: manage_models_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Manage Spaces Dim. Description:
+        Daily count of users with manage_spaces permission'
+      name: manage_spaces_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Manage Stereo Dim. Description: '
+      name: manage_stereo_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Mobile App Access Dim.
+        Description: Daily count of users with mobile_app_access permisson'
+      name: mobile_app_access_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Permissions. Description: '
+      name: permissions
+      type: STRING
+    - description: 'Display Name: Compliance User Permissions Save Content Dim. Description:
+        Daily count of users with save_content permission'
+      name: save_content_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Schedule External Look
+        Emails Dim. Description: Daily count of users with schedule_external_look_emails
+        permission'
+      name: schedule_external_look_emails_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Schedule Look Emails
+        Dim. Description: Daily count of users with schedule_look_emails permission'
+      name: schedule_look_emails_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Alerts Dim. Description:
+        Daily count of users with see_alerts permission'
+      name: see_alerts_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Datagroups Dim.
+        Description: Daily count of users with see_datagroups permission'
+      name: see_datagroups_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Drill Overlay Dim.
+        Description: Daily count of users with see_drill_overlay permission'
+      name: see_drill_overlay_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Logs Dim. Description:
+        Daily count of users with see_logs permission'
+      name: see_logs_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Lookml Dashboards
+        Dim. Description: Daily count of users with see_lookml_dashboards permission'
+      name: see_lookml_dashboards_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Lookml Dim. Description:
+        Daily count of users with see_lookml permission'
+      name: see_lookml_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Looks Dim. Description:
+        Daily count of users with see_looks permission'
+      name: see_looks_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Pdts Dim. Description:
+        Daily count of users with see_pdts permission'
+      name: see_pdts_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Queries Dim. Description:
+        Daily count of users with see_queries permission'
+      name: see_queries_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See SQL Dim. Description:
+        Daily count of users with see_sql permission'
+      name: see_sql_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Schedules Dim. Description:
+        Daily count of users with see_schedules permission'
+      name: see_schedules_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See System Activity
+        Dim. Description: Daily count of users with see_system_activity permission'
+      name: see_system_activity_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See User Dashboards
+        Dim. Description: Daily count of users with see_user_dashboards permission'
+      name: see_user_dashboards_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions See Users Dim. Description:
+        Daily count of users with see_users permission'
+      name: see_users_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Send Outgoing Webhook
+        Dim. Description: Daily count of users with send_outgoing_webhook permission'
+      name: send_outgoing_webhook_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Send to Integration
+        Dim. Description: Daily count of users with send_to_integration permission'
+      name: send_to_integration_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Send to S3 Dim. Description:
+        Daily count of users with send_to_s3 permission'
+      name: send_to_s3_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Send to Sftp Dim. Description:
+        Daily count of users with send_to_sftp permission'
+      name: send_to_sftp_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Sudo Dim. Description:
+        Daily count of users with sudo permission'
+      name: sudo_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Support Access Toggle
+        Dim. Description: Daily count of users with support_access_toggle permission'
+      name: support_access_toggle_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Update Datagroups Dim.
+        Description: Daily count of users with update_datagroups permission'
+      name: update_datagroups_dim
+      type: FLOAT64
+    - description: 'Display Name: Compliance User Permissions Use SQL Runner Dim.
+        Description: Daily count of users with use_sql_runner permission'
+      name: use_sql_runner_dim
+      type: FLOAT64
+    view: compliance_user_permissions
+    view_display_name: Compliance User Permissions
+content_usage:
+  content_usage:
+    batch_cursor_field: null
+    cursor_field: content_usage.last_accessed_time
+    cursor_value_offset: null
+    explore_display_name: Content Usage
+    explore_name: content_usage
+    fields:
+    - content_usage.api_count
+    - content_usage.content_id
+    - content_usage.content_id_as_number
+    - content_usage.content_title
+    - content_usage.content_type
+    - content_usage.days_since_last_access_tiers
+    - content_usage.days_since_last_accessed
+    - content_usage.embed_count
+    - content_usage.favorite_count
+    - content_usage.id
+    - content_usage.last_accessed_time
+    - content_usage.prefetch_count
+    - content_usage.public_count
+    - content_usage.schedule_count
+    - content_usage.other_count
+    - content_usage.dashboard_deleted
+    - content_usage.look_deleted
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - content_usage.last_accessed_time
+    primary_key: content_usage.id
+    schema:
+    - description: 'Display Name: Content Usage API Count. Description: Number of
+        times this content has been viewed via the Looker API'
+      name: api_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage Content ID. Description: Look ID,
+        dashboard ID, LookML dashboard ID, unique PDT name, or board ID'
+      name: content_id
+      type: STRING
+    - description: 'Display Name: Content Usage Content ID As Number. Description: '
+      name: content_id_as_number
+      type: INTEGER
+    - description: 'Display Name: Content Usage Content Title. Description: If content
+        is a Look or a dashboard then the text of the title, otherwise displays the
+        content ID'
+      name: content_title
+      type: STRING
+    - description: 'Display Name: Content Usage Content Type. Description: The type
+        of content (Look, Dashboard, Board, Explore or PDT)'
+      name: content_type
+      type: STRING
+    - description: 'Display Name: Content Usage Days Since Last Access Tiers. Description:
+        The number of days since this content was last accessed, grouped into ranges
+        of days'
+      name: days_since_last_access_tiers
+      type: STRING
+    - description: 'Display Name: Content Usage Days Since Last Accessed. Description:
+        The number of days since this content was last accessed'
+      name: days_since_last_accessed
+      type: FLOAT64
+    - description: 'Display Name: Content Usage Embed Count. Description: The number
+        of times this content has been viewed in an embedded setting'
+      name: embed_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage Favorite Count. Description: The current
+        favorite count for this content'
+      name: favorite_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage ID. Description: The unique numeric
+        identifier for the content. Unique primary key of the content_usage table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Content Usage Last Accessed Time. Description: The
+        date and time this content was last accessed. NOTE: Looks and Dashboards are
+        treated as separate pieces of content. Viewing a look on a dashboard will
+        not update this field.'
+      name: last_accessed_time
+      type: TIMESTAMP
+    - description: 'Display Name: Content Usage Prefetch Count. Description: The number
+        of times this content has been prefetched to warm the cache before running
+        a scheduled job'
+      name: prefetch_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage Public Count. Description: The number
+        of times this content has been viewed as public. Only applies to dashboards
+        and Looks.'
+      name: public_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage Schedule Count. Description: The number
+        of scheduled jobs run for this content'
+      name: schedule_count
+      type: FLOAT64
+    - description: 'Display Name: Content Usage View Count. Description: The number
+        of times this content has been viewed from the Looker UI'
+      name: other_count
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Is Deleted (Yes / No). Description: Has
+        this dashboard been deleted from the trash? Only applies to user-defined dashboards'
+      name: dashboard_deleted
+      type: BOOL
+    - description: 'Display Name: Look Is Deleted (Yes / No). Description: Has this
+        Look been deleted from the trash?'
+      name: look_deleted
+      type: BOOL
+    view: content_usage
+    view_display_name: Content Usage
+dashboard:
+  dashboard:
+    batch_cursor_field: null
+    count_measure: dashboard.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Dashboard
+    explore_name: dashboard
+    fields:
+    - dashboard.background_color
+    - dashboard.content_metadata_id
+    - dashboard.created_time
+    - dashboard.description
+    - dashboard.hidden
+    - dashboard.id
+    - dashboard.is_legacy
+    - dashboard.last_updater_id
+    - dashboard.link
+    - dashboard.load_configuration
+    - dashboard.lookml_link_id
+    - dashboard.moved_to_trash
+    - dashboard.deleted_time
+    - dashboard.deleter_id
+    - dashboard.preferred_viewer
+    - dashboard.query_timezone
+    - dashboard.refresh_interval
+    - dashboard.refresh_interval_ordered
+    - dashboard.run_on_load
+    - dashboard.show_filters_bar
+    - dashboard.show_tile_shadow
+    - dashboard.show_title
+    - dashboard.space_id
+    - dashboard.text_tile_text_color
+    - dashboard.tile_background_color
+    - dashboard.tile_border_radius
+    - dashboard.tile_separator_color
+    - dashboard.tile_text_color
+    - dashboard.title
+    - dashboard.title_color
+    - dashboard.updated_time
+    - dashboard.user_id
+    filters:
+      dashboard.moved_to_trash: ""
+    model: system__activity
+    possible_cursor_field:
+    - dashboard.created_time
+    - dashboard.deleted_time
+    - dashboard.updated_time
+    primary_key: dashboard.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Dashboard Background Color. Description: The color
+        of the dashboard background when viewed in an embedded context as a hex string
+        or CSS color name'
+      name: background_color
+      type: STRING
+    - description: 'Display Name: Dashboard Content Metadata ID. Description: '
+      name: content_metadata_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Created Time. Description: When this dashboard
+        was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Description. Description: The description
+        assigned to the dashboard'
+      name: description
+      type: STRING
+    - description: 'Display Name: Dashboard Hidden (Yes / No). Description: Is the
+        dashboard configured to be hidden?'
+      name: hidden
+      type: BOOL
+    - description: 'Display Name: Dashboard ID (User-defined only). Description: The
+        unique numeric identifier for a user-defined dashboard. Unique primary key
+        of the dashboard table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Is Legacy (Yes / No). Description: Is
+        this dashboard saved as a legacy dashboard by default? Will be ''Yes'' when
+        `preferred_viewer` is  not equal to ''dashboards-next.'
+      name: is_legacy
+      type: BOOL
+    - description: 'Display Name: Dashboard Last Updater ID. Description: '
+      name: last_updater_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Link. Description: A clickable link to
+        the dashboard URL'
+      name: link
+      type: STRING
+    - description: 'Display Name: Dashboard Load Configuration. Description: '
+      name: load_configuration
+      type: STRING
+    - description: 'Display Name: Dashboard Lookml Link ID. Description: The LookML
+        dashboard this dashboard is made from, will be null if dashboard was not made
+        from a LookML dashboard.'
+      name: lookml_link_id
+      type: STRING
+    - description: 'Display Name: Dashboard Moved to Trash (Yes / No). Description:
+        Has this dashboard been moved to the trash? This field will be ''Yes'' when
+        the deleted_date field is not null'
+      name: moved_to_trash
+      type: BOOL
+    - description: 'Display Name: Dashboard Moved to Trash Time. Description: When
+        the dashboard was moved to the trash. If the dashboard is still active, this
+        field is null.'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Moved to Trash User ID. Description: The
+        unique numeric ID of the user who moved the dashboard to the trash. If the
+        dashboard is still active, this field is null.'
+      name: deleter_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Preferred Viewer. Description: The raw
+        preferred_viewer attribute for a dashboard.'
+      name: preferred_viewer
+      type: STRING
+    - description: 'Display Name: Dashboard Query Timezone. Description: The default
+        timezone for the dashboard''s queries'
+      name: query_timezone
+      type: STRING
+    - description: 'Display Name: Dashboard Refresh Interval. Description: The frequency
+        with which the dashboard will refresh if auto-refresh is enabled. If auto-refresh
+        is disabled, the value of this field is null.'
+      name: refresh_interval
+      type: STRING
+    - description: 'Display Name: Dashboard Refresh Interval. Description: The frequency
+        with which the dashboard will refresh if auto-refresh is enabled. If auto-refresh
+        is disabled, the value of this field is null.'
+      name: refresh_interval_ordered
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run on Load (Yes / No). Description: Is
+        the dashboard configured to automatically load data when it is opened?'
+      name: run_on_load
+      type: BOOL
+    - description: 'Display Name: Dashboard Show Filters Bar (Yes / No). Description:
+        When viewed in an embedded context, is the dashboard configured to display
+        its filters bar?'
+      name: show_filters_bar
+      type: BOOL
+    - description: 'Display Name: Dashboard Show Tile Shadow (Yes / No). Description:
+        When viewed in an embedded context, is the dashboard configured to display
+        a shadow around tile borders?'
+      name: show_tile_shadow
+      type: BOOL
+    - description: 'Display Name: Dashboard Show Title (Yes / No). Description: When
+        viewed in an embedded context, is the dashboard configured to display its
+        title?'
+      name: show_title
+      type: BOOL
+    - description: 'Display Name: Dashboard Space ID. Description: '
+      name: space_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Text Tile Text Color. Description: The
+        color of the text in the dashboard''s tiles when viewed in an embedded context
+        as a hex string or CSS color name'
+      name: text_tile_text_color
+      type: STRING
+    - description: 'Display Name: Dashboard Tile Background Color. Description: The
+        dashboard tiles'' background color when viewed in an embedded context as a
+        hex string or CSS color name'
+      name: tile_background_color
+      type: STRING
+    - description: 'Display Name: Dashboard Tile Border Radius. Description: The thickness
+        of the borders around dashboard tiles when viewed in an embedded context'
+      name: tile_border_radius
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Tile Separator Color. Description: The
+        color of the separators between dashboard tiles when viewed in an embedded
+        context as a hex string or CSS color name'
+      name: tile_separator_color
+      type: STRING
+    - description: 'Display Name: Dashboard Tile Text Color. Description: The color
+        of the text in the dashboard tiles when viewed in an embedded context as a
+        hex string or CSS color name'
+      name: tile_text_color
+      type: STRING
+    - description: 'Display Name: Dashboard Title. Description: The title of the dashboard
+        as a clickable link'
+      name: title
+      type: STRING
+    - description: 'Display Name: Dashboard Title Color. Description: The color of
+        the dashboard title when viewed in an embedded context as a hex string or
+        CSS color name'
+      name: title_color
+      type: STRING
+    - description: 'Display Name: Dashboard Updated Time. Description: When this dashboard
+        was last updated'
+      name: updated_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard User ID. Description: '
+      name: user_id
+      type: INTEGER
+    view: dashboard
+    view_display_name: Dashboard
+  dashboard_element:
+    batch_cursor_field: null
+    count_measure: dashboard_element.count
+    cursor_field: dashboard_element.created_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard
+    explore_name: dashboard
+    fields:
+    - dashboard_element.body_text
+    - dashboard_element.coalesced_query_id
+    - dashboard_element.created_time
+    - dashboard_element.dashboard_id
+    - dashboard_element.deleted_time
+    - dashboard_element.id
+    - dashboard_element.is_text_tile
+    - dashboard_element.listen
+    - dashboard_element.look_id
+    - dashboard_element.note_display
+    - dashboard_element.note_state
+    - dashboard_element.note_text
+    - dashboard_element.query_id
+    - dashboard_element.refresh_interval
+    - dashboard_element.refresh_interval_ordered
+    - dashboard_element.result_maker_id
+    - dashboard_element.result_source
+    - dashboard_element.subtitle_text
+    - dashboard_element.title
+    - dashboard_element.title_hidden
+    - dashboard_element.title_text
+    - dashboard_element.type
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - dashboard_element.created_time
+    - dashboard_element.deleted_time
+    primary_key: dashboard_element.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Dashboard Element Body Text. Description: The body
+        text of a text tile'
+      name: body_text
+      type: STRING
+    - description: 'Display Name: Dashboard Element Coalesced Query ID. Description: '
+      name: coalesced_query_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Created Time. Description: When
+        the dashboard tile was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Element Dashboard ID. Description: '
+      name: dashboard_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Deleted Time. Description: When
+        the dashboard tile was deleted. If the tile has never been deleted, the value
+        of this field is null.'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Element ID. Description: The unique numeric
+        identifier for a dashboard tile. Primary key of the `dashboard_element` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Is Text Tile (Yes / No). Description:
+        Is the dashboard tile a text tile?'
+      name: is_text_tile
+      type: BOOL
+    - description: 'Display Name: Dashboard Element Listen. Description: The dashboard
+        filters the element listens to'
+      name: listen
+      type: STRING
+    - description: 'Display Name: Dashboard Element Look ID. Description: '
+      name: look_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Note Display. Description: The
+        location of a note on the dashboard tile'
+      name: note_display
+      type: STRING
+    - description: 'Display Name: Dashboard Element Note State. Description: Whether
+        a dashboard note is expanded. A note that is not expanded shows in the middle
+        of the tile and shows only the beginning of the text with an icon to expand.
+        An expanded note shows in entirety and is left-justified in the tile.'
+      name: note_state
+      type: STRING
+    - description: 'Display Name: Dashboard Element Note Text. Description: The note
+        text shown on the dashboard tile'
+      name: note_text
+      type: STRING
+    - description: 'Display Name: Dashboard Element Query ID. Description: '
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Refresh Interval. Description:
+        The frequency with which the dashboard will refresh if auto-refresh is enabled.
+        If auto-refresh is disabled, the value of this field is null.'
+      name: refresh_interval
+      type: STRING
+    - description: 'Display Name: Dashboard Element Refresh Interval. Description:
+        The frequency with which the dashboard will refresh if auto-refresh is enabled.
+        If auto-refresh is disabled, the value of this field is null.'
+      name: refresh_interval_ordered
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Element Result Maker ID. Description: '
+      name: result_maker_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Element Result Source. Description: The
+        type of dashboard element. Values are ''Saved Look'', ''Lookless'', or ''Merge
+        Query''.'
+      name: result_source
+      type: STRING
+    - description: 'Display Name: Dashboard Element Subtitle Text. Description: The
+        subtitle of a text tile'
+      name: subtitle_text
+      type: STRING
+    - description: 'Display Name: Dashboard Element Title. Description: The title
+        of a dashboard tile'
+      name: title
+      type: STRING
+    - description: 'Display Name: Dashboard Element Title Hidden (Yes / No). Description:
+        Is the dashboard tile''s title shown?'
+      name: title_hidden
+      type: BOOL
+    - description: 'Display Name: Dashboard Element Title Text. Description: The title
+        of a text tile'
+      name: title_text
+      type: STRING
+    - description: 'Display Name: Dashboard Element Type. Description: The type of
+        dashboard tile: data, visualization, or text'
+      name: type
+      type: STRING
+    view: dashboard
+    view_display_name: Dashboard Element
+  dashboard_layout:
+    batch_cursor_field: null
+    count_measure: dashboard_layout.count
+    cursor_field: dashboard_layout.created_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard
+    explore_name: dashboard
+    fields:
+    - dashboard_layout.active
+    - dashboard_layout.column_width
+    - dashboard_layout.created_time
+    - dashboard_layout.dashboard_id
+    - dashboard_layout.deleted_time
+    - dashboard_layout.id
+    - dashboard_layout.type
+    - dashboard_layout.width
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - dashboard_layout.created_time
+    - dashboard_layout.deleted_time
+    primary_key: dashboard_layout.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Dashboard Layout Active (Yes / No). Description:
+        Is this dashboard layout active? A dashboard can have multiple layouts, but
+        only one can be active at any time.'
+      name: active
+      type: BOOL
+    - description: 'Display Name: Dashboard Layout Column Width. Description: For
+        dashboard with layout:tile, the width in pixels of the tile columns. For other
+        dashboard types, the value of this field is null.'
+      name: column_width
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Created Time. Description: When
+        the dashboard was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Layout Dashboard ID. Description: '
+      name: dashboard_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Deleted Time. Description: When
+        the dashboard was deleted. If the dashboard has not been deleted, the value
+        of this field is null.'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Layout ID. Description: The unique numeric
+        identifier for the dashboard'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Type. Description: The layout method
+        used for the dashboard drag, newspaper, or tile'
+      name: type
+      type: STRING
+    - description: 'Display Name: Dashboard Layout Width. Description: For dashboards
+        of layout type:tile, the width in pixels of the dashboard. For other dashboard
+        types, the value of this field is null.'
+      name: width
+      type: INTEGER
+    view: dashboard
+    view_display_name: Dashboard Layout
+  dashboard_layout_component:
+    batch_cursor_field: null
+    count_measure: dashboard_layout_component.count
+    cursor_field: dashboard_layout_component.created_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard
+    explore_name: dashboard
+    fields:
+    - dashboard_layout_component.column
+    - dashboard_layout_component.created_time
+    - dashboard_layout_component.dashboard_element_id
+    - dashboard_layout_component.dashboard_layout_id
+    - dashboard_layout_component.deleted_time
+    - dashboard_layout_component.height
+    - dashboard_layout_component.id
+    - dashboard_layout_component.row
+    - dashboard_layout_component.width
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - dashboard_layout_component.created_time
+    - dashboard_layout_component.deleted_time
+    primary_key: dashboard_layout_component.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Dashboard Layout Component Column. Description:
+        The dashboard column in which the dashboard tile is located'
+      name: column
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Layout Component Created Time. Description:
+        The date and time the dashboard tile was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Layout Component Dashboard Element ID.
+        Description: '
+      name: dashboard_element_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Component Dashboard Layout ID.
+        Description: '
+      name: dashboard_layout_id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Component Deleted Time. Description:
+        The date and time the dashboard tile was deleted. A tile that has not been
+        deleted has a value of null.'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Layout Component Height. Description:
+        The height of the dashboard tile, in units defined by tile_size (the default
+        of which is 160 pixels)'
+      name: height
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Layout Component ID. Description: The
+        unique numeric identifier for the dashboard tile. Primary key of the `dashboard_layout_component`
+        table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Dashboard Layout Component Row. Description: The
+        dashboard row in which the dashboard tile is located'
+      name: row
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Layout Component Width. Description: The
+        width of the dashboard tile, in units defined by tile_size (the default of
+        which is 160 pixels)'
+      name: width
+      type: INTEGER
+    view: dashboard
+    view_display_name: Dashboard Layout Component
+dashboard_performance:
+  dashboard_history_stats:
+    batch_cursor_field: null
+    cursor_field: dashboard_performance.last_event_at_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard Performance
+    explore_name: dashboard_performance
+    fields:
+    - dashboard_history_stats.dashboard_id
+    - dashboard_history_stats.dashboard_id_as_number
+    - dashboard_history_stats.dashboard_session
+    - dashboard_history_stats.history_stat_pk
+    - dashboard_history_stats.max_runtime
+    - dashboard_history_stats.min_runtime
+    - dashboard_history_stats.total_queries
+    - dashboard_history_stats.total_runtime
+    - dashboard_performance.last_event_at_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: dashboard_history_stats.history_stat_pk
+    schema:
+    - description: 'Display Name: Dashboard History Stats Dashboard ID. Description: '
+      name: dashboard_id
+      type: STRING
+    - description: 'Display Name: Dashboard History Stats Dashboard ID As Number.
+        Description: '
+      name: dashboard_id_as_number
+      type: INTEGER
+    - description: 'Display Name: Dashboard History Stats Dashboard Session. Description:
+        The unique numeric identifier for a single time the dashboard was loaded'
+      name: dashboard_session
+      type: STRING
+    - description: 'Display Name: Dashboard History Stats History Stat Pk. Description: '
+      name: history_stat_pk
+      type: STRING
+    - description: 'Display Name: Dashboard History Stats Max Runtime. Description:
+        The longest amount of time taken to load the dashboard during the previous
+        90 days'
+      name: max_runtime
+      type: FLOAT64
+    - description: 'Display Name: Dashboard History Stats Min Runtime. Description:
+        The shortest amount of time taken to load the dashboard during the previous
+        90 days'
+      name: min_runtime
+      type: FLOAT64
+    - description: 'Display Name: Dashboard History Stats Total Queries. Description:
+        The cumulative number of queries run by the dashboard during the previous
+        90 days'
+      name: total_queries
+      type: FLOAT64
+    - description: 'Display Name: Dashboard History Stats Total Runtime. Description:
+        The cumulative total of time spent loading the dashboard during the previous
+        90 days'
+      name: total_runtime
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run Last Event At Time. Description: The
+        last occurrence of a particular dashboard being run. This field is extracted
+        from the dashboard_performance view'
+      name: dashboard_performance_last_event_at_time
+      type: TIMESTAMP
+    view: dashboard_performance
+    view_display_name: Dashboard History Stats
+  dashboard_page_event_stats:
+    batch_cursor_field: null
+    cursor_field: dashboard_page_event_stats.last_event_at_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard Performance
+    explore_name: dashboard_performance
+    fields:
+    - dashboard_page_event_stats.dashboard_page_session
+    - dashboard_page_event_stats.first_event_at_time
+    - dashboard_page_event_stats.last_event_at_time
+    - dashboard_page_event_stats.seconds_until_controller_initialized
+    - dashboard_page_event_stats.seconds_until_dom_content_loaded
+    - dashboard_page_event_stats.seconds_until_metadata_loaded
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - dashboard_page_event_stats.first_event_at_time
+    - dashboard_page_event_stats.last_event_at_time
+    primary_key: dashboard_page_event_stats.dashboard_page_session
+    schema:
+    - description: 'Display Name: Dashboard Page Event Stats Dashboard Page Session.
+        Description: A unique string identifier assigned to a particular dashboard
+        each time a dashboard page is loaded'
+      name: dashboard_page_session
+      type: STRING
+    - description: 'Display Name: Dashboard Page Event Stats First Event At Time.
+        Description: The first occurrence of a particular dashboard being run'
+      name: first_event_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Page Event Stats Last Event At Time. Description:
+        The last occurrence of a particular dashboard being run'
+      name: last_event_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Page Event Stats Seconds Until Controller
+        Initialized. Description: The number of seconds that passed before the last
+        query results were returned to the dashboard'
+      name: seconds_until_controller_initialized
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Page Event Stats Seconds Until Dom Content
+        Loaded. Description: The number of seconds that passed before the document
+        object model (DOM) was loaded on the dashboard page'
+      name: seconds_until_dom_content_loaded
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Page Event Stats Seconds Until Metadata
+        Loaded. Description: The number of seconds that passed before metadata was
+        loaded on the dashboard page'
+      name: seconds_until_metadata_loaded
+      type: FLOAT64
+    view: dashboard_performance
+    view_display_name: Dashboard Page Event Stats
+  dashboard_performance:
+    batch_cursor_field: null
+    cursor_field: dashboard_performance.last_event_at_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard Performance
+    explore_name: dashboard_performance
+    fields:
+    - dashboard_performance.dash_id
+    - dashboard_performance.dashboard_page_session
+    - dashboard_performance.dashboard_run_event_stats_pk
+    - dashboard_performance.dashboard_run_session
+    - dashboard_performance.first_event_at_time
+    - dashboard_performance.last_event_at_time
+    - dashboard_performance.seconds_until_dashboard_run_start
+    - dashboard_performance.seconds_until_first_data_received
+    - dashboard_performance.seconds_until_first_tile_finished_rendering
+    - dashboard_performance.seconds_until_last_data_received
+    - dashboard_performance.seconds_until_last_tile_finished_rendering
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - dashboard_performance.first_event_at_time
+    - dashboard_performance.last_event_at_time
+    primary_key: dashboard_performance.dashboard_run_event_stats_pk
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Dashboard Run Dashboard ID (inclusive). Description:
+        Dashboard ID, numerical if it is User-defined or string with <model_name>::<dashboard_id>
+        syntax for LookML Dashboards.'
+      name: dash_id
+      type: STRING
+    - description: 'Display Name: Dashboard Run Dashboard Page Session. Description:
+        A unique string identifier assigned to a particular dashboard each time a
+        dashboard page is loaded'
+      name: dashboard_page_session
+      type: STRING
+    - description: 'Display Name: Dashboard Run Dashboard Run Event Stats Pk. Description: '
+      name: dashboard_run_event_stats_pk
+      type: STRING
+    - description: 'Display Name: Dashboard Run Dashboard Run Session. Description:
+        The unique string identifier assigned to a particular dashboard each time
+        the dashboard is run'
+      name: dashboard_run_session
+      type: STRING
+    - description: 'Display Name: Dashboard Run First Event At Time. Description:
+        The first occurrence of a particular dashboard being run'
+      name: first_event_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: Dashboard Run Last Event At Time. Description: The
+        last occurrence of a particular dashboard being run'
+      name: last_event_at_time
+      type: TIMESTAMP
+    - description: "Display Name: Dashboard Run Seconds Until Dashboard Run Start.\
+        \ Description: The number of seconds that passed before the dashboard loaded\
+        \ and the \u2018Run\u2019 button was clicked"
+      name: seconds_until_dashboard_run_start
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run Seconds Until First Data Received.
+        Description: The number of seconds that passed before the first query results
+        were returned to the dashboard'
+      name: seconds_until_first_data_received
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run Seconds Until First Tile Finished
+        Rendering. Description: The number of seconds that passed before the first
+        dashboard tile was displayed with query results'
+      name: seconds_until_first_tile_finished_rendering
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run Seconds Until Last Data Received.
+        Description: The number of seconds that passed before the last query results
+        were returned to the dashboard'
+      name: seconds_until_last_data_received
+      type: FLOAT64
+    - description: 'Display Name: Dashboard Run Seconds Until Last Tile Finished Rendering.
+        Description: The number of seconds that passed before the last dashboard tile
+        was displayed with query results'
+      name: seconds_until_last_tile_finished_rendering
+      type: FLOAT64
+    view: dashboard_performance
+    view_display_name: Dashboard Run
+  dashboard_run_session_filter_usage:
+    batch_cursor_field: null
+    cursor_field: dashboard_performance.last_event_at_time
+    cursor_value_offset: null
+    explore_display_name: Dashboard Performance
+    explore_name: dashboard_performance
+    fields:
+    - dashboard_run_session_filter_usage.filter_json
+    - dashboard_run_session_filter_usage.dashboard_run_session_filter_pk
+    - dashboard_run_session_filter_usage.run_session_id
+    - dashboard_performance.last_event_at_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: dashboard_run_session_filter_usage.dashboard_run_session_filter_pk
+    schema:
+    - description: 'Display Name: Dashboard Run Filter JSON. Description: A JSON string
+        describing the dashboard filter configuration when the dashboard was loaded'
+      name: filter_json
+      type: STRING
+    - description: 'Display Name: Dashboard Run Session Filter Usage Dashboard Run
+        Session Filter Pk. Description: '
+      name: dashboard_run_session_filter_pk
+      type: STRING
+    - description: 'Display Name: Dashboard Run Session Filter Usage Run Session ID.
+        Description: '
+      name: run_session_id
+      type: STRING
+    - description: 'Display Name: Dashboard Run Last Event At Time. Description: The
+        last occurrence of a particular dashboard being run. This field is extracted
+        from the dashboard_performance view'
+      name: dashboard_performance_last_event_at_time
+      type: TIMESTAMP
+    view: dashboard_performance
+    view_display_name: Dashboard Run
+db_connection:
+  db_connection:
+    batch_cursor_field: null
+    cursor_field: db_connection.last_regen_at_time
+    cursor_value_offset: null
+    explore_display_name: DB Connection
+    explore_name: db_connection
+    fields:
+    - db_connection.created_time
+    - db_connection.db_timezone
+    - db_connection.database
+    - db_connection.dialect
+    - db_connection.edit_link
+    - db_connection.host
+    - db_connection.id
+    - db_connection.last_reap_at_time
+    - db_connection.last_regen_at_time
+    - db_connection.maintenance_cron
+    - db_connection.max_billing_gigabytes
+    - db_connection.max_connections
+    - db_connection.name
+    - db_connection.pool_timeout
+    - db_connection.port
+    - db_connection.query_timezone
+    - db_connection.reg_key
+    - db_connection.sql_runner_precache_tables
+    - db_connection.ssl
+    - db_connection.schema
+    - db_connection.schema_busted_time
+    - db_connection.tmp_db_name
+    - db_connection.user_attribute_fields
+    - db_connection.user_id
+    - db_connection.uses_tns
+    - db_connection.verify_ssl
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - db_connection.created_time
+    - db_connection.last_reap_at_time
+    - db_connection.last_regen_at_time
+    - db_connection.schema_busted_time
+    primary_key: db_connection.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: DB Connection Created Time. Description: When the
+        connection was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: DB Connection DB Timezone. Description: The timezone
+        in which the database stores dates, set in the connection'
+      name: db_timezone
+      type: STRING
+    - description: 'Display Name: DB Connection Database. Description: The name of
+        the database'
+      name: database
+      type: STRING
+    - description: 'Display Name: DB Connection Dialect. Description: The database''s
+        SQL dialect'
+      name: dialect
+      type: STRING
+    - description: 'Display Name: DB Connection Edit Link. Description: A clickable
+        link to edit the connection'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: DB Connection Host. Description: The database''s
+        host, set in the connection'
+      name: host
+      type: STRING
+    - description: 'Display Name: DB Connection ID. Description: The unique numeric
+        identifier for the connection'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: DB Connection Last Reap At Time. Description: '
+      name: last_reap_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: DB Connection Last Regen At Time. Description: '
+      name: last_regen_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: DB Connection Maintenance Cron. Description: The
+        cron string set in the connection that specifies a schedule for checking triggers
+        and dropping expired tables'
+      name: maintenance_cron
+      type: STRING
+    - description: 'Display Name: DB Connection Max Billing Gigabytes. Description:
+        The maximum number of bytes billed allowed on a single BigQuery query in GBs
+        (excluding PDTs), set in the connection'
+      name: max_billing_gigabytes
+      type: STRING
+    - description: 'Display Name: DB Connection Max Connections. Description: The
+        max number of connections Looker will allow at one time, set in the connection'
+      name: max_connections
+      type: FLOAT64
+    - description: 'Display Name: DB Connection Name. Description: The name of the
+        connection'
+      name: name
+      type: STRING
+    - description: 'Display Name: DB Connection Pool Timeout. Description: The number
+        of seconds a query will wait before timing out due to a full connection pool,
+        set in the connection'
+      name: pool_timeout
+      type: FLOAT64
+    - description: 'Display Name: DB Connection Port. Description: The database''s
+        port, set in the connection'
+      name: port
+      type: STRING
+    - description: 'Display Name: DB Connection Query Timezone. Description: The timezone
+        in which to show dates and times when querying, set in the connection'
+      name: query_timezone
+      type: STRING
+    - description: 'Display Name: DB Connection Reg Key. Description: '
+      name: reg_key
+      type: STRING
+    - description: 'Display Name: DB Connection SQL Runner Precache Tables (Yes /
+        No). Description: Are tables precached for faster lookup?'
+      name: sql_runner_precache_tables
+      type: BOOL
+    - description: 'Display Name: DB Connection SSL (Yes / No). Description: Is this
+        connection using SSL encryption?'
+      name: ssl
+      type: BOOL
+    - description: 'Display Name: DB Connection Schema. Description: The default schema
+        that Looker uses when a schema is not specified, set in the connection. Only
+        applicable to some dialects.'
+      name: schema
+      type: STRING
+    - description: 'Display Name: DB Connection Schema Busted Time. Description: '
+      name: schema_busted_time
+      type: TIMESTAMP
+    - description: 'Display Name: DB Connection Temporary DB Name. Description: The
+        schema or database (depending on your dialect) in which Looker will write
+        persistent derived tables, set in the connection'
+      name: tmp_db_name
+      type: STRING
+    - description: 'Display Name: DB Connection User Attribute Fields. Description:
+        The fields used in the connection whose values map to user attribute names'
+      name: user_attribute_fields
+      type: STRING
+    - description: 'Display Name: DB Connection User ID. Description: The unique numeric
+        ID of the user who created the connection'
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: DB Connection Uses TNS (Yes / No). Description:
+        Does the connection use TNS? Only applicable to Oracle connections.'
+      name: uses_tns
+      type: BOOL
+    - description: 'Display Name: DB Connection Verify SSL (Yes / No). Description:
+        Does the connection require verification of the certificate? Unverified certificates
+        still ensure encryption.'
+      name: verify_ssl
+      type: BOOL
+    view: db_connection
+    view_display_name: DB Connection
+event:
+  event:
+    batch_cursor_field: null
+    count_measure: event.count
+    cursor_field: event.created_time
+    cursor_value_offset: null
+    explore_display_name: Event
+    explore_name: event
+    fields:
+    - event.category
+    - event.created_time
+    - event.id
+    - event.is_api_call
+    - event.is_admin
+    - event.is_looker_employee
+    - event.name
+    - event.sudo_user_id
+    - event.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - event.created_time
+    primary_key: event.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Event Category. Description: The high-level category
+        associated with each event (ex: ''dashboard'')'
+      name: category
+      type: STRING
+    - description: 'Display Name: Event Created Time. Description: The time (in UTC)
+        an event was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Event ID. Description: The unique numeric identifier
+        for each event'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Event Is API Call (Yes / No). Description: Was the
+        event due to an api call?'
+      name: is_api_call
+      type: BOOL
+    - description: 'Display Name: Event Is Admin (Yes / No). Description: Is the user
+        identified by user_id a looker admin?'
+      name: is_admin
+      type: BOOL
+    - description: 'Display Name: Event Is Looker Employee (Yes / No). Description:
+        Is the user identified by user_id a looker employee?'
+      name: is_looker_employee
+      type: BOOL
+    - description: 'Display Name: Event Name. Description: The specific event that
+        occured (ex: ''create dashboard'')'
+      name: name
+      type: STRING
+    - description: 'Display Name: Event Sudo User ID. Description: ID of ''actual''
+        user impersonating user indicated by user_id'
+      name: sudo_user_id
+      type: INTEGER
+    - description: 'Display Name: Event User ID. Description: The unique numeric ID
+        of the user who triggered the event'
+      name: user_id
+      type: INTEGER
+    view: event
+    view_display_name: Event
+event_attribute:
+  event_attribute:
+    batch_cursor_field: null
+    count_measure: event_attribute.count
+    cursor_field: event.created_time
+    cursor_value_offset: null
+    explore_display_name: Event Attribute
+    explore_name: event_attribute
+    fields:
+    - event_attribute.event_id
+    - event_attribute.id
+    - event_attribute.name
+    - event_attribute.value
+    - event.created_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: event_attribute.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Event Attribute Event ID. Description: The unique
+        numeric ID of the triggered event'
+      name: event_id
+      type: INTEGER
+    - description: 'Display Name: Event Attribute ID. Description: The unique numeric
+        identifier for each change that occured due to a triggered event. One event
+        may have multiple event_attribute rows associated with it.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Event Attribute Name. Description: The name of the
+        attribute involved in the event (ex: ''dashboard_id''). Can be used in combination
+        with ''event_attribute.value'' to find details of a specific event.'
+      name: name
+      type: STRING
+    - description: 'Display Name: Event Attribute Value. Description: The value of
+        the attribute involved in the event'
+      name: value
+      type: STRING
+    - description: 'Display Name: Event Created Time. Description: The time (in UTC)
+        an event_id was created. This field is taken from event table to be used as
+        the cursor value for this table.'
+      name: event_created_time
+      type: TIMESTAMP
+    view: event_attribute
+    view_display_name: Event Attribute
+field_usage:
+  field_usage:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Field Usage
+    explore_name: field_usage
+    fields:
+    - field_usage.explore
+    - field_usage.field
+    - field_usage.id
+    - field_usage.model
+    - field_usage.times_used_dim
+    - field_usage.view
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: field_usage.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Field Usage Explore. Description: The Explore from
+        which the field is pulled'
+      name: explore
+      type: STRING
+    - description: 'Display Name: Field Usage Field. Description: The fully-scoped
+        name of the field'
+      name: field
+      type: STRING
+    - description: 'Display Name: Field Usage ID. Description: The unique numeric
+        identifier for the field'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Field Usage Model. Description: The model from which
+        the field is pulled'
+      name: model
+      type: STRING
+    - description: 'Display Name: Field Usage Times Used Dim. Description: The number
+        of times this field has been used'
+      name: times_used_dim
+      type: FLOAT64
+    - description: 'Display Name: Field Usage View. Description: The view to which
+        the field belongs. NOTE: The view''s alias will appear here if using the `from:`
+        parameter at the Explore level.'
+      name: view
+      type: STRING
+    view: field_usage
+    view_display_name: Field Usage
+folders:
+  folders:
+    batch_cursor_field: null
+    count_measure: folders.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Folders
+    explore_name: folders
+    fields:
+    - folders.content_metadata_id
+    - folders.created_time
+    - folders.creator_id
+    - folders.deleted_time
+    - folders.external_id
+    - folders.id
+    - folders.is_embed
+    - folders.is_embed_shared_root
+    - folders.is_embed_users_root
+    - folders.is_personal_descendant
+    - folders.is_personal
+    - folders.is_shared_root
+    - folders.is_users_root
+    - folders.name
+    - folders.parent_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - folders.created_time
+    - folders.deleted_time
+    primary_key: folders.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Folders Content Metadata ID. Description: '
+      name: content_metadata_id
+      type: INTEGER
+    - description: 'Display Name: Folders Created Time. Description: When the Folder
+        was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Folders Creator ID. Description: The unique numeric
+        ID of the user who created the Folder'
+      name: creator_id
+      type: INTEGER
+    - description: 'Display Name: Folders Deleted Time. Description: When the Folder
+        was deleted'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Folders External ID. Description: The external string
+        ID of an embedded Folder'
+      name: external_id
+      type: STRING
+    - description: 'Display Name: Folders ID. Description: The unique numeric identifier
+        for a Folder. Contains direct link to Folder. This is the primary key of the
+        `folder` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Folders Is Embed (Yes / No). Description: Is this
+        Folder embedded?'
+      name: is_embed
+      type: BOOL
+    - description: 'Display Name: Folders Is Embed Shared Root (Yes / No). Description:
+        Is this the root Embed Shared Folder?'
+      name: is_embed_shared_root
+      type: BOOL
+    - description: 'Display Name: Folders Is Embed Users Root (Yes / No). Description:
+        Is this the root Embed Users Folder?'
+      name: is_embed_users_root
+      type: BOOL
+    - description: 'Display Name: Folders Is Personal Descendant (Yes / No). Description:
+        Is this a child of a personal Folder?'
+      name: is_personal_descendant
+      type: BOOL
+    - description: 'Display Name: Folders Is Personal Root (Yes / No). Description:
+        Is this a personal root folder?'
+      name: is_personal
+      type: BOOL
+    - description: 'Display Name: Folders Is Shared Root (Yes / No). Description:
+        Is this the root Shared Folder?'
+      name: is_shared_root
+      type: BOOL
+    - description: 'Display Name: Folders Is Users Root (Yes / No). Description: Is
+        this the root Users Folder?'
+      name: is_users_root
+      type: BOOL
+    - description: 'Display Name: Folders Name. Description: The name of the Folder.
+        Contains direct link to Folder.'
+      name: name
+      type: STRING
+    - description: 'Display Name: Folders Parent ID. Description: The unique numeric
+        ID of the parent Folder'
+      name: parent_id
+      type: INTEGER
+    view: folders
+    view_display_name: Folders
+group:
+  child_group:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - child_group.can_add_to_content_metadata
+    - child_group.edit_link
+    - child_group.external_group_id
+    - child_group.externally_managed
+    - child_group.id
+    - child_group.include_by_default
+    - child_group.name
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: child_group.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Child Group Can Add to Content Metadata (Yes / No).
+        Description: Can the group be used in content access controls?'
+      name: can_add_to_content_metadata
+      type: BOOL
+    - description: 'Display Name: Child Group Edit Link. Description: A link to the
+        Admin page used to edit the group''s properties'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Child Group External Group ID. Description: If the
+        group membership is controlled outside of Looker, the unique string identifier
+        given to the group by the outside source'
+      name: external_group_id
+      type: STRING
+    - description: 'Display Name: Child Group Externally Managed (Yes / No). Description:
+        Is the group membership controlled outside of Looker?'
+      name: externally_managed
+      type: BOOL
+    - description: 'Display Name: Child Group ID. Description: The unique numeric
+        identifier for the group. This is the primary key of the `group` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Child Group Include By Default (Yes / No). Description:
+        Are new users added to this group by default?'
+      name: include_by_default
+      type: BOOL
+    - description: 'Display Name: Child Group Name. Description: The group name'
+      name: name
+      type: STRING
+    view: group
+    view_display_name: Child Group
+  group:
+    batch_cursor_field: null
+    count_measure: group.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - group.can_add_to_content_metadata
+    - group.edit_link
+    - group.external_group_id
+    - group.externally_managed
+    - group.id
+    - group.include_by_default
+    - group.name
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: group.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Group Can Add to Content Metadata (Yes / No). Description:
+        Can the group be used in content access controls?'
+      name: can_add_to_content_metadata
+      type: BOOL
+    - description: 'Display Name: Group Edit Link. Description: A link to the Admin
+        page used to edit the group''s properties'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Group External Group ID. Description: If the group
+        membership is controlled outside of Looker, the unique string identifier given
+        to the group by the outside source'
+      name: external_group_id
+      type: STRING
+    - description: 'Display Name: Group Externally Managed (Yes / No). Description:
+        Is the group membership controlled outside of Looker?'
+      name: externally_managed
+      type: BOOL
+    - description: 'Display Name: Group ID. Description: The unique numeric identifier
+        for the group. This is the primary key of the `group` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Group Include By Default (Yes / No). Description:
+        Are new users added to this group by default?'
+      name: include_by_default
+      type: BOOL
+    - description: 'Display Name: Group Name. Description: The group name'
+      name: name
+      type: STRING
+    view: group
+    view_display_name: Group
+  group_group_included:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - group_group_included.id
+    - group_group_included.included_group_id
+    - group_group_included.into_group_id
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: group_group_included.id
+    schema:
+    - description: 'Display Name: Group Group Included ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Group Group Included Included Group ID. Description: '
+      name: included_group_id
+      type: INTEGER
+    - description: 'Display Name: Group Group Included Into Group ID. Description: '
+      name: into_group_id
+      type: INTEGER
+    view: group
+    view_display_name: Group Group Included
+  group_group_into:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - group_group_into.id
+    - group_group_into.included_group_id
+    - group_group_into.into_group_id
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: group_group_into.id
+    schema:
+    - description: 'Display Name: Group Group Into ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Group Group Into Included Group ID. Description: '
+      name: included_group_id
+      type: INTEGER
+    - description: 'Display Name: Group Group Into Into Group ID. Description: '
+      name: into_group_id
+      type: INTEGER
+    view: group
+    view_display_name: Group Group Into
+  group_role:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - group_role.built_in
+    - group_role.edit_link
+    - group_role.embed
+    - group_role.id
+    - group_role.model_set_id
+    - group_role.name
+    - group_role.permission_set_id
+    - group_role.has_role
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: group_role.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Group Role Built In (Yes / No). Description: Is
+        this a built-in role?'
+      name: built_in
+      type: BOOL
+    - description: 'Display Name: Group Role Edit Link. Description: A clickable link
+        to edit the role.'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Group Role Embed (Yes / No). Description: Is this
+        an embedded user role?'
+      name: embed
+      type: BOOL
+    - description: 'Display Name: Group Role ID. Description: The unique numeric identifier
+        for the role. Primary key of the `role` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Group Role Model Set ID. Description: '
+      name: model_set_id
+      type: INTEGER
+    - description: 'Display Name: Group Role Name. Description: The name of the role'
+      name: name
+      type: STRING
+    - description: 'Display Name: Group Role Permission Set ID. Description: '
+      name: permission_set_id
+      type: INTEGER
+    - description: 'Display Name: User Has Role (Yes / No). Description: Does this
+        user have at least one role?'
+      name: has_role
+      type: BOOL
+    view: group
+    view_display_name: Group Role
+  group_user:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - group_user.is_direct_group
+    - group_user.from_group_id
+    - group_user.group_id
+    - group_user.id
+    - group_user.user_id
+    - user.created_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: group_user.id
+    schema:
+    - description: 'Display Name: Group Is Direct Group (Yes / No). Description: Was
+        the user directly added to this group, rather than inheriting this group by
+        being a member of a child group?'
+      name: is_direct_group
+      type: BOOL
+    - description: 'Display Name: Group User From Group ID. Description: '
+      name: from_group_id
+      type: INTEGER
+    - description: 'Display Name: Group User Group ID. Description: '
+      name: group_id
+      type: INTEGER
+    - description: 'Display Name: Group User ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Group User User ID. Description: '
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: User Created Time. Description: When this user was
+        created. This field is extracted from table user'
+      name: user_created_time
+      type: TIMESTAMP
+    view: group
+    view_display_name: Group
+  indirect_group:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - indirect_group.can_add_to_content_metadata
+    - indirect_group.edit_link
+    - indirect_group.external_group_id
+    - indirect_group.externally_managed
+    - indirect_group.id
+    - indirect_group.include_by_default
+    - indirect_group.name
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: indirect_group.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Indirect Group Can Add to Content Metadata (Yes
+        / No). Description: Can the group be used in content access controls?'
+      name: can_add_to_content_metadata
+      type: BOOL
+    - description: 'Display Name: Indirect Group Edit Link. Description: A link to
+        the Admin page used to edit the group''s properties'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Indirect Group External Group ID. Description: If
+        the group membership is controlled outside of Looker, the unique string identifier
+        given to the group by the outside source'
+      name: external_group_id
+      type: STRING
+    - description: 'Display Name: Indirect Group Externally Managed (Yes / No). Description:
+        Is the group membership controlled outside of Looker?'
+      name: externally_managed
+      type: BOOL
+    - description: 'Display Name: Indirect Group ID. Description: The unique numeric
+        identifier for the group. This is the primary key of the `group` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Indirect Group Include By Default (Yes / No). Description:
+        Are new users added to this group by default?'
+      name: include_by_default
+      type: BOOL
+    - description: 'Display Name: Indirect Group Name. Description: The group name'
+      name: name
+      type: STRING
+    view: group
+    view_display_name: Indirect Group
+  parent_group:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Group
+    explore_name: group
+    fields:
+    - parent_group.can_add_to_content_metadata
+    - parent_group.edit_link
+    - parent_group.external_group_id
+    - parent_group.externally_managed
+    - parent_group.id
+    - parent_group.include_by_default
+    - parent_group.name
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: parent_group.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Parent Group Can Add to Content Metadata (Yes /
+        No). Description: Can the group be used in content access controls?'
+      name: can_add_to_content_metadata
+      type: BOOL
+    - description: 'Display Name: Parent Group Edit Link. Description: A link to the
+        Admin page used to edit the group''s properties'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Parent Group External Group ID. Description: If
+        the group membership is controlled outside of Looker, the unique string identifier
+        given to the group by the outside source'
+      name: external_group_id
+      type: STRING
+    - description: 'Display Name: Parent Group Externally Managed (Yes / No). Description:
+        Is the group membership controlled outside of Looker?'
+      name: externally_managed
+      type: BOOL
+    - description: 'Display Name: Parent Group ID. Description: The unique numeric
+        identifier for the group. This is the primary key of the `group` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Parent Group Include By Default (Yes / No). Description:
+        Are new users added to this group by default?'
+      name: include_by_default
+      type: BOOL
+    - description: 'Display Name: Parent Group Name. Description: The group name'
+      name: name
+      type: STRING
+    view: group
+    view_display_name: Parent Group
+history:
+  history:
+    batch_cursor_field: null
+    count_measure: history.count
+    cursor_field: history.created_time
+    cursor_value_offset: -3 day
+    explore_display_name: History
+    explore_name: history
+    fields:
+    - history.apply_formatting
+    - history.apply_vis
+    - history.cache
+    - history.cache_key
+    - history.completed_time
+    - history.connection_id
+    - history.connection_name
+    - history.created_time
+    - history.dashboard_id
+    - history.real_dash_id
+    - history.dashboard_id_as_number
+    - history.dashboard_session
+    - history.dialect
+    - history.force_production
+    - history.generate_links
+    - history.id
+    - history.cache_only
+    - history.is_single_query
+    - history.is_user_dashboard
+    - history.issuer_source
+    - history.look_id
+    - history.message
+    - history.most_recent_run_at_time
+    - history.most_recent_length
+    - history.node_id
+    - history.query_id
+    - history.raw_source
+    - history.rebuild_pdts
+    - history.render_key
+    - history.result_format
+    - history.result_maker_id
+    - history.result_source
+    - history.runtime_tiers_1
+    - history.runtime_tiers_5
+    - history.runtime_tiers
+    - history.runtime_under_10s
+    - history.runtime
+    - history.sql_query_id
+    - history.server_table_calcs
+    - history.slug
+    - history.source
+    - history.status
+    - history.title
+    - history.user_id
+    - history.workspace_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - history.completed_time
+    - history.created_time
+    - history.most_recent_run_at_time
+    primary_key: history.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: History Apply Formatting (Yes / No). Description:
+        Was formatting applied to the data in the data download?'
+      name: apply_formatting
+      type: BOOL
+    - description: 'Display Name: History Apply Vis (Yes / No). Description: Were
+        the visualization options applied to the data download?'
+      name: apply_vis
+      type: BOOL
+    - description: 'Display Name: History Attempted Cache (Yes / No). Description:
+        When this is true, Looker will attempt to pull results from cache for the
+        query. Generally this will be true unless "Clear Cache & Refresh" was selected
+        or the query originated from a Dashboard with Auto-Refresh enabled'
+      name: cache
+      type: BOOL
+    - description: 'Display Name: History Cache Key. Description: The unique string
+        identifier for a SQL-based cache entry'
+      name: cache_key
+      type: STRING
+    - description: 'Display Name: History Completed Time. Description: When an event
+        in ''History'' was completed. Each event is linked to a query in Looker.'
+      name: completed_time
+      type: TIMESTAMP
+    - description: 'Display Name: History Connection ID. Description: The unique string
+        identifier for a connection'
+      name: connection_id
+      type: STRING
+    - description: 'Display Name: History Connection Name. Description: The name of
+        the connection used to run the query'
+      name: connection_name
+      type: STRING
+    - description: 'Display Name: History Created Time. Description: When an event
+        in ''History'' was created. Each event is linked to a query in Looker.'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: History Dashboard ID. Description: '
+      name: dashboard_id
+      type: STRING
+    - description: 'Display Name: History Dashboard ID (Inclusive). Description: The
+        unique string identifier for either a user-defined or a LookML dashboard'
+      name: real_dash_id
+      type: STRING
+    - description: 'Display Name: History Dashboard ID As Number. Description: '
+      name: dashboard_id_as_number
+      type: INTEGER
+    - description: 'Display Name: History Dashboard Session. Description: The unique
+        numeric identifier for a single time the dashboard was loaded'
+      name: dashboard_session
+      type: STRING
+    - description: 'Display Name: History Dialect. Description: The database dialect
+        used to run the query'
+      name: dialect
+      type: STRING
+    - description: 'Display Name: History Force Production (Yes / No). Description:
+        Was the query forced to run against production regardless of whether the user
+        was in dev mode? An example of Looker adding this flag is when running scheduled
+        jobs.'
+      name: force_production
+      type: BOOL
+    - description: 'Display Name: History Generate Links (Yes / No). Description:
+        Were links (such as drill links) generated in the query results?'
+      name: generate_links
+      type: BOOL
+    - description: 'Display Name: History ID. Description: The unique numeric identifier
+        for this event. Each event is linked to a query in Looker. Includes a link
+        to this query on the Queries page. (Requires see_queries permission.)'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: History Is From Instant Dashboard (Yes / No). Description:
+        When this is true, Looker will allow expired cache to be returned temporarily
+        while fresh data is loaded in the background. Primarily used for Instant Dashboards.'
+      name: cache_only
+      type: BOOL
+    - description: 'Display Name: History Is Single Query (Yes / No). Description:
+        Whether the event in ''History'' represents a single query or a merge query.
+        Running a merge query creates a history event for the merge query itself,
+        in addition to the events created for the individual queries.'
+      name: is_single_query
+      type: BOOL
+    - description: 'Display Name: History Is User Dashboard (Yes / No). Description:
+        Is this query from a user-defined dashboard?'
+      name: is_user_dashboard
+      type: BOOL
+    - description: 'Display Name: History Issuer Source. Description: The source of
+        a query, bucketed. Buckets are the API, users themselves, Action Hub, or automated
+        system activities (PDTs and schedules).'
+      name: issuer_source
+      type: STRING
+    - description: 'Display Name: History Look ID. Description: '
+      name: look_id
+      type: INTEGER
+    - description: 'Display Name: History Message. Description: General information
+        about the query, often around error reporting or the current status'
+      name: message
+      type: STRING
+    - description: 'Display Name: History Most Recent Query Run at Time. Description:
+        The last time an event in ''History'' was created for a query'
+      name: most_recent_run_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: History Most Recent Run Length in Seconds. Description:
+        The number of seconds a query took the last time it ran'
+      name: most_recent_length
+      type: FLOAT64
+    - description: 'Display Name: History Node ID. Description: '
+      name: node_id
+      type: INTEGER
+    - description: 'Display Name: History Query ID. Description: '
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: History Raw Source. Description: The source of a
+        query, such as a saved Look, dashboard, Explore, scheduled task, API, etc
+        (raw values)'
+      name: raw_source
+      type: STRING
+    - description: 'Display Name: History Rebuild PDTs (Yes / No). Description: Whether
+        the query was initiated with the ''Rebuild Derived Tables & Run'' option.'
+      name: rebuild_pdts
+      type: BOOL
+    - description: 'Display Name: History Render Key. Description: The unique string
+        cache key for the fully formatted results cache'
+      name: render_key
+      type: STRING
+    - description: 'Display Name: History Result Format. Description: The export format
+        chosen for non-image result sets'
+      name: result_format
+      type: STRING
+    - description: 'Display Name: History Result Maker ID. Description: '
+      name: result_maker_id
+      type: STRING
+    - description: 'Display Name: History Result Source. Description: Whether the
+        result set of a query was returned from cache or from database'
+      name: result_source
+      type: STRING
+    - description: 'Display Name: History Runtime Tiers in 1-Second Increments. Description:
+        The number of seconds a query took to run in tiers of 1-second increments'
+      name: runtime_tiers_1
+      type: STRING
+    - description: 'Display Name: History Runtime Tiers in 5-Second Increments. Description:
+        The number of seconds a query took to run in tiers of 5-second increments'
+      name: runtime_tiers_5
+      type: STRING
+    - description: 'Display Name: History Runtime Tiers in Seconds. Description: The
+        number of seconds a query took to run, tiered'
+      name: runtime_tiers
+      type: STRING
+    - description: 'Display Name: History Runtime Under 10s (Yes / No). Description:
+        Did the query run in less than 10 seconds?'
+      name: runtime_under_10s
+      type: BOOL
+    - description: 'Display Name: History Runtime in Seconds. Description: The number
+        of seconds a query took to run'
+      name: runtime
+      type: FLOAT64
+    - description: 'Display Name: History SQL Query ID. Description: The SQL Runner
+        query ID'
+      name: sql_query_id
+      type: INTEGER
+    - description: 'Display Name: History Server Table Calcs (Yes / No). Description:
+        Were table calculations computed by the server (as opposed to the browser)?'
+      name: server_table_calcs
+      type: BOOL
+    - description: 'Display Name: History Slug. Description: The unique string identifier
+        for a query.'
+      name: slug
+      type: STRING
+    - description: 'Display Name: History Source. Description: The source of a query,
+        such as a Look, an Explore, a scheduled_task, an alert, a dashboard etc.'
+      name: source
+      type: STRING
+    - description: 'Display Name: History Status. Description: The current status
+        of the history event. For more information about errors, see the message field.
+        The value cache_only_miss is a result when a query is run with the cache_only=TRUE
+        option and the cache entry is not present.'
+      name: status
+      type: STRING
+    - description: 'Display Name: History Title. Description: '
+      name: title
+      type: STRING
+    - description: 'Display Name: History User ID. Description: '
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: History Workspace ID. Description: The environment
+        in which the history event was intiated. Values are production, dev, and null.'
+      name: workspace_id
+      type: STRING
+    view: history
+    view_display_name: History
+  node:
+    batch_cursor_field: null
+    count_measure: node.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: History
+    explore_name: history
+    fields:
+    - node.version
+    - node.cache_port
+    - node.clustered
+    - node.hostname
+    - node.id
+    - node.is_master
+    - node.last_heartbeat_time
+    - node.mac_adress
+    - node.node_cluster_version
+    - node.node_to_node_port
+    - node.port
+    - node.prev_node_id
+    - node.queue_broker_port
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - node.last_heartbeat_time
+    primary_key: node.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Node  Looker Version. Description: The Looker version
+        running on the node'
+      name: version
+      type: STRING
+    - description: 'Display Name: Node Cache Port. Description: '
+      name: cache_port
+      type: STRING
+    - description: 'Display Name: Node Clustered (Yes / No). Description: Is this
+        node part of a clustered Looker installation?'
+      name: clustered
+      type: BOOL
+    - description: 'Display Name: Node Hostname. Description: The node''s unique IP
+        address or hostname that other nodes use to contact this one'
+      name: hostname
+      type: STRING
+    - description: 'Display Name: Node ID. Description: Every time a node starts up,
+        a record in the node table is generated. The ID field is the unique numeric
+        identifier for the record generated at startup. This is the primary key of
+        the `node` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Node Is Master (Yes / No). Description: If this
+        is a clustered installation, is this the master node?'
+      name: is_master
+      type: BOOL
+    - description: 'Display Name: Node Last Heartbeat Time. Description: The date
+        and time the node most recently transmitted a heartbeat message to the other
+        nodes in the cluster. The heartbeat message transmits system information about
+        the node to the other nodes in the cluster, verifying the node''s presence
+        in the cluster.'
+      name: last_heartbeat_time
+      type: TIMESTAMP
+    - description: 'Display Name: Node Mac Address. Description: The node''s MAC address'
+      name: mac_adress
+      type: STRING
+    - description: 'Display Name: Node Node Cluster Version. Description: A number
+        that is incremented whenever changes to a node make inter-node communication
+        impossible, and the node must be updated to make inter-node communication
+        possible. This number should be identical for all nodes communicating in a
+        cluster.'
+      name: node_cluster_version
+      type: FLOAT64
+    - description: 'Display Name: Node Node to Node Port. Description: The port number
+        used for inter-node communication'
+      name: node_to_node_port
+      type: STRING
+    - description: 'Display Name: Node Port. Description: The port number on which
+        the node listens for connections to Looker'
+      name: port
+      type: STRING
+    - description: 'Display Name: Node Prev Node ID. Description: The unique numeric
+        identifier for the record generated the last time the node started up'
+      name: prev_node_id
+      type: INTEGER
+    - description: 'Display Name: Node Queue Broker Port. Description: The port number
+        used for queueing cluster-wide events'
+      name: queue_broker_port
+      type: STRING
+    view: history
+    view_display_name: Node
+  result_maker:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: History
+    explore_name: history
+    fields:
+    - result_maker.id
+    - result_maker.is_merge_query
+    - result_maker.is_query
+    - result_maker.is_sql_query
+    - result_maker.merge_query_id
+    - result_maker.query_id
+    - result_maker.sql_query_id
+    - result_maker.slug
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: result_maker.id
+    schema:
+    - description: 'Display Name: Result Maker ID. Description: The unique numeric
+        identifier for a result maker entry. Entries come from sql runner queries,
+        merge queries, or (less common) dashboard elements created via the API. Primary
+        key of the `result_maker` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Result Maker Is Merge Query (Yes / No). Description:
+        Is this a merge query (will be no if ''Merge Query ID'' is null)?'
+      name: is_merge_query
+      type: BOOL
+    - description: 'Display Name: Result Maker Is Query (Yes / No). Description: Is
+        this a query (will be no if ''Query ID'' is null)?'
+      name: is_query
+      type: BOOL
+    - description: 'Display Name: Result Maker Is SQL Query (Yes / No). Description:
+        Is this a sql runner query (will be no when `Sql Query ID` is null)?'
+      name: is_sql_query
+      type: BOOL
+    - description: 'Display Name: Result Maker Merge Query ID. Description: ID of
+        the merge query. A single merge query can contain several source queries.'
+      name: merge_query_id
+      type: INTEGER
+    - description: 'Display Name: Result Maker Query ID. Description: ID of the Dashboard
+        element query (best used in the Dashboard explore).'
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Result Maker SQL Query ID. Description: ID of the
+        sql runner query'
+      name: sql_query_id
+      type: STRING
+    - description: 'Display Name: Result Maker Slug. Description: The query''s unique
+        string ID, included in the URL'
+      name: slug
+      type: STRING
+    view: history
+    view_display_name: Result Maker
+  source_query:
+    batch_cursor_field: null
+    count_measure: source_query.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: History
+    explore_name: history
+    fields:
+    - source_query.column_limit
+    - source_query.total
+    - source_query.created_time
+    - source_query.dynamic_fields
+    - source_query.view
+    - source_query.field_or_filter_contains
+    - source_query.fields
+    - source_query.formatted_fields
+    - source_query.fill_fields
+    - source_query.filters
+    - source_query.hash
+    - source_query.id
+    - source_query.link
+    - source_query.model
+    - source_query.pivots
+    - source_query.formatted_pivots
+    - source_query.query_timezone
+    - source_query.limit
+    - source_query.row_total
+    - source_query.row_totals
+    - source_query.slug
+    - source_query.sorts
+    - source_query.vis_config
+    - source_query.visible_ui_sections
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - source_query.created_time
+    primary_key: source_query.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Source Query Column Limit. Description: The column
+        limit applied to the query'
+      name: column_limit
+      type: STRING
+    - description: 'Display Name: Source Query Column Totals (Yes / No). Description:
+        Were totals included in the query?'
+      name: total
+      type: BOOL
+    - description: 'Display Name: Source Query Created Time. Description: When the
+        query was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Source Query Custom Fields. Description: JSON output
+        of the Custom Fields & Table Calculations used in query.'
+      name: dynamic_fields
+      type: STRING
+    - description: 'Display Name: Source Query Explore. Description: The Explore that
+        uses the query'
+      name: view
+      type: STRING
+    - description: 'Display Name: Source Query Field or Filter Contains (Yes / No).
+        Description: Accepts a view name string, filters for queries with fields or
+        filters that contain the view name'
+      name: field_or_filter_contains
+      type: BOOL
+    - description: 'Display Name: Source Query Fields. Description: The fields used
+        in the query'
+      name: fields
+      type: STRING
+    - description: 'Display Name: Source Query Fields Used. Description: The fields
+        used in the query'
+      name: formatted_fields
+      type: STRING
+    - description: 'Display Name: Source Query Fill Fields. Description: The fields
+        in the query with dimension fill applied'
+      name: fill_fields
+      type: STRING
+    - description: 'Display Name: Source Query Filters. Description: JSON output of
+        the filters used in the query.'
+      name: filters
+      type: STRING
+    - description: 'Display Name: Source Query Hash. Description: The query''s unique
+        string identifier calculated from the generated SQL text'
+      name: hash
+      type: STRING
+    - description: 'Display Name: Source Query ID. Description: The unique numeric
+        identifier for the query. Primary key of the `query` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Source Query Link. Description: A clickable link
+        to the query. For filtering, use query id field instead.'
+      name: link
+      type: STRING
+    - description: 'Display Name: Source Query Model. Description: The model used
+        in the query'
+      name: model
+      type: STRING
+    - description: 'Display Name: Source Query Pivots. Description: The fields used
+        as pivots in the query'
+      name: pivots
+      type: STRING
+    - description: 'Display Name: Source Query Pivots Used. Description: The pivots
+        used in the query'
+      name: formatted_pivots
+      type: STRING
+    - description: 'Display Name: Source Query Query Timezone. Description: The timezone
+        used for the query. If the default query timezone was used, the value of this
+        field is null.'
+      name: query_timezone
+      type: STRING
+    - description: 'Display Name: Source Query Row Limit. Description: The row limit
+        applied to the query. Will be equal to `-1` if the query is an `All Results`
+        schedule or download.'
+      name: limit
+      type: FLOAT64
+    - description: 'Display Name: Source Query Row Total Orientation. Description:
+        The position of the row total in the UI, left or right.'
+      name: row_total
+      type: STRING
+    - description: 'Display Name: Source Query Row Totals (Yes / No). Description:
+        Were row totals included in the query?'
+      name: row_totals
+      type: BOOL
+    - description: 'Display Name: Source Query Slug. Description: The query''s unique
+        string ID, included in the URL'
+      name: slug
+      type: STRING
+    - description: 'Display Name: Source Query Sorts. Description: The fields used
+        as sorts in the query'
+      name: sorts
+      type: STRING
+    - description: 'Display Name: Source Query Vis Config. Description: The JSON-encoded
+        metadata of the visualization configuration'
+      name: vis_config
+      type: STRING
+    - description: 'Display Name: Source Query Visible UI Sections. Description: '
+      name: visible_ui_sections
+      type: STRING
+    view: history
+    view_display_name: Source Query
+look:
+  look:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Look
+    explore_name: look
+    fields:
+    - look.content_metadata_id
+    - look.created_time
+    - look.description
+    - look.id
+    - look.is_run_on_load
+    - look.last_updater_id
+    - look.link
+    - look.moved_to_trash
+    - look.deleted_time
+    - look.deleter_id
+    - look.public
+    - look.public_embed_link
+    - look.public_slug
+    - look.query_id
+    - look.space_id
+    - look.title
+    - look.updated_time
+    - look.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - look.created_time
+    - look.deleted_time
+    - look.updated_time
+    primary_key: look.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Look Content Metadata ID. Description: '
+      name: content_metadata_id
+      type: INTEGER
+    - description: 'Display Name: Look Created Time. Description: When the Look was
+        initially created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Look Description. Description: The description assigned
+        to the Look'
+      name: description
+      type: STRING
+    - description: 'Display Name: Look ID. Description: The unique numeric identifier
+        for the Look. Unique primary key of the look table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Look Is Run on Load (Yes / No). Description: Is
+        the Look configured with ''Automatically run this Look on page load'' setting
+        toggled on?'
+      name: is_run_on_load
+      type: BOOL
+    - description: 'Display Name: Look Last Updater ID. Description: The unique numeric
+        ID of the user who most recently updated the Look or its underlying query'
+      name: last_updater_id
+      type: INTEGER
+    - description: 'Display Name: Look Link. Description: A clickable link to the
+        Look''s URL'
+      name: link
+      type: STRING
+    - description: 'Display Name: Look Moved to Trash (Yes / No). Description: Has
+        this look been moved to the trash? This field will be ''Yes'' when the deleted_date
+        field is not null'
+      name: moved_to_trash
+      type: BOOL
+    - description: 'Display Name: Look Moved to Trash Time. Description: When the
+        Look was moved to the trash. If the Look is still active, this field will
+        be null.'
+      name: deleted_time
+      type: TIMESTAMP
+    - description: 'Display Name: Look Moved to Trash User ID. Description: The unique
+        numeric ID of the user who moved the Look to the trash.'
+      name: deleter_id
+      type: INTEGER
+    - description: 'Display Name: Look Public (Yes / No). Description: Has public
+        access been enabled for the Look?'
+      name: public
+      type: BOOL
+    - description: 'Display Name: Look Public Embed Link. Description: A clickable
+        link to the URL where the Look is embedded and publicly accessible'
+      name: public_embed_link
+      type: STRING
+    - description: 'Display Name: Look Public Slug. Description: The Look''s unique
+        string ID, included in the public URL'
+      name: public_slug
+      type: STRING
+    - description: 'Display Name: Look Query ID. Description: '
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Look Space ID. Description: '
+      name: space_id
+      type: INTEGER
+    - description: 'Display Name: Look Title. Description: The Look''s title'
+      name: title
+      type: STRING
+    - description: 'Display Name: Look Updated Time. Description: When the Look or
+        its underlying query was updated'
+      name: updated_time
+      type: TIMESTAMP
+    - description: 'Display Name: Look User ID. Description: '
+      name: user_id
+      type: INTEGER
+    view: look
+    view_display_name: Look
+merge_query:
+  merge_query:
+    batch_cursor_field: null
+    count_measure: merge_query.count
+    cursor_field: merge_query.created_time
+    cursor_value_offset: null
+    explore_display_name: Merge Query
+    explore_name: merge_query
+    fields:
+    - merge_query.column_limit
+    - merge_query.created_time
+    - merge_query.hash
+    - merge_query.id
+    - merge_query.pivots
+    - merge_query.formatted_pivots
+    - merge_query.sorts
+    - merge_query.dynamic_fields
+    - merge_query.total
+    - merge_query.vis_config
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - merge_query.created_time
+    primary_key: merge_query.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Merge Query Column Limit. Description: '
+      name: column_limit
+      type: FLOAT64
+    - description: 'Display Name: Merge Query Created Time. Description: When the
+        merge query was created.'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Merge Query Hash. Description: The merge query''s
+        unique string identifier.'
+      name: hash
+      type: STRING
+    - description: 'Display Name: Merge Query ID. Description: The unique numeric
+        identifier for the merge query. A single merge query can contain several source
+        queries. This is the primary key of the `merge_query` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Merge Query Pivots. Description: '
+      name: pivots
+      type: STRING
+    - description: 'Display Name: Merge Query Pivots Used. Description: The pivots
+        used in the merge query.'
+      name: formatted_pivots
+      type: STRING
+    - description: 'Display Name: Merge Query Sorts. Description: '
+      name: sorts
+      type: STRING
+    - description: 'Display Name: Merge Query Table Calculations. Description: JSON
+        output of the Custom Fields & Table Calculations used in the merge query.'
+      name: dynamic_fields
+      type: STRING
+    - description: 'Display Name: Merge Query Total (Yes / No). Description: '
+      name: total
+      type: BOOL
+    - description: 'Display Name: Merge Query Vis Config. Description: '
+      name: vis_config
+      type: STRING
+    view: merge_query
+    view_display_name: Merge Query
+  merge_query_source_query:
+    batch_cursor_field: null
+    count_measure: merge_query_source_query.count
+    cursor_field: merge_query.created_time
+    cursor_value_offset: null
+    explore_display_name: Merge Query
+    explore_name: merge_query
+    fields:
+    - merge_query_source_query.id
+    - merge_query_source_query.is_primary_query
+    - merge_query_source_query.merge_fields
+    - merge_query_source_query.merge_query_id
+    - merge_query_source_query.name
+    - merge_query_source_query.query_id
+    - merge_query_source_query.rank
+    - merge_query.created_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: merge_query_source_query.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Merge Query Source Query ID. Description: The unique
+        numeric identifier for the merge query source query. This is the primary key
+        of the `merge_query_source_query` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Merge Query Source Query Is Primary Query (Yes /
+        No). Description: Is this the primary query of the merge query?'
+      name: is_primary_query
+      type: BOOL
+    - description: 'Display Name: Merge Query Source Query Merge Fields. Description:
+        List of fields this merge query source query merged on. Will be blank or null
+        for the primary query.'
+      name: merge_fields
+      type: STRING
+    - description: 'Display Name: Merge Query Source Query Merge Query ID. Description: '
+      name: merge_query_id
+      type: INTEGER
+    - description: 'Display Name: Merge Query Source Query Name. Description: Name
+        of the merge query source query as specified in the UI.'
+      name: name
+      type: STRING
+    - description: 'Display Name: Merge Query Source Query Query ID. Description:
+        The unique numeric identifier for the query.'
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Merge Query Source Query Rank. Description: Positional
+        order of this query in the merge query. Will be 0 if this is the primary query.'
+      name: rank
+      type: FLOAT64
+    - description: 'Display Name: Merge Query Created Time. Description: When the
+        merge query was created. This field is extracted from merge_query'
+      name: merge_query_created_time
+      type: TIMESTAMP
+    view: merge_query
+    view_display_name: Merge Query Source Query
+pdt_builds:
+  pdt_builds:
+    batch_cursor_field: null
+    cursor_field: pdt_builds.end_time
+    cursor_value_offset: null
+    explore_display_name: PDT Builds
+    explore_name: pdt_builds
+    fields:
+    - pdt_builds.table_summary
+    - pdt_builds.build_reason
+    - pdt_builds.table_type
+    - pdt_builds.action_list
+    - pdt_builds.build_result
+    - pdt_builds.connection
+    - pdt_builds.context
+    - pdt_builds.dev_build
+    - pdt_builds.elapsed_minutes
+    - pdt_builds.elapsed_minutes_float
+    - pdt_builds.elapsed_seconds
+    - pdt_builds.end_time
+    - pdt_builds.model_name
+    - pdt_builds.start_time
+    - pdt_builds.status
+    - pdt_builds.tid
+    - pdt_builds.view_name
+    - pdt_builds.workspace
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - pdt_builds.end_time
+    - pdt_builds.start_time
+    primary_key: pdt_builds.tid
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: PDT Builds   Action List Summary. Description: Description
+        of PDT events based on values in the Action List. Syntax is ''Build Reason
+        - Table Type - Build Result''. Grouped by transaction ID.'
+      name: table_summary
+      type: STRING
+    - description: 'Display Name: PDT Builds  Build Reason. Description: '
+      name: build_reason
+      type: STRING
+    - description: 'Display Name: PDT Builds  Table Type. Description: '
+      name: table_type
+      type: STRING
+    - description: 'Display Name: PDT Builds Action List. Description: List of PDT
+        create actions grouped by transaction ID. Use ''Action List Summary'' in ''PDT
+        Builds'' view for a human-readable summary.'
+      name: action_list
+      type: STRING
+    - description: 'Display Name: PDT Builds Build Result. Description: '
+      name: build_result
+      type: STRING
+    - description: 'Display Name: PDT Builds Connection. Description: The database
+        connection used by the PDT query'
+      name: connection
+      type: STRING
+    - description: 'Display Name: PDT Builds Context. Description: The workspace and
+        optional user id e.g. dev-user-42'
+      name: context
+      type: STRING
+    - description: 'Display Name: PDT Builds Dev Build (Yes / No). Description: The
+        build was initiated by a dev mode query'
+      name: dev_build
+      type: BOOL
+    - description: 'Display Name: PDT Builds Elapsed Minutes. Description: The number
+        of minutes (rounded to 2 decimal points) between the start and end times of
+        the PDT build process'
+      name: elapsed_minutes
+      type: FLOAT64
+    - description: 'Display Name: PDT Builds Elapsed Minutes Float. Description: The
+        number of minutes (as a decimal) between the start and end times of the PDT
+        build process'
+      name: elapsed_minutes_float
+      type: FLOAT64
+    - description: 'Display Name: PDT Builds Elapsed Seconds. Description: The number
+        of seconds (in integers) between the start and end times of the PDT build
+        process'
+      name: elapsed_seconds
+      type: FLOAT64
+    - description: 'Display Name: PDT Builds End Time. Description: The end time of
+        the PDT build occurrence'
+      name: end_time
+      type: TIMESTAMP
+    - description: 'Display Name: PDT Builds Model Name. Description: The name of
+        the model in which the PDT view is saved'
+      name: model_name
+      type: STRING
+    - description: 'Display Name: PDT Builds Start Time. Description: The start time
+        of the PDT build occurrence'
+      name: start_time
+      type: TIMESTAMP
+    - description: 'Display Name: PDT Builds Status. Description: The status of the
+        PDT build process'
+      name: status
+      type: STRING
+    - description: 'Display Name: PDT Builds Tid. Description: The unique transaction
+        ID for each occurence of a PDT build'
+      name: tid
+      type: STRING
+    - description: 'Display Name: PDT Builds View Name. Description: The view name
+        of the PDT'
+      name: view_name
+      type: STRING
+    - description: 'Display Name: PDT Builds Workspace. Description: The workspace
+        of the PDT build process'
+      name: workspace
+      type: STRING
+    view: pdt_builds
+    view_display_name: PDT Builds
+pdt_event_log:
+  incremental_pdt_events:
+    batch_cursor_field: null
+    cursor_field: incremental_pdt_events.latest_created_time
+    cursor_value_offset: null
+    explore_display_name: PDT Event Log
+    explore_name: pdt_event_log
+    fields:
+    - incremental_pdt_events.latest_created_time
+    - incremental_pdt_events.model_name
+    - incremental_pdt_events.view_name
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - incremental_pdt_events.latest_created_time
+    primary_key:
+    - model_name
+    - view_name
+    schema:
+    - description: 'Display Name: PDT Event Log Latest Incremental Build Time. Description:
+        When the last increment was added for an incremental PDT.'
+      name: latest_created_time
+      type: TIMESTAMP
+    - description: 'Display Name: PDT Event Log Model Name. Description: The name
+        of the model in which the PDT view is saved'
+      name: model_name
+      type: STRING
+    - description: 'Display Name: PDT Event Log View Name. Description: The PDT LookML
+        view name'
+      name: view_name
+      type: STRING
+    view: pdt_event_log
+    view_display_name: PDT Event Log
+  pdt_event_log:
+    batch_cursor_field: null
+    cursor_field: pdt_event_log.created_time
+    cursor_value_offset: null
+    explore_display_name: PDT Event Log
+    explore_name: pdt_event_log
+    fields:
+    - pdt_event_log.action
+    - pdt_event_log.action_data
+    - pdt_event_log.connection
+    - pdt_event_log.created_time
+    - pdt_event_log.extract_view_from_table
+    - pdt_event_log.hash
+    - pdt_event_log.short_hash
+    - pdt_event_log.id
+    - pdt_event_log.incremental_build
+    - pdt_event_log.model_name
+    - pdt_event_log.table_name
+    - pdt_event_log.tid
+    - pdt_event_log.short_tid
+    - pdt_event_log.sequence
+    - pdt_event_log.view_name
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - pdt_event_log.created_time
+    primary_key: pdt_event_log.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: PDT Event Log Action. Description: The type of PDT
+        action that created the log entry. If action is like ''trigger%'', ''regenerate%'',
+        ''reap%'', that row is deleted after 5 days.'
+      name: action
+      type: STRING
+    - description: 'Display Name: PDT Event Log Action Data. Description: Data related
+        to the type of action. For example, a trigger value action would show the
+        value of the data that caused the trigger to occur, whereas a regenerate end
+        action would show whether the table regeneration was successful. If action_data
+        contains any data after 5 days, then action_data is overwritten with NULL
+        for that row.'
+      name: action_data
+      type: STRING
+    - description: 'Display Name: PDT Event Log Connection. Description: The name
+        of the Looker connection from which a model retrieves data from the PDT'
+      name: connection
+      type: STRING
+    - description: 'Display Name: PDT Event Log Created Time. Description: The date
+        and time the event occurred'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: PDT Event Log Extract View From Table. Description:
+        The PDT view name, derived from the database table name'
+      name: extract_view_from_table
+      type: STRING
+    - description: 'Display Name: PDT Event Log Hash. Description: A unique string
+        identifier for the query that creates the PDT. This is a method to ensure
+        that PDTs are not duplicated.'
+      name: hash
+      type: STRING
+    - description: 'Display Name: PDT Event Log Hash (short). Description: The first
+        8 characters of the hash'
+      name: short_hash
+      type: STRING
+    - description: 'Display Name: PDT Event Log ID. Description: The unique numeric
+        identifier for the log entry'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: PDT Event Log Incremental Build (Yes / No). Description:
+        Yes if event log action is equal to `create increment complete`'
+      name: incremental_build
+      type: BOOL
+    - description: 'Display Name: PDT Event Log Model Name. Description: The name
+        of the model in which the PDT view is saved'
+      name: model_name
+      type: STRING
+    - description: 'Display Name: PDT Event Log Table Name. Description: The database
+        table name assigned to the PDT'
+      name: table_name
+      type: STRING
+    - description: 'Display Name: PDT Event Log Transaction ID. Description: The unique
+        identifier the database assigned to the unit of work, containing one or more
+        SQL statements, related to the event'
+      name: tid
+      type: STRING
+    - description: 'Display Name: PDT Event Log Transaction ID (short). Description:
+        The first 8 characters of the transaction ID'
+      name: short_tid
+      type: STRING
+    - description: 'Display Name: PDT Event Log Transaction Sequence #. Description:
+        A single PDT action can create several events. The transaction ID uniquely
+        identifies PDT actions, and the sequence number uniquely identifies individual
+        events that comprise the action.'
+      name: sequence
+      type: FLOAT64
+    - description: 'Display Name: PDT Event Log View Name. Description: The PDT LookML
+        view name'
+      name: view_name
+      type: STRING
+    view: pdt_event_log
+    view_display_name: PDT Event Log
+query:
+  query:
+    batch_cursor_field: null
+    count_measure: query.count
+    cursor_field: query.created_time
+    cursor_value_offset: null
+    explore_display_name: Query
+    explore_name: query
+    fields:
+    - query.column_limit
+    - query.total
+    - query.created_time
+    - query.dynamic_fields
+    - query.view
+    - query.field_or_filter_contains
+    - query.fields
+    - query.formatted_fields
+    - query.fill_fields
+    - query.filters
+    - query.hash
+    - query.id
+    - query.link
+    - query.model
+    - query.pivots
+    - query.formatted_pivots
+    - query.query_timezone
+    - query.limit
+    - query.row_total
+    - query.row_totals
+    - query.slug
+    - query.sorts
+    - query.vis_config
+    - query.visible_ui_sections
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - query.created_time
+    primary_key: query.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    row_limit: 20000
+    schema:
+    - description: 'Display Name: Query Column Limit. Description: The column limit
+        applied to the query'
+      name: column_limit
+      type: STRING
+    - description: 'Display Name: Query Column Totals (Yes / No). Description: Were
+        totals included in the query?'
+      name: total
+      type: BOOL
+    - description: 'Display Name: Query Created Time. Description: When the query
+        was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Query Custom Fields. Description: JSON output of
+        the Custom Fields & Table Calculations used in query.'
+      name: dynamic_fields
+      type: STRING
+    - description: 'Display Name: Query Explore. Description: The Explore that uses
+        the query'
+      name: view
+      type: STRING
+    - description: 'Display Name: Query Field or Filter Contains (Yes / No). Description:
+        Accepts a view name string, filters for queries with fields or filters that
+        contain the view name'
+      name: field_or_filter_contains
+      type: BOOL
+    - description: 'Display Name: Query Fields. Description: The fields used in the
+        query'
+      name: fields
+      type: STRING
+    - description: 'Display Name: Query Fields Used. Description: The fields used
+        in the query'
+      name: formatted_fields
+      type: STRING
+    - description: 'Display Name: Query Fill Fields. Description: The fields in the
+        query with dimension fill applied'
+      name: fill_fields
+      type: STRING
+    - description: 'Display Name: Query Filters. Description: JSON output of the filters
+        used in the query.'
+      name: filters
+      type: STRING
+    - description: 'Display Name: Query Hash. Description: The query''s unique string
+        identifier calculated from the generated SQL text'
+      name: hash
+      type: STRING
+    - description: 'Display Name: Query ID. Description: The unique numeric identifier
+        for the query. Primary key of the `query` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Query Link. Description: A clickable link to the
+        query. For filtering, use query id field instead.'
+      name: link
+      type: STRING
+    - description: 'Display Name: Query Model. Description: The model used in the
+        query'
+      name: model
+      type: STRING
+    - description: 'Display Name: Query Pivots. Description: The fields used as pivots
+        in the query'
+      name: pivots
+      type: STRING
+    - description: 'Display Name: Query Pivots Used. Description: The pivots used
+        in the query'
+      name: formatted_pivots
+      type: STRING
+    - description: 'Display Name: Query Query Timezone. Description: The timezone
+        used for the query. If the default query timezone was used, the value of this
+        field is null.'
+      name: query_timezone
+      type: STRING
+    - description: 'Display Name: Query Row Limit. Description: The row limit applied
+        to the query. Will be equal to `-1` if the query is an `All Results` schedule
+        or download.'
+      name: limit
+      type: FLOAT64
+    - description: 'Display Name: Query Row Total Orientation. Description: The position
+        of the row total in the UI, left or right.'
+      name: row_total
+      type: STRING
+    - description: 'Display Name: Query Row Totals (Yes / No). Description: Were row
+        totals included in the query?'
+      name: row_totals
+      type: BOOL
+    - description: 'Display Name: Query Slug. Description: The query''s unique string
+        ID, included in the URL'
+      name: slug
+      type: STRING
+    - description: 'Display Name: Query Sorts. Description: The fields used as sorts
+        in the query'
+      name: sorts
+      type: STRING
+    - description: 'Display Name: Query Vis Config. Description: The JSON-encoded
+        metadata of the visualization configuration'
+      name: vis_config
+      type: STRING
+    - description: 'Display Name: Query Visible UI Sections. Description: '
+      name: visible_ui_sections
+      type: STRING
+    view: query
+    view_display_name: Query
+query_metrics:
+  query_metrics:
+    batch_cursor_field: null
+    count_measure: query_metrics.count
+    cursor_field: query_metrics.created_at_time
+    cursor_value_offset: null
+    explore_display_name: Query Performance Metrics
+    explore_name: query_metrics
+    fields:
+    - query_metrics.queued
+    - query_metrics.acquire_connection
+    - query_metrics.async_processing
+    - query_metrics.bi_engine_mode
+    - query_metrics.bi_engine_reasons
+    - query_metrics.bigquery_job_id
+    - query_metrics.cache_load
+    - query_metrics.connection_held
+    - query_metrics.created_at_time
+    - query_metrics.execute_extents_query
+    - query_metrics.execute_fill_max_query
+    - query_metrics.execute_fill_min_query
+    - query_metrics.execute_fill_pivot_max_query
+    - query_metrics.execute_fill_pivot_min_query
+    - query_metrics.execute_grand_totals_query
+    - query_metrics.execute_main_query
+    - query_metrics.execute_row_totals_query
+    - query_metrics.execute_totals_query
+    - query_metrics.explore_init
+    - query_metrics.marshalled_cache_load
+    - query_metrics.explore_init_mode
+    - query_metrics.extra_fields_json
+    - query_metrics.history_id
+    - query_metrics.id
+    - query_metrics.load_extents_query_in_memory
+    - query_metrics.load_fill_max_query_in_memory
+    - query_metrics.load_fill_min_query_in_memory
+    - query_metrics.load_fill_pivot_max_query_in_memory
+    - query_metrics.load_fill_pivot_min_query_in_memory
+    - query_metrics.load_grand_totals_query_in_memory
+    - query_metrics.load_main_query_in_memory
+    - query_metrics.load_process_and_stream_main_query
+    - query_metrics.load_row_totals_query_in_memory
+    - query_metrics.load_totals_query_in_memory
+    - query_metrics.model_init_mode
+    - query_metrics.model_init_computed
+    - query_metrics.model_init_cache
+    - query_metrics.pdt
+    - query_metrics.per_user_throttler
+    - query_metrics.post_processing
+    - query_metrics.prepare
+    - query_metrics.project_init
+    - query_metrics.artifact_id
+    - query_metrics.artifact_type
+    - query_metrics.query_task_id
+    - query_metrics.stream_to_cache
+    - query_metrics.temporary_dt
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - query_metrics.created_at_time
+    primary_key: query_metrics.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Query Metrics  Queued. Description: Time in seconds
+        that a query spent waiting for a worker to be available to run the query.'
+      name: queued
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Acquire Connection. Description: Time
+        in seconds necessary to acquire connection to the DB. This includes time to
+        look up the credentials (or key) for the user, create the connection pool
+        if it does not already exist, and initialize the connection for use.'
+      name: acquire_connection
+      type: FLOAT64
+    - description: "Display Name: Query Metrics Async Processing. Description: Time\
+        \ in seconds spent executing the query. Will not include time it takes for\
+        \ a query task to be \u201Cadded\u201D to the queue, or time it takes for\
+        \ the client API workflow to \u201Cnotice\u201D that the query has completed,\
+        \ or stream the results from the cache."
+      name: async_processing
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics BI Engine Mode. Description: Mode,
+        can be disabled or full. Only for BigQuery queries using BI engine.'
+      name: bi_engine_mode
+      type: STRING
+    - description: 'Display Name: Query Metrics BI Engine Reason. Description: Error
+        message and code. Only for BigQuery queries using BI engine'
+      name: bi_engine_reasons
+      type: STRING
+    - description: 'Display Name: Query Metrics BigQuery Job ID. Description: The
+        job ID in BigQuery for the query. Only for BigQuery queries using BI engine'
+      name: bigquery_job_id
+      type: STRING
+    - description: 'Display Name: Query Metrics Cache Load. Description: Time in seconds
+        it takes to pull raw results from the result set cache. When a query has been
+        run recently, it is possible that the results will be in the result set cache.
+        Instead of running the query on the database again, Looker loads these results
+        from the cache into memory.'
+      name: cache_load
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Connection Held. Description: Time
+        in seconds that Looker maintained a connection to the customer database (AKA
+        ''execute SQL duration''). This includes time it takes for the customer database
+        to run the SQL query.'
+      name: connection_held
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Created At Time. Description: '
+      name: created_at_time
+      type: TIMESTAMP
+    - description: 'Display Name: Query Metrics Execute Extents Query. Description:
+        Time in seconds it took to run the extents'' query on the customer database.
+        Only applies to results using the map visualization.'
+      name: execute_extents_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Fill Max Query. Description:
+        Time in seconds it took to run the fill max query results in memory from the
+        customer database. Only applies to queries with dimension fill.'
+      name: execute_fill_max_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Fill Min Query. Description:
+        Time in seconds it took to run the fill min query results in memory from the
+        customer database. Only applies to queries with dimension fill.'
+      name: execute_fill_min_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Fill Pivot Max Query. Description:
+        Time in seconds it took to run the fill pivot max query results in memory
+        from the customer database. Only applies to queries with dimension fill applied
+        to a pivoted field.'
+      name: execute_fill_pivot_max_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Fill Pivot Min Query. Description:
+        Time in seconds it took to run the fill pivot min query results in memory
+        from the customer database. Only applies to queries with dimension fill applied
+        to a pivoted field.'
+      name: execute_fill_pivot_min_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Grand Totals Query. Description:
+        Time in seconds it took run the ''Grand Totals'' query results in memory from
+        the customer database. Only applies if both ''Totals'' and ''Row Totals''
+        are enabled for the query.'
+      name: execute_grand_totals_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Main Query. Description: Time
+        in seconds that it took to run the ''primary'' query on the customer database
+        (AKA ''Run Query''). This does not include the time to acquire or set up the
+        JDBC connection. This is not tracked for queries that require the use of the
+        allow_large_results feature.'
+      name: execute_main_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Row Totals Query. Description:
+        Time in seconds it took to run the ''Row Totals'' query results in memory
+        from the customer database. Only applies if ''Row Totals'' are enabled for
+        the query.'
+      name: execute_row_totals_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Execute Totals Query. Description:
+        Time in seconds it took to run the ''Totals'' query on the customer database'
+      name: execute_totals_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Explore Init: Computed. Description:
+        Time in seconds to initialize the explore before ''preparing'' it. If this
+        is null, then the initialization came from cache, see ''Explore Init: From
+        Cache.'''
+      name: explore_init
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Explore Init: From Cache. Description:
+        Time in seconds to pull the explore initialization from cache. Also known
+        as ''Marshalled Cache Load.'' If this is null, then the initiialization was
+        computed, see ''Explore Init: Computed.'''
+      name: marshalled_cache_load
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Explore Initialization Mode. Description:
+        Whether the explore was initialized from cache or not.'
+      name: explore_init_mode
+      type: STRING
+    - description: 'Display Name: Query Metrics Extra Fields JSON. Description: '
+      name: extra_fields_json
+      type: STRING
+    - description: 'Display Name: Query Metrics History ID. Description: Instance
+        specific history id that executed the query task'
+      name: history_id
+      type: INTEGER
+    - description: 'Display Name: Query Metrics ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Query Metrics Load Extents Query In Memory. Description:
+        Time in seconds it took to load the extents query results in memory from the
+        customer database'
+      name: load_extents_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Fill Max Query In Memory. Description:
+        Time in seconds it took to load the fill max query results in memory from
+        the customer database. Only applies to queries with dimension fill.'
+      name: load_fill_max_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Fill Min Query In Memory. Description:
+        Time in seconds it took to load the fill min query results in memory from
+        the customer database. Only applies to queries with dimension fill.'
+      name: load_fill_min_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Fill Pivot Max Query In Memory.
+        Description: Time in seconds it took to load the fill pivot max query results
+        in memory from the customer database. Only applies to queries with dimension
+        fill applied to a pivoted field.'
+      name: load_fill_pivot_max_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Fill Pivot Min Query In Memory.
+        Description: Time in seconds it took to load the fill pivot min query results
+        in memory from the customer database. Only applies to queries with dimension
+        fill applied to a pivoted field.'
+      name: load_fill_pivot_min_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Grand Totals Query In Memory.
+        Description: Time in seconds it took to load the ''Grand Totals'' query results
+        in memory from the customer database. Only applies if both ''Totals'' and
+        ''Row Totals'' are enabled for the query.'
+      name: load_grand_totals_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Main Query In Memory. Description:
+        Time in seconds it took to load the main query results in memory from the
+        customer database. Applies to non-streamed queries only.'
+      name: load_main_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Process and Stream Main Query.
+        Description: Time in seconds it took to load (from the customer database),
+        process, and stream (to the client) the main query. Applies to streamed queries
+        only.'
+      name: load_process_and_stream_main_query
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Row Totals Query In Memory. Description:
+        Time in seconds it took to load the ''Row Totals'' query results in memory
+        from the customer database. Only applies if ''Row Totals'' are enabled for
+        the query.'
+      name: load_row_totals_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Load Totals Query In Memory. Description:
+        Time in seconds it took to load the ''Totals'' query results in memory from
+        the customer database. Only applies if both ''Totals'' are enabled for the
+        query.'
+      name: load_totals_query_in_memory
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Model Init Mode. Description: '
+      name: model_init_mode
+      type: STRING
+    - description: 'Display Name: Query Metrics Model Init: Computed. Description:
+        Time in seconds to load the model required to run a query. Includes time it
+        takes to parse the model. If this is null, then the initiialization was from
+        cache, see ''Model Init: From Cache.'
+      name: model_init_computed
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Model Init: From Cache. Description:
+        Time in seconds to load the model required to run a query from cache. If this
+        is null, then the initiialization was computed, see ''Model Init: Computed.'''
+      name: model_init_cache
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics PDTs. Description: Time in seconds
+        to build the persistent derived tables required for the query.'
+      name: pdt
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Per User Throttler. Description: Time
+        in seconds the query is throttled by the per-user throttler. This is time
+        spent waiting for a connection to be available for the user to run the query.
+        This could be high either due to the user running a high number of concurrent
+        queries or a low user limit.'
+      name: per_user_throttler
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Postprocessing. Description: Time
+        in seconds necessary for postprocessing the query. Occurs after the connection
+        is closed.'
+      name: post_processing
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Prepare. Description: Time in seconds
+        necessary for preparing the query from the explore definition.'
+      name: prepare
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Project Init. Description: Time in
+        seconds for the LookML project to be initialized or read from cache. In the
+        vast majority of cases, this should be read from cache.'
+      name: project_init
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Query Dashboard ID. Description: The
+        dashboard the query was generated from.'
+      name: artifact_id
+      type: STRING
+    - description: 'Display Name: Query Metrics Query Source. Description: Indicates
+        if a query was from a dashboard, will be null if not.'
+      name: artifact_type
+      type: STRING
+    - description: 'Display Name: Query Metrics Query Task ID. Description: ID for
+        the query task that executed to run this query'
+      name: query_task_id
+      type: STRING
+    - description: 'Display Name: Query Metrics Stream to Cache. Description: Time
+        in seconds to process and stream results to the render cache (seconds). This
+        span is only present when running an async query from the query manager.'
+      name: stream_to_cache
+      type: FLOAT64
+    - description: 'Display Name: Query Metrics Temporary Dt. Description: Time in
+        seconds to build temporary derived tables. Only applies to dialects that don''t
+        support CTEs or inline derived tables (i.e. MySQL).'
+      name: temporary_dt
+      type: FLOAT64
+    view: query_metrics
+    view_display_name: Query Metrics
+role:
+  model_set:
+    batch_cursor_field: null
+    count_measure: model_set.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Role
+    explore_name: role
+    fields:
+    - model_set.built_in
+    - model_set.edit_link
+    - model_set.embed
+    - model_set.id
+    - model_set.models
+    - model_set.name
+    - model_set.unlimited
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: model_set.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Model Set Built In (Yes / No). Description: Is this
+        a built-in model set?'
+      name: built_in
+      type: BOOL
+    - description: 'Display Name: Model Set Edit Link. Description: A link to the
+        Admin page used to edit the model set'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Model Set Embed (Yes / No). Description: Is this
+        model set specific to embed users?'
+      name: embed
+      type: BOOL
+    - description: 'Display Name: Model Set ID. Description: The unique numeric identifier
+        for the model set. This is the primary key of the `model_set` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Model Set Models. Description: A list of the models
+        included in this model set'
+      name: models
+      type: STRING
+    - description: 'Display Name: Model Set Name. Description: The name of the model
+        set'
+      name: name
+      type: STRING
+    - description: 'Display Name: Model Set Unlimited (Yes / No). Description: Does
+        this model set grant unlimited permissions, regardless of which models are
+        listed? This will be yes for the `All` model set and for any model sets created
+        via the API with `all_access` set to true.'
+      name: unlimited
+      type: BOOL
+    view: role
+    view_display_name: Model Set
+  permission_set:
+    batch_cursor_field: null
+    count_measure: permission_set.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Role
+    explore_name: role
+    fields:
+    - permission_set.built_in
+    - permission_set.edit_link
+    - permission_set.embed
+    - permission_set.id
+    - permission_set.name
+    - permission_set.permissions
+    - permission_set.unlimited
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: permission_set.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Permission Set Built In (Yes / No). Description:
+        Is this a built-in permission set?'
+      name: built_in
+      type: BOOL
+    - description: 'Display Name: Permission Set Edit Link. Description: A link to
+        the Admin page used to edit the permission set'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Permission Set Embed (Yes / No). Description: Is
+        this permission set specific to embed users?'
+      name: embed
+      type: BOOL
+    - description: 'Display Name: Permission Set ID. Description: The unique numeric
+        identifier for the permission set. This is the primary key of the `permission_set`
+        table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Permission Set Name. Description: The name of the
+        permission set'
+      name: name
+      type: STRING
+    - description: 'Display Name: Permission Set Permissions. Description: A list
+        of the permissions included in this permission set'
+      name: permissions
+      type: STRING
+    - description: 'Display Name: Permission Set Unlimited (Yes / No). Description:
+        Does this permission set grant unlimited permissions, regardless of which
+        permissions are listed? This will be yes for the `Admin` permission set and
+        for any permission sets created via the API with `all_access` set to true.'
+      name: unlimited
+      type: BOOL
+    view: role
+    view_display_name: Permission Set
+  role:
+    batch_cursor_field: null
+    count_measure: role.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Role
+    explore_name: role
+    fields:
+    - role.built_in
+    - role.edit_link
+    - role.embed
+    - role.id
+    - role.model_set_id
+    - role.name
+    - role.permission_set_id
+    - role.has_role
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: role.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Role Built In (Yes / No). Description: Is this a
+        built-in role?'
+      name: built_in
+      type: BOOL
+    - description: 'Display Name: Role Edit Link. Description: A clickable link to
+        edit the role.'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Role Embed (Yes / No). Description: Is this an embedded
+        user role?'
+      name: embed
+      type: BOOL
+    - description: 'Display Name: Role ID. Description: The unique numeric identifier
+        for the role. Primary key of the `role` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Role Model Set ID. Description: '
+      name: model_set_id
+      type: INTEGER
+    - description: 'Display Name: Role Name. Description: The name of the role'
+      name: name
+      type: STRING
+    - description: 'Display Name: Role Permission Set ID. Description: '
+      name: permission_set_id
+      type: INTEGER
+    - description: 'Display Name: User Has Role (Yes / No). Description: Does this
+        user have at least one role?'
+      name: has_role
+      type: BOOL
+    view: role
+    view_display_name: Role
+scheduled_plan:
+  scheduled_job:
+    batch_cursor_field: null
+    cursor_field: scheduled_job.finalized_time
+    cursor_value_offset: -10 day
+    explore_display_name: Scheduled Plan
+    explore_name: scheduled_plan
+    fields:
+    - scheduled_job.active_or_run_once_plan
+    - scheduled_job.content_link
+    - scheduled_job.created_time
+    - scheduled_job.cron_schedule
+    - scheduled_job.dashboard_id
+    - scheduled_job.datagroup
+    - scheduled_job.filters_string
+    - scheduled_job.finalized_time
+    - scheduled_job.id
+    - scheduled_job.include_links
+    - scheduled_job.look_id
+    - scheduled_job.lookml_dashboard_id
+    - scheduled_job.name
+    - scheduled_job.require_change
+    - scheduled_job.require_no_results
+    - scheduled_job.require_results
+    - scheduled_job.row_limit_reached
+    - scheduled_job.run_as_recipient
+    - scheduled_job.run_once
+    - scheduled_job.query_id
+    - scheduled_job.scheduled_plan_id
+    - scheduled_job.send_all_results
+    - scheduled_job.status
+    - scheduled_job.status_detail
+    - scheduled_job.timezone
+    - scheduled_job.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - scheduled_job.created_time
+    - scheduled_job.finalized_time
+    primary_key: scheduled_job.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Scheduled Job Active or Run Once Plan (Yes / No).
+        Description: For use in the User Explore. When this field is yes, results
+        will only show scheduled jobs from active or run once scheduled plans.'
+      name: active_or_run_once_plan
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Content Link. Description: A clickable
+        link to the scheduled job''s source content.'
+      name: content_link
+      type: STRING
+    - description: 'Display Name: Scheduled Job Created Time. Description: When a
+        scheduled job was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Job Cron Schedule. Description: The cron
+        string that defines a job''s delivery schedule'
+      name: cron_schedule
+      type: STRING
+    - description: 'Display Name: Scheduled Job Dashboard ID. Description: The unique
+        numeric identifier for the user-defined dashboard associated with the scheduled
+        job'
+      name: dashboard_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Datagroup. Description: The name of
+        the datagroup used to trigger the scheduled job'
+      name: datagroup
+      type: STRING
+    - description: 'Display Name: Scheduled Job Filters String. Description: The URL-encoded
+        filter string that is appended to the source content URL'
+      name: filters_string
+      type: STRING
+    - description: 'Display Name: Scheduled Job Finalized Time. Description: When
+        a scheduled job ended, regardless of success or failure. See the ''Scheduled
+        Job Status'' field for job status.'
+      name: finalized_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Job ID. Description: The unique numeric
+        identfier for the scheduled job. This is the primary key of the `scheduled_job`
+        table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Include Links (Yes / No). Description:
+        Was the link to the content source in Looker included in the delivery?'
+      name: include_links
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Look ID. Description: The unique numeric
+        identifier for the Look that is associated with the scheduled job'
+      name: look_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Lookml Dashboard ID. Description:
+        The unique string identifier for the LookML dashboard associated with the
+        scheduled job'
+      name: lookml_dashboard_id
+      type: STRING
+    - description: 'Display Name: Scheduled Job Name. Description: The name of the
+        scheduled job'
+      name: name
+      type: STRING
+    - description: 'Display Name: Scheduled Job Require Change (Yes / No). Description:
+        Did the scheduled job send only if results had changed since the query''s
+        last run?'
+      name: require_change
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Require No Results (Yes / No). Description:
+        Did the scheduled job send only if there were no results?'
+      name: require_no_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Require Results (Yes / No). Description:
+        Did the scheduled job send only if there were results?'
+      name: require_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Row Limit Reached (Yes / No). Description:
+        Did the scheduled job reach the query row limit?'
+      name: row_limit_reached
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Run As Recipient (Yes / No). Description:
+        Did the scheduled job run the query as the recipient?'
+      name: run_as_recipient
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Run Once (Yes / No). Description:
+        Was this delivery triggered using the "Send" or "Send Test" option?'
+      name: run_once
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Run Once Query ID. Description: The
+        query''s unique numeric ID for scheduled jobs manually triggered via the "Send"
+        or "Send Test" option.'
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Scheduled Plan ID. Description: The
+        unique numeric identfier for the scheduled plan this scheduled job was run
+        from.'
+      name: scheduled_plan_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Send All Results (Yes / No). Description:
+        Did the scheduled job send all results with no limit?'
+      name: send_all_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Job Status. Description: The status of
+        the scheduled job. Can be success, failure, in progress, or disabled.'
+      name: status
+      type: STRING
+    - description: 'Display Name: Scheduled Job Status Detail. Description: Detailed
+        information about the status of the scheduled job'
+      name: status_detail
+      type: STRING
+    - description: 'Display Name: Scheduled Job Timezone. Description: The timezone
+        specified for the scheduled job''s delivery time'
+      name: timezone
+      type: STRING
+    - description: 'Display Name: Scheduled Job User ID. Description: The unique numeric
+        identifier of the user who owned the schedule at the time the scheduled job
+        was run'
+      name: user_id
+      type: INTEGER
+    view: scheduled_plan
+    view_display_name: Scheduled Job
+  scheduled_job_stage:
+    batch_cursor_field: null
+    cursor_field: scheduled_job_stage.completed_time
+    cursor_value_offset: null
+    explore_display_name: Scheduled Plan
+    explore_name: scheduled_plan
+    fields:
+    - scheduled_job_stage.completed_time
+    - scheduled_job_stage.id
+    - scheduled_job_stage.node_id
+    - scheduled_job_stage.runtime
+    - scheduled_job_stage.scheduled_job_id
+    - scheduled_job_stage.stage
+    - scheduled_job_stage.started_time
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - scheduled_job_stage.completed_time
+    - scheduled_job_stage.started_time
+    primary_key: scheduled_job_stage.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Scheduled Job Stage Completed Time. Description:
+        When the scheduled job''s stage completed'
+      name: completed_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Job Stage ID. Description: The unique
+        numeric identfier for a stage of a scheduled job'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Stage Node ID. Description: The node
+        that the stage of the scheduled job was executed on'
+      name: node_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Stage Runtime in Seconds. Description:
+        The number of seconds a scheduled job took to run'
+      name: runtime
+      type: FLOAT64
+    - description: 'Display Name: Scheduled Job Stage Scheduled Job ID. Description:
+        The unique numeric identifier for a scheduled job'
+      name: scheduled_job_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Job Stage Stage. Description: The stage
+        or ''state'' of the scheduled job'
+      name: stage
+      type: STRING
+    - description: 'Display Name: Scheduled Job Stage Started Time. Description: When
+        the scheduled job''s stage started'
+      name: started_time
+      type: TIMESTAMP
+    view: scheduled_plan
+    view_display_name: Scheduled Job Stage
+  scheduled_plan:
+    batch_cursor_field: null
+    count_measure: scheduled_plan.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Scheduled Plan
+    explore_name: scheduled_plan
+    fields:
+    - scheduled_plan.content_link
+    - scheduled_plan.content_type_id
+    - scheduled_plan.created_time
+    - scheduled_plan.cron_schedule
+    - scheduled_plan.dashboard_id
+    - scheduled_plan.datagroup
+    - scheduled_plan.enabled
+    - scheduled_plan.filters_string
+    - scheduled_plan.space_link
+    - scheduled_plan.id
+    - scheduled_plan.include_links
+    - scheduled_plan.look_id
+    - scheduled_plan.lookml_dashboard_id
+    - scheduled_plan.lookml_dashboard_link
+    - scheduled_plan.name
+    - scheduled_plan.next_run_time
+    - scheduled_plan.require_change
+    - scheduled_plan.require_no_results
+    - scheduled_plan.require_results
+    - scheduled_plan.requirements
+    - scheduled_plan.run_as_recipient
+    - scheduled_plan.run_once
+    - scheduled_plan.query_id
+    - scheduled_plan.send_all_results
+    - scheduled_plan.space_id
+    - scheduled_plan.timezone
+    - scheduled_plan.updated_time
+    - scheduled_plan.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - scheduled_plan.created_time
+    - scheduled_plan.next_run_time
+    - scheduled_plan.updated_time
+    primary_key: scheduled_plan.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Scheduled Plan Content Link. Description: A clickable
+        link to the scheduled plan''s source content'
+      name: content_link
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Content Type ID. Description: Content
+        Type and ID'
+      name: content_type_id
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Created Time. Description: When a
+        scheduled plan was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Plan Cron Schedule. Description: The cron
+        string that defines a schedule''s time of delivery'
+      name: cron_schedule
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Dashboard ID. Description: The unique
+        numeric identifier for the user-defined dashboard associated with the scheduled
+        plan'
+      name: dashboard_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Datagroup. Description: The name
+        of the datagroup used to trigger the schedule'
+      name: datagroup
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Enabled (Yes / No). Description:
+        Is the scheduled plan enabled? If not, it will not send.'
+      name: enabled
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Filters String. Description: The
+        URL-encoded filter string that is appended to source content URL'
+      name: filters_string
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Folder Link. Description: A clickable
+        link to the folder where the scheduled plan''s content is located. To filter
+        use the numerical folder ID or -1 for the LookML folder itself.'
+      name: space_link
+      type: FLOAT64
+    - description: 'Display Name: Scheduled Plan ID. Description: The unique numeric
+        identifier for a scheduled plan. This is the primary key of the `scheduled_plan`
+        table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Include Links (Yes / No). Description:
+        Is the link to the content source in Looker included in the delivery?'
+      name: include_links
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Look ID. Description: The unique
+        numeric identifier of the Look that is associated with the scheduled plan'
+      name: look_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Lookml Dashboard ID. Description:
+        The unique string identifier of the LookML dashboard associated with the scheduled
+        plan'
+      name: lookml_dashboard_id
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Lookml Dashboard Link. Description:
+        Link to the LookML dashboard associated with the scheduled plan'
+      name: lookml_dashboard_link
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Name. Description: The name of the
+        scheduled plan'
+      name: name
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Next Run Time. Description: The next
+        scheduled delivery'
+      name: next_run_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Plan Require Change (Yes / No). Description:
+        Will the schedule send only if results have changed since the query''s last
+        run?'
+      name: require_change
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Require No Results (Yes / No). Description:
+        Will the schedule send only if there are no results?'
+      name: require_no_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Require Results (Yes / No). Description:
+        Will the schedule send only if there are results?'
+      name: require_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Requirements. Description: Query
+        requirements for the schedule to send'
+      name: requirements
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Run As Recipient (Yes / No). Description:
+        Will the schedule run the query as the recipient?'
+      name: run_as_recipient
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Run Once (Yes / No). Description:
+        Was this delivery triggered using the "Send" or "Send Test" option?'
+      name: run_once
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Run Once Query ID. Description: The
+        query''s unique numeric ID for scheduled plans manually triggered via the
+        "Send" or "Send Test" option.'
+      name: query_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Send All Results (Yes / No). Description:
+        Does the schedule send all results with no limit?'
+      name: send_all_results
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Space ID. Description: The unique
+        numeric identifier of the Space in which the scheduled plan''s content is
+        located'
+      name: space_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Timezone. Description: The timezone
+        specified for the schedule''s delivery time'
+      name: timezone
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Updated Time. Description: The time
+        of the most recent update or change to the scheduled plan'
+      name: updated_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Plan User ID. Description: The unique
+        numeric identifier of the user who currently owns the scheduled plan'
+      name: user_id
+      type: INTEGER
+    view: scheduled_plan
+    view_display_name: Scheduled Plan
+  scheduled_plan_destination:
+    batch_cursor_field: null
+    cursor_field: scheduled_plan_destination.created_time
+    cursor_value_offset: null
+    explore_display_name: Scheduled Plan
+    explore_name: scheduled_plan
+    fields:
+    - scheduled_plan_destination.action_type
+    - scheduled_plan_destination.address
+    - scheduled_plan_destination.apply_formatting
+    - scheduled_plan_destination.apply_vis
+    - scheduled_plan_destination.created_time
+    - scheduled_plan_destination.format
+    - scheduled_plan_destination.id
+    - scheduled_plan_destination.message
+    - scheduled_plan_destination.parameters
+    - scheduled_plan_destination.s3_region
+    - scheduled_plan_destination.scheduled_plan_id
+    - scheduled_plan_destination.slug
+    - scheduled_plan_destination.type
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - scheduled_plan_destination.created_time
+    primary_key: scheduled_plan_destination.id
+    row_count_discrepancy_threshold: 0.1
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Scheduled Plan Destination Action Type. Description:
+        The type of Action Hub action used in the scheduled plan. Will show ''Built
+        in'' for non-Action Hub destinations.'
+      name: action_type
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination Address. Description:
+        A destination address for the scheduled plan'
+      name: address
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination Apply Formatting (Yes
+        / No). Description: Are values displayed using the formatting set in Looker?
+        (containing currency symbols, digit separators, etc.)'
+      name: apply_formatting
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Destination Apply Vis (Yes / No).
+        Description: Are settings from the Plot, Series, and Formatting menus applied
+        to the scheduled plan?'
+      name: apply_vis
+      type: BOOL
+    - description: 'Display Name: Scheduled Plan Destination Created Time. Description:
+        When the scheduled plan''s destination field was last updated'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Scheduled Plan Destination Format. Description:
+        The export format set in the scheduled plan. For more on these formats, see
+        the Looker API documentation on the ScheduledPlan endpoint.'
+      name: format
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination ID. Description: The
+        unique numeric identifier for the scheduled plan-destination-save combination.
+        If the destination field is edited, all addresses get a new ID. This is the
+        primary key of the `scheduled_plan_destination` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Destination Message. Description:
+        Optional custom message text to append to the scheduled email'
+      name: message
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination Parameters. Description:
+        Conditions that determine whether the schedule should be sent. JSON object
+        containing parameters for external scheduling. For Amazon S3, this requires
+        keys and values for access_key_id and region. For SFTP, this requires a key
+        and value for username.'
+      name: parameters
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination S3 Region. Description:
+        Amazon Web Services region for Amazon S3 destinations'
+      name: s3_region
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination Scheduled Plan ID. Description:
+        The unique numeric identifier for a scheduled plan'
+      name: scheduled_plan_id
+      type: INTEGER
+    - description: 'Display Name: Scheduled Plan Destination Slug. Description: '
+      name: slug
+      type: STRING
+    - description: 'Display Name: Scheduled Plan Destination Type. Description: The
+        delivery method set in the scheduled plan'
+      name: type
+      type: STRING
+    view: scheduled_plan
+    view_display_name: Scheduled Plan Destination
+sql_query:
+  sql_query:
+    batch_cursor_field: null
+    count_measure: sql_query.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: SQL Query
+    explore_name: sql_query
+    fields:
+    - sql_query.connection_id
+    - sql_query.hash
+    - sql_query.id
+    - sql_query.last_run_time
+    - sql_query.last_runtime
+    - sql_query.result_set_metadata
+    - sql_query.run_count
+    - sql_query.sql
+    - sql_query.slug
+    - sql_query.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - sql_query.last_run_time
+    primary_key: sql_query.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: SQL Runner Query Connection ID. Description: The
+        name of the database connection used for the query'
+      name: connection_id
+      type: STRING
+    - description: 'Display Name: SQL Runner Query Hash. Description: The query''s
+        unique string ID identifier, calculated from the generated SQL text'
+      name: hash
+      type: STRING
+    - description: 'Display Name: SQL Runner Query ID. Description: The unique numeric
+        identifier for a query. This is the primary key of the `sql_query` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: SQL Runner Query Last Run Time. Description: When
+        the query was last run'
+      name: last_run_time
+      type: TIMESTAMP
+    - description: 'Display Name: SQL Runner Query Last Runtime. Description: The
+        duration of the last query run'
+      name: last_runtime
+      type: FLOAT64
+    - description: 'Display Name: SQL Runner Query Result Set Metadata. Description:
+        The query''s JSON encoded metadata'
+      name: result_set_metadata
+      type: STRING
+    - description: 'Display Name: SQL Runner Query Run Count. Description: The number
+        of times the query was run'
+      name: run_count
+      type: FLOAT64
+    - description: 'Display Name: SQL Runner Query SQL. Description: The text of the
+        SQL query'
+      name: sql
+      type: STRING
+    - description: 'Display Name: SQL Runner Query Slug. Description: The query''s
+        unique string ID, provides clickable link to SQL Runner. Requires `use_sql_runner`
+        permission.'
+      name: slug
+      type: STRING
+    - description: 'Display Name: SQL Runner Query User ID. Description: The unique
+        numeric ID of the user who created the query'
+      name: user_id
+      type: INTEGER
+    view: sql_query
+    view_display_name: SQL Runner Query
+support_access_event:
+  support_access_admin:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: Support Access Event
+    explore_name: support_access_event
+    fields:
+    - support_access_admin.created_time
+    - support_access_admin.dev_branch_name
+    - support_access_admin.edit_link
+    - support_access_admin.email
+    - support_access_admin.external_avatar_url
+    - support_access_admin.first_name
+    - support_access_admin.home_space_id
+    - support_access_admin.id
+    - support_access_admin.is_disabled
+    - support_access_admin.last_name
+    - support_access_admin.name
+    - support_access_admin.timezone
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - support_access_admin.created_time
+    primary_key: support_access_admin.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Support Access Admin Created Time. Description:
+        When this user was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Support Access Admin Dev Branch Name. Description:
+        The name of the user''s personal developer branch'
+      name: dev_branch_name
+      type: STRING
+    - description: 'Display Name: Support Access Admin Edit Link. Description: A clickable
+        link to this user''s edit page. For filtering, use user id field instead.'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: Support Access Admin Email. Description: The email
+        address associated with the user account'
+      name: email
+      type: STRING
+    - description: 'Display Name: Support Access Admin External Avatar URL. Description:
+        The public URL of the user''s profile photo'
+      name: external_avatar_url
+      type: STRING
+    - description: 'Display Name: Support Access Admin First Name. Description: The
+        user''s first name'
+      name: first_name
+      type: STRING
+    - description: 'Display Name: Support Access Admin Home Folder. Description: The
+        string ID of the Home Folder assigned to the user'
+      name: home_space_id
+      type: STRING
+    - description: 'Display Name: Support Access Admin ID. Description: The unique
+        numeric identifier for a user. Unique primary key of the `user` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Support Access Admin Is Disabled (Yes / No). Description:
+        Has this user''s account been disabled?'
+      name: is_disabled
+      type: BOOL
+    - description: 'Display Name: Support Access Admin Last Name. Description: The
+        user''s last name'
+      name: last_name
+      type: STRING
+    - description: 'Display Name: Support Access Admin Name. Description: The user''s
+        full name'
+      name: name
+      type: STRING
+    - description: 'Display Name: Support Access Admin Timezone. Description: The
+        user''s timezone, if set'
+      name: timezone
+      type: STRING
+    view: support_access_event
+    view_display_name: Support Access Admin
+  support_access_event:
+    batch_cursor_field: null
+    cursor_field: support_access_event.created_time
+    cursor_value_offset: null
+    explore_display_name: Support Access Event
+    explore_name: support_access_event
+    fields:
+    - support_access_event.category
+    - support_access_event.created_time
+    - support_access_event.id
+    - support_access_event.is_api_call
+    - support_access_event.is_admin
+    - support_access_event.is_looker_employee
+    - support_access_event.login_time
+    - support_access_event.name
+    - support_access_event.sudo_user_id
+    - support_access_event.user_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - support_access_event.created_time
+    - support_access_event.login_time
+    primary_key: support_access_event.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Support Access Event Category. Description: The
+        high-level category associated with each event (ex: ''dashboard'')'
+      name: category
+      type: STRING
+    - description: 'Display Name: Support Access Event Created Time. Description:
+        The time (in UTC) an event was created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Support Access Event ID. Description: The unique
+        numeric identifier for each event'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Support Access Event Is API Call (Yes / No). Description:
+        Was the event due to an api call?'
+      name: is_api_call
+      type: BOOL
+    - description: 'Display Name: Support Access Event Is Admin (Yes / No). Description:
+        Is the user identified by user_id a looker admin?'
+      name: is_admin
+      type: BOOL
+    - description: 'Display Name: Support Access Event Is Looker Employee (Yes / No).
+        Description: Is the user identified by user_id a looker employee?'
+      name: is_looker_employee
+      type: BOOL
+    - description: 'Display Name: Support Access Event Login Time. Description: '
+      name: login_time
+      type: TIMESTAMP
+    - description: 'Display Name: Support Access Event Name. Description: The specific
+        event that occured (ex: ''create dashboard'')'
+      name: name
+      type: STRING
+    - description: 'Display Name: Support Access Event Sudo User ID. Description:
+        ID of ''actual'' user impersonating user indicated by user_id'
+      name: sudo_user_id
+      type: INTEGER
+    - description: 'Display Name: Support Access Event User ID. Description: The unique
+        numeric ID of the user who triggered the event'
+      name: user_id
+      type: INTEGER
+    view: support_access_event
+    view_display_name: Support Access Event
+  support_access_event_attribute:
+    batch_cursor_field: null
+    cursor_field: support_access_event.created_time
+    cursor_value_offset: null
+    explore_display_name: Support Access Event
+    explore_name: support_access_event
+    fields:
+    - support_access_event_attribute.event_id
+    - support_access_event_attribute.id
+    - support_access_event_attribute.login_purpose
+    - support_access_event_attribute.name
+    - support_access_event_attribute.value
+    - support_access_event.created_time
+    filters: null
+    model: system__activity
+    possible_cursor_field: []
+    primary_key: support_access_event_attribute.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Support Access Event Attribute Event ID. Description:
+        The unique numeric ID of the triggered event'
+      name: event_id
+      type: INTEGER
+    - description: 'Display Name: Support Access Event Attribute ID. Description:
+        The unique numeric identifier for each change that occured due to a triggered
+        event. One event may have multiple event_attribute rows associated with it.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Support Access Event Attribute Login Purpose. Description: '
+      name: login_purpose
+      type: STRING
+    - description: 'Display Name: Support Access Event Attribute Name. Description:
+        The name of the attribute involved in the event (ex: ''dashboard_id''). Can
+        be used in combination with ''event_attribute.value'' to find details of a
+        specific event.'
+      name: name
+      type: STRING
+    - description: 'Display Name: Support Access Event Attribute Value. Description:
+        The value of the attribute involved in the event'
+      name: value
+      type: STRING
+    - description: 'Display Name: Support Access Event Created Time. Description:
+        The time (in UTC) an event was created. This field is extracted from table
+        support_access_event'
+      name: support_access_event_created_time
+      type: TIMESTAMP
+    view: support_access_event
+    view_display_name: Support Access Event Attribute
 user:
+  access_token:
+    batch_cursor_field: null
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: User
+    explore_name: user
+    fields:
+    - access_token.created_time
+    - access_token.expires_time
+    - access_token.grant_type
+    - access_token.id
+    - access_token.user_id
+    - access_token.user_overrides_workspace
+    - access_token.workspace_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - access_token.created_time
+    - access_token.expires_time
+    primary_key: access_token.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Access Token Created Time. Description: '
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Access Token Expires Time. Description: '
+      name: expires_time
+      type: TIMESTAMP
+    - description: 'Display Name: Access Token Grant Type. Description: '
+      name: grant_type
+      type: STRING
+    - description: 'Display Name: Access Token ID. Description: '
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Access Token User ID. Description: '
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: Access Token User Overrides Workspace (Yes / No).
+        Description: '
+      name: user_overrides_workspace
+      type: BOOL
+    - description: 'Display Name: Access Token Workspace ID. Description: '
+      name: workspace_id
+      type: STRING
+    view: user
+    view_display_name: Access Token
+  session:
+    batch_cursor_field: null
+    count_measure: session.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: User
+    explore_name: user
+    fields:
+    - session.browser
+    - session.city
+    - session.country
+    - session.created_time
+    - session.credentials_type
+    - session.expires_time
+    - session.extended_count
+    - session.extended_time
+    - session.id
+    - session.ip_address
+    - session.is_sudo_session
+    - session.operating_system
+    - session.state
+    - session.sudo_url
+    - session.sudo_user_id
+    - session.user_id
+    - session.user_overrides_workspace
+    - session.workspace_id
+    filters: null
+    model: system__activity
+    possible_cursor_field:
+    - session.created_time
+    - session.expires_time
+    - session.extended_time
+    primary_key: session.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: Session Browser. Description: Browser being used
+        in the session.'
+      name: browser
+      type: STRING
+    - description: 'Display Name: Session City. Description: City name where the session
+        originated.'
+      name: city
+      type: STRING
+    - description: 'Display Name: Session Country. Description: Two-letter ISO 3166-1
+        alpha-2 country code for where the session originated.'
+      name: country
+      type: STRING
+    - description: 'Display Name: Session Created Time. Description: When the session
+        was created.'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: Session Credentials Type. Description: Credentials
+        type used for this session (i.e SAML, email, embed, ephemeral etc...). NOTE:
+        To avoid large, long-running queries, this field is filtered by default to
+        omit credentials of type `ephemeral` (used for rendering). Filtering on this
+        field will override the default.'
+      name: credentials_type
+      type: STRING
+    - description: 'Display Name: Session Expires Time. Description: When the session
+        expires.'
+      name: expires_time
+      type: TIMESTAMP
+    - description: 'Display Name: Session Extended Count. Description: '
+      name: extended_count
+      type: FLOAT64
+    - description: 'Display Name: Session Extended Time. Description: '
+      name: extended_time
+      type: TIMESTAMP
+    - description: 'Display Name: Session ID. Description: The unique numeric identifier
+        for the session. This is the primary key of the `session` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: Session IP Address. Description: IP Address used
+        in the session.'
+      name: ip_address
+      type: STRING
+    - description: 'Display Name: Session Is Sudo Session (Yes / No). Description:
+        Is this session a result of a sudo? Will be ''Yes'' when sudo_user_id is not
+        null.'
+      name: is_sudo_session
+      type: BOOL
+    - description: 'Display Name: Session Operating System. Description: Operating
+        system used in the session.'
+      name: operating_system
+      type: STRING
+    - description: 'Display Name: Session State. Description: State name where the
+        session originated.'
+      name: state
+      type: STRING
+    - description: 'Display Name: Session Sudo URL. Description: Link to the User
+        page filtered for the sudo user.'
+      name: sudo_url
+      type: STRING
+    - description: 'Display Name: Session Sudo User ID. Description: User ID of the
+        sudo user.'
+      name: sudo_user_id
+      type: INTEGER
+    - description: 'Display Name: Session User ID. Description: '
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: Session User Overrides Workspace (Yes / No). Description:
+        Does this user override the workspace?'
+      name: user_overrides_workspace
+      type: BOOL
+    - description: 'Display Name: Session Workspace ID. Description: Workspace ID
+        of the session. Default value is ''production.'''
+      name: workspace_id
+      type: STRING
+    view: user
+    view_display_name: Session
   user:
     batch_cursor_field: null
     count_measure: user.count
@@ -75,5 +4513,167 @@ user:
         if set'
       name: timezone
       type: STRING
+    view: user
+    view_display_name: User
+  user_facts:
+    batch_cursor_field: null
+    count_measure: user_facts.count
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: User
+    explore_name: user
+    fields:
+    - user_facts.active_api_sessions
+    - user_facts.active_ui_sessions
+    - user_facts.external_id
+    - user_facts.has_api_credentials
+    - user_facts.has_ui_credentials
+    - user_facts.id
+    - user_facts.is_admin
+    - user_facts.is_content_saver
+    - user_facts.is_developer
+    - user_facts.is_embed
+    - user_facts.is_explorer
+    - user_facts.is_looker_employee
+    - user_facts.is_presumed_looker_employee
+    - user_facts.is_sql_runner
+    - user_facts.is_verified_looker_employee
+    - user_facts.is_viewer
+    - user_facts.last_api_login_time
+    - user_facts.last_ui_login_credential_type
+    - user_facts.last_ui_login_time
+    - user_facts.user_id
+    filters:
+      user.is_disabled: ""
+    model: system__activity
+    possible_cursor_field:
+    - user_facts.last_api_login_time
+    - user_facts.last_ui_login_time
+    primary_key: user_facts.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: User Facts (updated hourly) Active API Sessions.
+        Description: The number of active API sessions for this user'
+      name: active_api_sessions
+      type: FLOAT64
+    - description: 'Display Name: User Facts (updated hourly) Active UI Sessions.
+        Description: The number of active sessions for this user in the Looker UI'
+      name: active_ui_sessions
+      type: FLOAT64
+    - description: 'Display Name: User Facts (updated hourly) External ID. Description:
+        The ID of the user from an external source, such as SAML or embed'
+      name: external_id
+      type: STRING
+    - description: 'Display Name: User Facts (updated hourly) Has API Credentials
+        (Yes / No). Description: Does this user have API credentials?'
+      name: has_api_credentials
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Has UI Credentials (Yes
+        / No). Description: Does this user have Looker UI credentials?'
+      name: has_ui_credentials
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) ID. Description: The
+        unique numeric identifier for the user_facts table. Primary key of the `user_facts`
+        table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: User Facts (updated hourly) Is Admin (Yes / No).
+        Description: Does this user have the admin role?'
+      name: is_admin
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Content Saver (Yes
+        / No). Description: Does this user have the save_content permission on at
+        least one model?'
+      name: is_content_saver
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Developer (Yes /
+        No). Description: Does this user have the develop permission on at least one
+        model?'
+      name: is_developer
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Embed (Yes / No).
+        Description: Is this an SSO embed user? (Does not include private embed users)'
+      name: is_embed
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Explorer (Yes / No).
+        Description: Does this user have the explore permission on at least one model?'
+      name: is_explorer
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Looker Employee (Yes
+        / No). Description: Is this user a Looker employee? This field is yes for
+        Looker support agents.'
+      name: is_looker_employee
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Presumed Looker Employee
+        (Yes / No). Description: Is this user a presumed Looker employee? This field
+        is yes for users with an @looker.com email.'
+      name: is_presumed_looker_employee
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is SQL Runner (Yes /
+        No). Description: Does this user have the use_sql_runner permission on at
+        least one model?'
+      name: is_sql_runner
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Verified Looker Employee
+        (Yes / No). Description: '
+      name: is_verified_looker_employee
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Is Viewer (Yes / No).
+        Description: Does this user have the access_data permission on at least one
+        model?'
+      name: is_viewer
+      type: BOOL
+    - description: 'Display Name: User Facts (updated hourly) Last API Login Time.
+        Description: The last time the user logged in via the API'
+      name: last_api_login_time
+      type: TIMESTAMP
+    - description: 'Display Name: User Facts (updated hourly) Last Attempted UI Login
+        Credential Type. Description: The type of credentials used the last time this
+        user attempted to log in via Looker UI'
+      name: last_ui_login_credential_type
+      type: STRING
+    - description: 'Display Name: User Facts (updated hourly) Last Attempted UI Login
+        Time. Description: The last time the user attempted to log in via the Looker
+        UI'
+      name: last_ui_login_time
+      type: TIMESTAMP
+    - description: 'Display Name: User Facts (updated hourly) User ID. Description:
+        The unique numeric identifier for a user'
+      name: user_id
+      type: INTEGER
+    view: user
+    view_display_name: User Facts (updated hourly)
+  user_facts_role:
+    batch_cursor_field: user.created_time
+    cursor_field: null
+    cursor_value_offset: null
+    explore_display_name: User
+    explore_name: user
+    fields:
+    - user.id
+    - role.id
+    - user.created_time
+    filters:
+      user.is_disabled: ""
+    model: system__activity
+    possible_cursor_field: []
+    primary_key:
+    - user_id
+    - role_id
+    schema:
+    - description: 'Display Name: User ID. Description: The unique numeric identifier
+        for a user. Unique primary key of the `user` table.'
+      name: user_id
+      type: INTEGER
+    - description: 'Display Name: Role ID. Description: The unique numeric identifier
+        for the role. Primary key of the `role` table.'
+      name: role_id
+      type: INTEGER
+    - description: 'Display Name: User Created Time. Description: When this user was
+        created'
+      name: user_created_time
+      type: TIMESTAMP
     view: user
     view_display_name: User

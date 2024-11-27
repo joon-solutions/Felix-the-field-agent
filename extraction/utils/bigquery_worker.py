@@ -36,6 +36,7 @@ class BigQueryWorker(Worker):
 
 
     def dump(self, **kwargs) -> None:   
+        # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.job.LoadJobConfig
         # Specify the fully qualified table ID (project_id.dataset_id.table_id)
         table_id = f"{self.bq_project_id}.{self.bq_dataset_id}.{self.bq_table_id}"
 
