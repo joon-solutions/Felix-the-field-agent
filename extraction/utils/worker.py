@@ -2,6 +2,8 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 import yaml
+import os
+from utils.enums import CSV_DUMP_DIR
 
 
 class Worker(ABC):
@@ -18,6 +20,8 @@ class Worker(ABC):
         self.table_name = table_name
         self.table_data : dict = self.schema_data[explore_name][table_name]
         self.schema_info = self.table_data['schema']
+        self.csv_target_path = os.path.join(CSV_DUMP_DIR,self.explore_name)
+        self.csv_name = os.path.join(self.csv_target_path,f"{self.table_name}.csv")
 
     @abstractmethod
     def fetch(self, **kwargs) -> dict | pd.DataFrame | str | None:

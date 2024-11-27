@@ -3,11 +3,8 @@ from google.cloud import bigquery
 from utils.worker import Worker
 import os
 import csv
+from utils.enums import BQ_PROJECT_ID,BQ_DATASET_ID 
 
-
-
-BQ_PROJECT_ID = os.environ.get('BQ_PROJECT_ID')
-BQ_DATASET_ID = os.environ.get('BQ_DATASET_ID')
 
 
 class BigQueryWorker(Worker):
@@ -15,14 +12,12 @@ class BigQueryWorker(Worker):
             self,
             explore_name: str,
             table_name: str,
-            csv_file_path: str = 'out',
             **kwargs
     ) -> None:
         super().__init__(explore_name,table_name)
         self.bq_project_id = BQ_PROJECT_ID
         self.bq_dataset_id = BQ_DATASET_ID
         self.bq_table_id = self.table_name
-        self.csv_file_path = csv_file_path
         self.bq_schema = []
         self.client = bigquery.Client(project=self.bq_project_id)
 
@@ -30,29 +25,18 @@ class BigQueryWorker(Worker):
         """
         Reads data from the CSV and loads it into the specified BigQuery table.
         """
-        print(f"Reading CSV data from {self.csv_file_path}...")
-        df = pd.read_csv(self.csv_file_path)
+        print(f"Reading CSV data from {self.csv_name}...")
+        df = pd.read_csv(self.csv_name)
         self.df = df
         
 
     def parse_column_types(self):
         for column in self.schema_info:
             field_name = column['name']
-            field_type = column['type'].upper()  # BigQuery schema types are case-sensitive (e.g., STRING, TIMESTAMP, INTEGER)
-            # # Map YAML types to BigQuery types if needed
-            # if field_type == 'STRING':
-            #     bigquery_type = 'STRING'
-            # elif field_type == 'INTEGER':
-            #     bigquery_type = 'INTEGER'
-            # elif field_type == 'TIMESTAMP':
-            #     bigquery_type = 'TIMESTAMP'
-            # elif field_type == 'BOOL':
-            #     bigquery_type = 'BOOLEAN'
-            # else:
-            #     raise ValueError(f"Unsupported type {field_type} for field {field_name}")
-
-            # Append to the schema
-            self.bq_schema.append(bigquery.SchemaField(name=field_name, field_type=field_type, mode='NULLABLE'))
+            field_type = column['type']
+            self.bq_schema.append(bigquery.SchemaField(name=field_name, 
+                                                       field_type=field_type, 
+                                                       mode='NULLABLE'))
 
 
 

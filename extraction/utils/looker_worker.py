@@ -4,20 +4,20 @@ from datetime import datetime
 from looker_sdk.sdk.api40 import methods as methods40
 from looker_sdk import models40 as models 
 import time
-from dotenv import load_dotenv
 import os
 from utils.worker import Worker
 import pandas as pd
 from io import StringIO
 import csv
+from utils.enums import (ROW_LIMIT,
+                         QUERY_TIMEZONE,
+                         QUERY_TIMEOUT,
+                         DATETIME_FORMAT,
+                         START_TIME,
+                         )
 
-load_dotenv()
 
-ROW_LIMIT = int(os.environ.get('ROW_LIMIT',50000))
-QUERY_TIMEZONE = os.environ.get('QUERY_TIMEZONE','UTC')
-QUERY_TIMEOUT = int(os.environ.get('QUERY_TIMEOUT',600))
-DATETIME_FORMAT = os.environ.get('DATETIME_FORMAT','%Y-%m-%d %H:%M:%S')
-START_TIME = os.environ.get('START_TIME',"2015-01-01 00:00:00")
+
 
 class LookerWorker(Worker):
     def __init__(
@@ -97,7 +97,8 @@ class LookerWorker(Worker):
             filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
         else:
             filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
-        filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
+        # filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
+        filters = {}
         print(
             f"Creating query on view [{view}], filters {filters}, cursor_field {cursor_field},"
             f" timezone [{self.query_timezone}]"
@@ -187,14 +188,20 @@ class LookerWorker(Worker):
 
             explore = self.explore_name
             table = self.table_name
-            self.df.to_csv(f"out/explore_{explore}__table_{table}.csv", 
+            
+
+            # create the dir
+            if not os.path.exists(self.csv_target_path):
+                os.mkdir(self.csv_target_path)
+
+            self.df.to_csv(self.csv_name, 
                     index=False,
                     quotechar='"',
                     quoting=csv.QUOTE_MINIMAL,
                     )
             print(f"sucessfully extracted explore '{explore}' table '{table}'. \n"
                 f"total rows extracted: {len(self.df)}. \n"
-                f"output file: 'explore_{explore}__table_{table}.csv' \n"
+                f"output file: '{self.csv_name}' \n"
                 )
 
 
