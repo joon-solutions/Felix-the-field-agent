@@ -11,10 +11,13 @@ class Worker(ABC):
                  table_name: str,
                  schema_file: str = 'schema.yaml', 
                  *args, **kwargs) -> None:
-        self.explore_name = explore_name
-        self.table_name = table_name
         with open(schema_file) as f:
             self.schema_data = yaml.safe_load(f)
+        
+        self.explore_name = explore_name
+        self.table_name = table_name
+        self.table_data : dict = self.schema_data[explore_name][table_name]
+        self.schema_info = self.table_data['schema']
 
     @abstractmethod
     def fetch(self, **kwargs) -> dict | pd.DataFrame | str | None:

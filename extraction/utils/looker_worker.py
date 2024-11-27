@@ -54,7 +54,6 @@ class LookerWorker(Worker):
         self.datetime_format= DATETIME_FORMAT
 
 
-        self.table_data : dict = self.schema_data[explore_name][table_name]
 
 
         # self.gcs_bucket_name = gcs_bucket_name
@@ -171,20 +170,30 @@ class LookerWorker(Worker):
         query_results = self.run_query(query_id)
         self.query_results = query_results
 
-    
+    def map_fields_name_with_config(self):
+        """
+        uses the field name specified in the schema file instead 
+        of fields returned from the api.
+        plus, this maps 1-1 with explore's view.
+        """
+        schema_info = self.schema_info
+        columns = [schema_info[i]['name'] for i,_ in enumerate(schema_info)]
+        self.df.columns = columns
 
     def dump(self, **kwargs) -> None:
             query_results = self.query_results
-            df = pd.read_csv(StringIO(query_results))
+            self.df = pd.read_csv(StringIO(query_results))
+            self.map_fields_name_with_config()
+
             explore = self.explore_name
             table = self.table_name
-            df.to_csv(f"out/explore_{explore}__table_{table}.csv", 
+            self.df.to_csv(f"out/explore_{explore}__table_{table}.csv", 
                     index=False,
                     quotechar='"',
                     quoting=csv.QUOTE_MINIMAL,
                     )
             print(f"sucessfully extracted explore '{explore}' table '{table}'. \n"
-                f"total rows extracted: {len(df)}. \n"
+                f"total rows extracted: {len(self.df)}. \n"
                 f"output file: 'explore_{explore}__table_{table}.csv' \n"
                 )
 
