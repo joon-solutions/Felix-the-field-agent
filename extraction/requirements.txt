@@ -1,0 +1,8 @@
+requests==2.31.0
+looker-sdk==23.10.0
+python-dotenv==1.0.0
+google-cloud-storage==2.10.0
+google-cloud-bigquery==3.11.3
+PyYAML==6.0
+python-dotenv==1.0.0
+pandas==2.2.3

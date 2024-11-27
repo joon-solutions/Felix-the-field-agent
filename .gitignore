@@ -2,3 +2,11 @@
 .env
 beck-test*
 venv
+.venv
+looker.ini
+out/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

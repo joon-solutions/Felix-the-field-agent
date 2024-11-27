@@ -1,0 +1,79 @@
+user:
+  user:
+    batch_cursor_field: null
+    count_measure: user.count
+    cursor_field: user.created_time
+    cursor_value_offset: null
+    explore_display_name: User
+    explore_name: user
+    fields:
+    - user.created_time
+    - user.dev_branch_name
+    - user.edit_link
+    - user.email
+    - user.external_avatar_url
+    - user.first_name
+    - user.home_space_id
+    - user.id
+    - user.is_disabled
+    - user.last_name
+    - user.name
+    - user.timezone
+    filters:
+      user.is_disabled: ""
+    model: system__activity
+    possible_cursor_field:
+    - user.created_time
+    primary_key: user.id
+    row_count_discrepancy_threshold: 0
+    row_count_filter: null
+    row_count_no_filter_cursor_field: false
+    schema:
+    - description: 'Display Name: User Created Time. Description: When this user was
+        created'
+      name: created_time
+      type: TIMESTAMP
+    - description: 'Display Name: User Dev Branch Name. Description: The name of the
+        user''s personal developer branch'
+      name: dev_branch_name
+      type: STRING
+    - description: 'Display Name: User Edit Link. Description: A clickable link to
+        this user''s edit page. For filtering, use user id field instead.'
+      name: edit_link
+      type: STRING
+    - description: 'Display Name: User Email. Description: The email address associated
+        with the user account'
+      name: email
+      type: STRING
+    - description: 'Display Name: User External Avatar URL. Description: The public
+        URL of the user''s profile photo'
+      name: external_avatar_url
+      type: STRING
+    - description: 'Display Name: User First Name. Description: The user''s first
+        name'
+      name: first_name
+      type: STRING
+    - description: 'Display Name: User Home Folder. Description: The string ID of
+        the Home Folder assigned to the user'
+      name: home_space_id
+      type: STRING
+    - description: 'Display Name: User ID. Description: The unique numeric identifier
+        for a user. Unique primary key of the `user` table.'
+      name: id
+      type: INTEGER
+    - description: 'Display Name: User Is Disabled (Yes / No). Description: Has this
+        user''s account been disabled?'
+      name: is_disabled
+      type: BOOL
+    - description: 'Display Name: User Last Name. Description: The user''s last name'
+      name: last_name
+      type: STRING
+    - description: 'Display Name: User Name. Description: The user''s full name'
+      name: name
+      type: STRING
+    - description: 'Display Name: User Timezone. Description: The user''s timezone,
+        if set'
+      name: timezone
+      type: STRING
+    view: user
+    view_display_name: User
