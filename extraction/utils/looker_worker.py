@@ -6,7 +6,10 @@ from looker_sdk import models40 as models
 import time
 from dotenv import load_dotenv
 import os
-
+from utils.worker import Worker
+import pandas as pd
+from io import StringIO
+import csv
 
 load_dotenv()
 
@@ -16,11 +19,11 @@ QUERY_TIMEOUT = int(os.environ.get('QUERY_TIMEOUT',600))
 DATETIME_FORMAT = os.environ.get('DATETIME_FORMAT','%Y-%m-%d %H:%M:%S')
 START_TIME = os.environ.get('START_TIME',"2015-01-01 00:00:00")
 
-class Extractor():
+class LookerWorker(Worker):
     def __init__(
             self,
+            explore_name: str,
             table_name: str,
-            table_data: dict,
 
             **kwargs
 
@@ -43,13 +46,16 @@ class Extractor():
             # gcs_path_prefix: str = None,
             # temp_bq_dataset_id: str = None,
             ) -> None:
+        super().__init__(explore_name,table_name)  
         self.sdk = looker_sdk.init40()
-        self.table_name = table_name
-        self.table_data = table_data
         self.start_time = kwargs.get('start_time',START_TIME)
         self.row_limit = ROW_LIMIT
         self.query_timezone= QUERY_TIMEZONE
         self.datetime_format= DATETIME_FORMAT
+
+
+        self.table_data : dict = self.schema_data[explore_name][table_name]
+
 
         # self.gcs_bucket_name = gcs_bucket_name
         # self.bq_project_id = bq_project_id
@@ -86,7 +92,6 @@ class Extractor():
         cursor_field = self.cursor_field
 
         sorts = []
-
         print(f"Extracting in incremental mode for view [{view}].")
         sorts = [cursor_field] if cursor_field else []
         if not self.is_id_cursor_field:
@@ -154,5 +159,37 @@ class Extractor():
         print(f"Waited {elapsed} seconds")
 
         task_result = self.sdk.query_task_results(task.id)
+
         return task_result
+
+
+    def fetch(self, **kwargs):
+        query_id = self.create_query(self.table_data, 
+                            self.start_time,
+                            )
+        
+        query_results = self.run_query(query_id)
+        self.query_results = query_results
+
+    
+
+    def dump(self, **kwargs) -> None:
+            query_results = self.query_results
+            df = pd.read_csv(StringIO(query_results))
+            explore = self.explore_name
+            table = self.table_name
+            df.to_csv(f"out/explore_{explore}__table_{table}.csv", 
+                    index=False,
+                    quotechar='"',
+                    quoting=csv.QUOTE_MINIMAL,
+                    )
+            print(f"sucessfully extracted explore '{explore}' table '{table}'. \n"
+                f"total rows extracted: {len(df)}. \n"
+                f"output file: 'explore_{explore}__table_{table}.csv' \n"
+                )
+
+
+
+
+
 
