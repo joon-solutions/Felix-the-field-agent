@@ -9,7 +9,6 @@ from utils.bigquery_worker import  BigQueryWorker
 
 
 # these not found ? 
-# explore_label
 # ,'user_email' <<< this not found ??
 # template : {explore : table}
 # ,'user_attribute'
@@ -22,6 +21,10 @@ hardcoded_list = [{'user': 'user'}
                     ,{'group': 'group'}
                     ,{'dashboard': 'dashboard'}
                     ,{'look': 'look'}
+                    ,{'explore_label': 'explore_label'}
+                    ,{'history': 'history'}
+                    ,{'query': 'query'}
+                    ,{'query_metrics': 'query_metrics'}
                 ]
 
 

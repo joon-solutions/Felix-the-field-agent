@@ -15,6 +15,7 @@ from utils.enums import (ROW_LIMIT,
                          DATETIME_FORMAT,
                          START_TIME,
                          )
+import hashlib
 
 
 
@@ -68,9 +69,11 @@ class LookerWorker(Worker):
         #     bigquery.SchemaField(name=field["name"], field_type=field["type"], description=field["description"])
         #     for field in self.table_data["schema"]
         #     ]
-        self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
-        print(f"{self.cursor_field}")
-        self.is_id_cursor_field = False
+        
+        if not self._dependent_yaml:
+            self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
+            print(f"{self.cursor_field}")
+            self.is_id_cursor_field = False
 
         
 
@@ -167,12 +170,17 @@ class LookerWorker(Worker):
 
 
     def fetch(self, **kwargs):
-        query_id = self.create_query(self.table_data, 
-                            self.start_time,
-                            )
-        
-        query_results = self.run_query(query_id)
-        self.query_results = query_results
+        if not self._dependent_yaml:
+            query_id = self.create_query(self.table_data, 
+                                self.start_time,
+                                )
+            
+            query_results = self.run_query(query_id)
+            self.query_results = query_results
+        elif self._dependent_yaml: 
+            self.get_explore_label()
+            self.df = self.get_explore_label()
+            
 
     def map_fields_name_with_config(self):
         """
@@ -185,8 +193,10 @@ class LookerWorker(Worker):
         self.df.columns = columns
 
     def dump(self, **kwargs) -> None:
-            query_results = self.query_results
-            self.df = pd.read_csv(StringIO(query_results))
+            if not self._dependent_yaml:
+                query_results = self.query_results
+                self.df = pd.read_csv(StringIO(query_results)) 
+            
             self.map_fields_name_with_config()
 
             explore = self.explore_name
@@ -206,6 +216,56 @@ class LookerWorker(Worker):
                 f"total rows extracted: {len(self.df)}. \n"
                 f"output file: '{self.csv_name}' \n"
                 )
+    def transform_api_output(self,output):
+        # turn each output record in to a dictionary
+        output = list(map(dict,output))
+        for model in output:
+            # Remove 'can'
+            model.pop('can')
+
+            # turn each explore record in to a dictionary
+            model['explores'] = list(map(dict, model['explores']))
+
+            # set default value for key 'explore_label' for each explore
+            for explore in model['explores']:
+                explore.setdefault('label', None)
+                explore.setdefault('description', None)
+
+        # unnest explores fields
+        transformed_data = [
+            {
+                **{
+                    'id': hashlib.sha256((model['name'] + '-' + explore['name']).encode()).hexdigest(),
+                    'model_name': model['name'],
+                    'model_label': model['label'],
+                    'model_allowed_db_connection_names': model['allowed_db_connection_names'],
+                    'model_has_content': model['has_content'],
+                    'project_name': model['project_name'],
+                    'model_unlimited_db_connections': model['unlimited_db_connections']
+                },
+                **{
+                    'explore_name': explore['name'],
+                    'explore_label': explore['label'],
+                    'is_explore_hidden': explore['hidden'],
+                    'explore_description': explore['description'],
+                    'explore_group_label': explore['group_label']
+                }
+            }
+            for model in output
+            for explore in model['explores']
+        ]
+
+        return transformed_data
+    
+    def get_explore_label(self):
+        output = self.sdk.all_lookml_models()
+        transformed_data = self.transform_api_output(output)
+
+        header = list(transformed_data[0].keys())
+        values = [i.values() for i in transformed_data]
+        df = pd.DataFrame(values,columns=header)
+
+        return df
 
 
 
