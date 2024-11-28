@@ -123,7 +123,9 @@ class LookerWorker(Worker):
         query_id = query.id
         if not query_id:
             raise ValueError(f"Failed to create query for view [{view}]")
-        print(f"Successfully created query, query_id is [{query_id}]")
+        print(f"Successfully created query, query_id is [{query_id}]"
+              f"query url: {query.share_url}"
+              )
         return query_id
 
     def run_query(self,query_id: str):
@@ -139,7 +141,8 @@ class LookerWorker(Worker):
             raise ValueError(f"Failed to create query task for query id [{query_id}]")
         query_task_id = task.id
 
-        print(f"Created async query task id [{query_task_id}] for query id [{query_id}]")
+        print(f"Created async query task id [{query_task_id}] for query id [{query_id}]"
+              )
 
         elapsed = 0.0
         delay = 5.0  # waiting seconds

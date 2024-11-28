@@ -52,6 +52,8 @@ class BigQueryWorker(Worker):
             skip_leading_rows=1,  # Skip header row in CSV
             field_delimiter=',',
             schema=self.bq_schema,
+            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+            allow_quoted_newlines=True
         )
 
         print(f"Loading data into BigQuery table: {table_id}")
