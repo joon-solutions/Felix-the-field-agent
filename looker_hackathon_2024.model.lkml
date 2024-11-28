@@ -11,3 +11,5 @@ datagroup: looker_hackathon_2024_default_datagroup {
 }
 
 persist_with: looker_hackathon_2024_default_datagroup
+
+label: "Looker Hackathon 2024"
