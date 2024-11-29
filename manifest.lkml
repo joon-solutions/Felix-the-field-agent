@@ -8,7 +8,7 @@ constant: CONNECTION_NAME {
   export: override_required
 }
 
-## Used in ga_sessions.view sql_table_name
+## Used in ga_sessions.view sql_table_name whattttt
 constant: SCHEMA_NAME {
   value: "joon-sandbox.looker_hackathon"
   export: override_required
