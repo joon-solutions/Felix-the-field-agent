@@ -1,5 +1,5 @@
-include: "/refined/history.refined.view.lkml"
-include: "/staging/history.view.lkml"
+include: "/views/refined/*.refined.view"
+include: "/views/*.view"
 
 view: field_usage {
   view_label: "Field Usage, excluding Spectacles Queries (updated hourly)"
@@ -7,7 +7,7 @@ view: field_usage {
   derived_table: {
     sql:
       select *
-      from `joon-sandbox.looker_hackathon.history`
+      from  @{SCHEMA_NAME}.history
       where completed_time >= coalesce({% date_start query_completed_date %}, cast('2022-07-10' as timestamp format 'YYYY-MM-DD')) and completed_time <= coalesce({% date_end query_completed_date %}, current_timestamp())
             {% if field_usage.filter_issuer_source._is_filtered %}
                and issuer_source in ({{ _filters['field_usage.filter_issuer_source'] | split:"," | sql_quote | join:"," }})

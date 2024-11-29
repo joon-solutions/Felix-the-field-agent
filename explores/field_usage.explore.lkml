@@ -1,6 +1,6 @@
-include: "/refined/*.refined.view"
-include: "/staging/*.view"
-include: "/derived_tables/*.derived.view"
+include: "/views/refined/*.refined.view"
+include: "/views/*.view"
+include: "/views/derived_tables/*.derived.view"
 
 explore: lookml_fields {
   label: "Field Usage"
@@ -35,7 +35,7 @@ explore: lookml_fields {
     sql_on: ${parsed_query.query_id} = ${field_usage.query_id} ;;
     relationship: many_to_many
     type: left_outer
-    sql_where: ${user.email} not like '%spectacles-worker%' or ${field_usage.user_id} is null;; ## ('spectacles-worker-3@one-line.com', 'spectacles-worker-2@one-line.com') to confirm again with Theodore https://oneline.cloud.looker.com/explore/system__activity/history?toggle=fil&qid=l7UktOL1PVMP6JaN6ue3rl
+    # sql_where: ${user.email} not like '%spectacles-worker%' or ${field_usage.user_id} is null;;
   }
 
   join: user_facts {

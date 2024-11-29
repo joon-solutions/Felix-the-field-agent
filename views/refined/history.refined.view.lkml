@@ -1,4 +1,4 @@
-include: "/staging/history.view.lkml"
+include: "/views/*.view"
 
 view: +history {
 
@@ -42,7 +42,7 @@ view: +history {
   measure: look_run_count {
     type: count
     description: "Count of times a look was run"
-    filters: [status: "-cache_only_miss", look_id: "-NULL"]
+    filters: [status: "-cache_only_miss"]
   }
 
   measure: first_query_date {

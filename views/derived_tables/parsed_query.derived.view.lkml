@@ -68,7 +68,7 @@ view: parsed_query {
         json_extract_array(fields) as fields,
         extract_keys(filters) as filters,
         parse_json(dynamic_fields) as dynamic_fields
-        from `joon-sandbox.looker_hackathon.query`
+        from  @{SCHEMA_NAME}.query
         ),
 
         pjson_fields as (

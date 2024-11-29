@@ -4,9 +4,9 @@ view: user_email {
     sql: SELECT
           user.email  AS email,
           logical_or(user_facts.is_embed) AS has_embed_account
-      FROM `joon-sandbox.looker_hackathon.user`
+      FROM  @{SCHEMA_NAME}.user
            AS user
-      LEFT JOIN `joon-sandbox.looker_hackathon.user_facts`
+      LEFT JOIN  @{SCHEMA_NAME}.user_facts
            AS user_facts ON user.id = user_facts.user_id
       GROUP BY
           1 ;;
