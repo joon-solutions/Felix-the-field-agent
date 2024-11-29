@@ -15,10 +15,10 @@ from utils.enums import (ROW_LIMIT,
                          DATETIME_FORMAT,
                          START_TIME,
                          ID_CURSOR_FIELD,
-                         NULL_CURSOR_FIELD
+                         NULL_CURSOR_FIELD,
+                         CURSOR_FIELD_NOT_PICKED
                          )
 import hashlib
-
 
 
 
@@ -55,6 +55,18 @@ class LookerWorker(Worker):
         self.row_limit = ROW_LIMIT
         self.query_timezone= QUERY_TIMEZONE
         self.datetime_format= DATETIME_FORMAT
+        self.row_count = self.fetch_rowcount()
+        if self.row_count:
+            self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
+            self.is_id_cursor_field = False
+            if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
+                print(f"Cursor field is {self.cursor_field}.")
+                self.is_id_cursor_field = True
+            self.cursor_value = None
+            self.is_last_batch = None
+        self.file_num = 0
+
+
 
 
 
@@ -63,7 +75,6 @@ class LookerWorker(Worker):
         # self.bq_project_id = bq_project_id
         # self.bq_dataset_id = bq_dataset_id
         # self.bq_table_name = bq_table_name
-        # self.file_num = file_num
 
         # self.bq_full_table_id = f"{self.bq_project_id}.{self.bq_dataset_id}.{self.bq_table_name}"
         # self.temp_bq_dataset_id = temp_bq_dataset_id if temp_bq_dataset_id else bq_dataset_id
@@ -71,49 +82,71 @@ class LookerWorker(Worker):
         #     bigquery.SchemaField(name=field["name"], field_type=field["type"], description=field["description"])
         #     for field in self.table_data["schema"]
         #     ]
-        self.is_id_cursor_field = False
-        if not self._dependent_yaml:
-            self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
-            if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
-                print(f"Cursor field is {self.cursor_field}.")
-                self.is_id_cursor_field = True            
+        # self.is_id_cursor_field = False
+        # if not self._dependent_yaml:
+        #     self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
+        #     if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
+        #         print(f"Cursor field is {self.cursor_field}.")
+        #         self.is_id_cursor_field = True            
 
 
-        # Cursor field in BigQuery table
-        self.bq_cursor_field = self.get_bq_cursor_field(self.cursor_field)
-        # Primary key in BigQuery table
-        self.bq_primary_key = ""
-        if isinstance(self.table_data["primary_key"], str):
-            self.bq_primary_key = self.table_data["primary_key"].split('.')[-1]
-        elif isinstance(self.table_data["primary_key"], list):
-            self.bq_primary_key = self.table_data["primary_key"]   
+        # # Cursor field in BigQuery table
+        # self.bq_cursor_field = self.get_bq_cursor_field(self.cursor_field)
+        # # Primary key in BigQuery table
+        # self.bq_primary_key = ""
+        # if isinstance(self.table_data["primary_key"], str):
+        #     self.bq_primary_key = self.table_data["primary_key"].split('.')[-1]
+        # elif isinstance(self.table_data["primary_key"], list):
+        #     self.bq_primary_key = self.table_data["primary_key"]   
 
 
-
-        self.run_query(self.fetch_rowcount())
 
 
     def fetch_rowcount(self):
-        model = self.table_data["model"]
-        view = self.table_data["view"]
-        fields = ['user.count']
-        body = models.WriteQuery(
-                        model = model,
-                        view = view,
-                        fields = fields,
-                        limit = str(self.row_limit),
-                        query_timezone = self.query_timezone,
-                        )
-        query = self.sdk.create_query(
-            body = body
-        )
-        query_id = query.id
-        if not query_id:
-            raise ValueError(f"Failed to create query for view [{view}]")
-        print(f"Successfully created query, query_id is [{query_id}]"
-            f"query url: {query.share_url}"
+        try:
+            view = self.table_data["view"]
+            model = self.table_data["model"]
+            # limitation : not all systerm activity has a count_measure
+            count_measure = self.table_data["count_measure"]
+            start_time = self.start_time
+
+
+            if not hasattr(self,'cursor_field'):
+                # init load
+                body = models.WriteQuery(
+                                model = model,
+                                view = view,
+                                fields = [count_measure],
+                                )
+
+            else:
+                cursor_field = self.cursor_field
+                if not self.is_id_cursor_field:
+                    filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
+                else:
+                    filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
+                filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
+                body = models.WriteQuery(
+                                model = model,
+                                view = view,
+                                fields = [count_measure],
+                                filters=filters
+                                )
+            print(f'fetching rowcount for {model}.{view} : ')
+            query = self.sdk.create_query(
+                body = body
             )
-        return query_id        
+            query_id = query.id
+            if not query_id:
+                raise ValueError(f"Failed to create query for view [{view}]")
+            print(f"Successfully created query, query_id is [{query_id}]"
+                f"query url: {query.share_url}"
+                )
+            row_count = self.run_query(query_id)
+            row_count = int(row_count.split('\n')[1])
+            return row_count
+        except KeyError:
+            return None
 
 
     def create_query(
@@ -128,45 +161,43 @@ class LookerWorker(Worker):
         model = table_data["model"]
         view = table_data["view"]
         fields = table_data["fields"]
-        
 
+        if self.row_count:
+            cursor_field = self.cursor_field
 
-        cursor_field = self.cursor_field
-
-        sorts = []
-        print(f"Extracting in incremental mode for view [{view}].")
-        sorts = [cursor_field] if cursor_field else []
-        if not self.is_id_cursor_field:
-            filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
-        else:
-            filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
-        # filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
-        filters = {}
-        print(
-            f"Creating query on view [{view}], filters {filters}, cursor_field {cursor_field},"
-            f" timezone [{self.query_timezone}]"
-            f" fields [{fields}]"
+            sorts = []
+            print(f"Extracting in incremental mode for view [{view}].")
+            sorts = [cursor_field] if cursor_field else []
+            if not self.is_id_cursor_field:
+                filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
+            else:
+                filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
+            filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
+            # print(
+            #     f"Creating query on view [{view}], filters {filters}, cursor_field {cursor_field},"
+            #     f" timezone [{self.query_timezone}]"
+            #     f" fields [{fields}]"
+            #     )
+            
+            body = models.WriteQuery(
+                    model = model,
+                    view = view,
+                    fields = fields,
+                    filters = filters,
+                    sorts = sorts,
+                    limit = str(self.row_limit),
+                    query_timezone = self.query_timezone,
+                    )
+            query = self.sdk.create_query(
+                body = body
             )
-        
-        body = models.WriteQuery(
-                model = model,
-                view = view,
-                fields = fields,
-                filters = filters,
-                sorts = sorts,
-                limit = str(self.row_limit),
-                query_timezone = self.query_timezone,
+            query_id = query.id
+            if not query_id:
+                raise ValueError(f"Failed to create query for view [{view}]")
+            print(f"Successfully created query, query_id is [{query_id}]"
+                f"query url: {query.share_url}"
                 )
-        query = self.sdk.create_query(
-            body = body
-        )
-        query_id = query.id
-        if not query_id:
-            raise ValueError(f"Failed to create query for view [{view}]")
-        print(f"Successfully created query, query_id is [{query_id}]"
-            f"query url: {query.share_url}"
-            )
-        return query_id
+            return query_id
 
 
 
@@ -214,12 +245,28 @@ class LookerWorker(Worker):
             query_id = self.create_query(self.table_data, 
                                 self.start_time,
                                 )
-            
+
             query_results = self.run_query(query_id)
             self.query_results = query_results
+
+                # assign the query results to the class variable
         elif self._dependent_yaml: 
             self.get_explore_label()
             self.df = self.get_explore_label()
+
+        if not self._dependent_yaml:
+            query_results = self.query_results
+            self.df = pd.read_csv(StringIO(query_results)) 
+        
+        self.map_fields_name_with_config()
+
+        if self.row_count:
+            # grab the cursor val
+            self.last_cursor_value = self.cursor_value if hasattr(self, 'cursor_value') else None
+            self.cursor_value = self.df[self.cursor_field.split('.')[-1]].iloc[-1]
+
+
+                
             
 
     def map_fields_name_with_config(self):
@@ -233,15 +280,20 @@ class LookerWorker(Worker):
         self.df.columns = columns
 
     def dump(self, **kwargs) -> None:
-            if not self._dependent_yaml:
-                query_results = self.query_results
-                self.df = pd.read_csv(StringIO(query_results)) 
-            
-            self.map_fields_name_with_config()
+
 
             explore = self.explore_name
             table = self.table_name
-            
+
+            if self.row_count:
+                self.start_time = self.cursor_value
+                self.file_num += 1
+                if self.file_num == 1:
+                    self.csv_basename = self.csv_name.split('.')[0]
+                self.csv_name = self.csv_basename + f"_{self.file_num}.csv"
+                # last batch : kills the cursor
+                if self.is_last_batch:
+                    self.row_count = None
 
             # create the dir
             if not os.path.exists(self.csv_target_path):
@@ -256,6 +308,17 @@ class LookerWorker(Worker):
                 f"total rows extracted: {len(self.df)}. \n"
                 f"output file: '{self.csv_name}' \n"
                 )
+
+            if self.row_count: 
+                self.fetch()
+                if self.last_cursor_value != self.cursor_value:
+                    if len(self.df) < self.row_limit:
+                        self.is_last_batch = True
+                    self.dump()
+
+            
+
+
     def transform_api_output(self,output):
         # turn each output record in to a dictionary
         output = list(map(dict,output))
@@ -306,50 +369,3 @@ class LookerWorker(Worker):
         df = pd.DataFrame(values,columns=header)
 
         return df
-
-    def get_table_rowcount(self):
-        """
-        Returns the number of rows in the table.
-        """
-        table_name = self.table_name
-        table_rowcount = self.sdk.table_row_count(table_name)
-        return table_rowcount
-
-
-    def generate_query_rn(self):
-        pass
-
-    def get_bq_cursor_field(self, cursor_field):
-        """
-        Table can use a field within itself as a cursor field. If a table
-        doesn't have a datetime field, it may use one from a related table
-        as its cursor field (i.e. event_attribute using event.created_time
-        as its cursor field).
-        Cursor field may also be null, indicating that there's no way to
-        get the data incrementally. Data must be full refreshed.
-        """
-        # If there's cursor field, check if table depends on another table field
-        # Otherwise return NULL_CURSOR_FIELD
-        if cursor_field:
-            # If only 1 cursor field return str of bq cursor field
-            if isinstance(cursor_field, str):
-                # If cursor field has table_name of this table in it, it means table is
-                # using its own fields as cursor field. In this case, remove the table name
-                if cursor_field.startswith(f"{self.table_name}."):
-                    return cursor_field.split('.')[-1]
-
-                # If it's another table name, then the table depends on another table
-                # for cursor field. In this case retain the depends_on table name.
-                # Change the dot to an underscore.
-                return cursor_field.replace('.','_')
-            # If cursor field is a list of fields then recursively return get_bq_cursor_field of each field in a list
-            if isinstance(cursor_field, list):
-                return [self.get_bq_cursor_field(i) for i in cursor_field]
-
-
-        return NULL_CURSOR_FIELD
-
-
-
-
-

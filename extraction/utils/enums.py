@@ -25,3 +25,6 @@ BQ_DATASET_ID = os.environ.get('BQ_DATASET_ID')
 
 ID_CURSOR_FIELD = os.environ.get('ID_CURSOR_FIELD','id')
 NULL_CURSOR_FIELD = os.environ.get('NULL_CURSOR_FIELD','null_cursor_field')
+CURSOR_FIELD_NOT_PICKED = "please_choose"
+NULL_CURSOR_VALUE = "null_cursor_value"
+

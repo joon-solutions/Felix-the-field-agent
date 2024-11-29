@@ -36,6 +36,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-e', '--explore', help='system activity explore name')
 parser.add_argument('-t', '--table', help='table name from the explore')
 parser.add_argument('-a', '--all', help='loads all required tables', action='store_true')
+parser.add_argument('-f', '--full-refresh', help='drops table before reload', action='store_true')
 
 args = parser.parse_args()
 
