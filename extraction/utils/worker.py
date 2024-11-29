@@ -19,7 +19,7 @@ class Worker(ABC):
         self._load_schema(schema_file)
         self.table_data = self.schema_data[explore_name][table_name] if not self._dependent_yaml else self.schema_data[table_name]
         self.schema_info = self.table_data['schema']
-        self.csv_target_path = os.path.join(CSV_DUMP_DIR,self.explore_name)
+        self.csv_target_path = os.path.join(CSV_DUMP_DIR,self.explore_name + '__' + self.table_name)
         self.csv_name = os.path.join(self.csv_target_path,f"{self.table_name}.csv")
 
     def _load_schema(self,schema_file):
