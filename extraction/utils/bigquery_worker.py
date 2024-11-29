@@ -34,8 +34,10 @@ class BigQueryWorker(Worker):
         for column in self.schema_info:
             field_name = column['name']
             field_type = column['type']
+            field_description = column['description']
             self.bq_schema.append(bigquery.SchemaField(name=field_name, 
                                                        field_type=field_type, 
+                                                       description=field_description,
                                                        mode='NULLABLE'))
 
 

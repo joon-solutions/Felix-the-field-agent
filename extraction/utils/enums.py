@@ -14,3 +14,6 @@ CSV_DUMP_DIR = os.environ.get('CSV_DUMP_DIR','out')
 
 BQ_PROJECT_ID = os.environ.get('BQ_PROJECT_ID')
 BQ_DATASET_ID = os.environ.get('BQ_DATASET_ID')
+
+ID_CURSOR_FIELD = os.environ.get('ID_CURSOR_FIELD','id')
+NULL_CURSOR_FIELD = os.environ.get('NULL_CURSOR_FIELD','null_cursor_field')

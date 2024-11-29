@@ -14,6 +14,8 @@ from utils.enums import (ROW_LIMIT,
                          QUERY_TIMEOUT,
                          DATETIME_FORMAT,
                          START_TIME,
+                         ID_CURSOR_FIELD,
+                         NULL_CURSOR_FIELD
                          )
 import hashlib
 
@@ -69,13 +71,49 @@ class LookerWorker(Worker):
         #     bigquery.SchemaField(name=field["name"], field_type=field["type"], description=field["description"])
         #     for field in self.table_data["schema"]
         #     ]
-        
+        self.is_id_cursor_field = False
         if not self._dependent_yaml:
             self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
-            print(f"{self.cursor_field}")
-            self.is_id_cursor_field = False
+            if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
+                print(f"Cursor field is {self.cursor_field}.")
+                self.is_id_cursor_field = True            
 
-        
+
+        # Cursor field in BigQuery table
+        self.bq_cursor_field = self.get_bq_cursor_field(self.cursor_field)
+        # Primary key in BigQuery table
+        self.bq_primary_key = ""
+        if isinstance(self.table_data["primary_key"], str):
+            self.bq_primary_key = self.table_data["primary_key"].split('.')[-1]
+        elif isinstance(self.table_data["primary_key"], list):
+            self.bq_primary_key = self.table_data["primary_key"]   
+
+
+
+        self.run_query(self.fetch_rowcount())
+
+
+    def fetch_rowcount(self):
+        model = self.table_data["model"]
+        view = self.table_data["view"]
+        fields = ['user.count']
+        body = models.WriteQuery(
+                        model = model,
+                        view = view,
+                        fields = fields,
+                        limit = str(self.row_limit),
+                        query_timezone = self.query_timezone,
+                        )
+        query = self.sdk.create_query(
+            body = body
+        )
+        query_id = query.id
+        if not query_id:
+            raise ValueError(f"Failed to create query for view [{view}]")
+        print(f"Successfully created query, query_id is [{query_id}]"
+            f"query url: {query.share_url}"
+            )
+        return query_id        
 
 
     def create_query(
@@ -90,6 +128,8 @@ class LookerWorker(Worker):
         model = table_data["model"]
         view = table_data["view"]
         fields = table_data["fields"]
+        
+
 
         cursor_field = self.cursor_field
 
@@ -117,19 +157,19 @@ class LookerWorker(Worker):
                 limit = str(self.row_limit),
                 query_timezone = self.query_timezone,
                 )
-
-
         query = self.sdk.create_query(
             body = body
         )
-
         query_id = query.id
         if not query_id:
             raise ValueError(f"Failed to create query for view [{view}]")
         print(f"Successfully created query, query_id is [{query_id}]"
-              f"query url: {query.share_url}"
-              )
+            f"query url: {query.share_url}"
+            )
         return query_id
+
+
+
 
     def run_query(self,query_id: str):
         """
@@ -267,6 +307,47 @@ class LookerWorker(Worker):
 
         return df
 
+    def get_table_rowcount(self):
+        """
+        Returns the number of rows in the table.
+        """
+        table_name = self.table_name
+        table_rowcount = self.sdk.table_row_count(table_name)
+        return table_rowcount
+
+
+    def generate_query_rn(self):
+        pass
+
+    def get_bq_cursor_field(self, cursor_field):
+        """
+        Table can use a field within itself as a cursor field. If a table
+        doesn't have a datetime field, it may use one from a related table
+        as its cursor field (i.e. event_attribute using event.created_time
+        as its cursor field).
+        Cursor field may also be null, indicating that there's no way to
+        get the data incrementally. Data must be full refreshed.
+        """
+        # If there's cursor field, check if table depends on another table field
+        # Otherwise return NULL_CURSOR_FIELD
+        if cursor_field:
+            # If only 1 cursor field return str of bq cursor field
+            if isinstance(cursor_field, str):
+                # If cursor field has table_name of this table in it, it means table is
+                # using its own fields as cursor field. In this case, remove the table name
+                if cursor_field.startswith(f"{self.table_name}."):
+                    return cursor_field.split('.')[-1]
+
+                # If it's another table name, then the table depends on another table
+                # for cursor field. In this case retain the depends_on table name.
+                # Change the dot to an underscore.
+                return cursor_field.replace('.','_')
+            # If cursor field is a list of fields then recursively return get_bq_cursor_field of each field in a list
+            if isinstance(cursor_field, list):
+                return [self.get_bq_cursor_field(i) for i in cursor_field]
+
+
+        return NULL_CURSOR_FIELD
 
 
 
