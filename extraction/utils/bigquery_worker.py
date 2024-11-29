@@ -21,9 +21,8 @@ class BigQueryWorker(Worker):
         self.bq_table_id = self.table_name
         self.bq_schema = []
         self.client = bigquery.Client(project=self.bq_project_id)
-        self.csv_dir = os.path.dirname(self.csv_name)
         self.is_last_batch = None
-        self.files = os.listdir(self.csv_dir)
+        self.files = os.listdir(self.csv_target_path)
 
 
     def fetch(self,**kwargs) -> None:
@@ -34,7 +33,7 @@ class BigQueryWorker(Worker):
             self.is_last_batch = True
         if len(self.files) >= 1:
             csv_file = self.files.pop()
-            self.csv_name = os.path.join(self.csv_dir,csv_file)
+            self.csv_name = os.path.join(self.csv_target_path,csv_file)
             df = pd.read_csv(self.csv_name)
             self.df = df
         

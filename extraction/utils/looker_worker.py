@@ -188,16 +188,25 @@ class LookerWorker(Worker):
                     limit = str(self.row_limit),
                     query_timezone = self.query_timezone,
                     )
-            query = self.sdk.create_query(
-                body = body
+        else:
+            print(f"Extracting in full mode for view [{view}].")
+            body = models.WriteQuery(
+                    model = model,
+                    view = view,
+                    fields = fields,
+                    limit = str(self.row_limit),
+                    query_timezone = self.query_timezone,
+                    )
+        query = self.sdk.create_query(
+            body = body
+        )
+        query_id = query.id
+        if not query_id:
+            raise ValueError(f"Failed to create query for view [{view}]")
+        print(f"Successfully created query, query_id is [{query_id}]"
+            f"query url: {query.share_url}"
             )
-            query_id = query.id
-            if not query_id:
-                raise ValueError(f"Failed to create query for view [{view}]")
-            print(f"Successfully created query, query_id is [{query_id}]"
-                f"query url: {query.share_url}"
-                )
-            return query_id
+        return query_id
 
 
 
@@ -297,7 +306,7 @@ class LookerWorker(Worker):
 
             # create the dir
             if not os.path.exists(self.csv_target_path):
-                os.mkdir(self.csv_target_path)
+                os.makedirs(self.csv_target_path,exist_ok=True)
 
             self.df.to_csv(self.csv_name, 
                     index=False,
