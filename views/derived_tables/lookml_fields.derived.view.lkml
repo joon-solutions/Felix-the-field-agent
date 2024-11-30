@@ -28,7 +28,7 @@ view: lookml_fields {
     type: string
     sql: COALESCE(${TABLE}.project, '') || COALESCE(${TABLE}.explore_name, '') || COALESCE(${TABLE}.field_name, '') || COALESCE(${TABLE}.view_name, '') ||
       COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_group_label, '') || COALESCE(${TABLE}.field_label, '') || COALESCE(${TABLE}.field_data_type, '') ||
-      COALESCE(${TABLE}.is_field_hidden, '') || COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_filters, '') || COALESCE(${TABLE}.extends__all, '');;
+      COALESCE(CAST(${TABLE}.is_field_hidden AS STRING), '') || COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_filters, '') || COALESCE(${TABLE}.extends__all, '');;
   }
 
   dimension: model_name {
