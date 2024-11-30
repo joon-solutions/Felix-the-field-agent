@@ -49,11 +49,11 @@ explore: query_metrics {
     type: left_outer
   }
 
-  # join: query_dynamic_field {
-  #   sql_on: ${query.id} = ${query_dynamic_field.query_id};;
-  #   relationship: one_to_many
-  #   type: left_outer
-  # }
+  join: query_dynamic_field {
+    sql_on: ${query.id} = ${query_dynamic_field.query_id};;
+    relationship: one_to_many
+    type: left_outer
+  }
 
   join: explore_label {
     sql_on: ${query.view} = ${explore_label.explore_name};;
