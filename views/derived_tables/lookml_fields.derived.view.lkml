@@ -26,11 +26,13 @@ view: lookml_fields {
     primary_key: yes
     hidden: yes
     type: string
-    sql: ${TABLE}.project ||  ${TABLE}.explore_name || ${TABLE}.field_name || ${TABLE}.view_name || ${TABLE}.field_type || ${TABLE}.field_group_label || ${TABLE}.field_label || ${TABLE}.field_data_type || ${TABLE}.is_field_hidden || ${TABLE}.field_type || ${TABLE}.field_filters;;
+    sql: COALESCE(${TABLE}.project, '') || COALESCE(${TABLE}.explore_name, '') || COALESCE(${TABLE}.field_name, '') || COALESCE(${TABLE}.view_name, '') ||
+      COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_group_label, '') || COALESCE(${TABLE}.field_label, '') || COALESCE(${TABLE}.field_data_type, '') ||
+      COALESCE(${TABLE}.is_field_hidden, '') || COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_filters, '') || COALESCE(${TABLE}.extends__all, '');;
   }
 
   dimension: model_name {
-    hidden: yes ### use model_name from Explore_Label view
+    #hidden: yes ### use model_name from Explore_Label view
     type: string
     description: "The associated model's name"
     sql: ${TABLE}.model_name ;;
