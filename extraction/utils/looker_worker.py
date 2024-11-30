@@ -256,6 +256,7 @@ class LookerWorker(Worker):
                 f"total rows extracted: {len(self.df)}. \n"
                 f"output file: '{self.csv_name}' \n"
                 )
+            self.total_record += len(self.df)
 
             if self.row_count: 
                 self.fetch()

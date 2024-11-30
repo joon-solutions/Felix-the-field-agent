@@ -1,6 +1,7 @@
 import argparse
 from utils.looker_worker import  LookerWorker
 from utils.bigquery_worker import  BigQueryWorker
+import pandas as pd
 
 # these needs to be handled by batch
 # history
@@ -43,6 +44,7 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     if args.all:
+        report = pd.DataFrame()
         for item in hardcoded_list:
             for k,v in item.items():
                 print("=" * 30 + '\n\n' +
@@ -58,6 +60,8 @@ if __name__ == "__main__":
                     bqw = BigQueryWorker(explore,table)
                     bqw.fetch()
                     bqw.dump()
+                    job = bqw.generate_summary_df()
+                    report = pd.concat([job,report], ignore_index=True)
                 except Exception as e:
                     print(e)
                     print(f"Error loading for explore: {k} table: {v}")
@@ -72,3 +76,7 @@ if __name__ == "__main__":
         bqw = BigQueryWorker(explore,table)
         bqw.fetch()
         bqw.dump()
+        report = bqw.generate_summary_df()
+    
+    print("\n\n\tFinished running scripts with report below:\n\n\t")
+    print(report.to_markdown(index=False))
