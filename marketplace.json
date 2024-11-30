@@ -1,0 +1,30 @@
+{
+    "label": "System Activity - Field Usage Enhanced Report",
+    "category_label": "Models",
+    "branding": {
+        "image_uri": "https://partners.getdbt.com/partner_content/75/1517875/logo300x300.png?t=8da9af0ae3513d0",
+        "tagline": "This Block provides a comprehensive overview of field usage in System Activity allowing Looker Admin to monitor and optimize instance performance:
+          \n - LookML fields that are never queried by users
+          \n - LookML field usage with Dashboard/Look/ Source granularity
+          \n - Custom dimensions, measures, table calculations that are used repeatedly
+          \n - Fields that do not follow LookML best practices
+          \n - Fields that are mostly used in filters
+          \n - Fields in the longest-running queries"
+    },
+
+    "constants": {
+        "CONNECTION_NAME": {
+            "label": "Connection Name"
+        },
+        "SCHEMA_NAME": {
+            "label": "Schema Name"
+        }
+    },
+
+    "models": [
+        {
+            "name": "looker_hackathon_2024",
+            "connection_constant": "CONNECTION_NAME"
+        }
+    ]
+}
