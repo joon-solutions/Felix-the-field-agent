@@ -27,27 +27,6 @@ class LookerWorker(Worker):
             self,
             explore_name: str,
             table_name: str,
-
-            **kwargs
-
-            # start_time: str,
-            # row_limit: int,
-            # query_timezone: str,
-            # datetime_format: str,
-            # is_incremental: bool = True,
-
-            # gcs_bucket_name: str,
-            # looker_sdk: methods40.Looker40SDK,
-            # bq_project_id: str,
-            # bq_dataset_id: str,
-            # bq_table_name: str,
-            # file_num: int,
-            # run_time: str,
-            # is_backfill_with_offset: bool = False,
-            # bigquery_client: bigquery.Client,
-            # storage_client: storage.Client,
-            # gcs_path_prefix: str = None,
-            # temp_bq_dataset_id: str = None,
             ) -> None:
         super().__init__(explore_name,table_name)  
         self.sdk = looker_sdk.init40()
@@ -67,72 +46,19 @@ class LookerWorker(Worker):
             self.is_last_batch = None
         self.file_num = 0
 
-
-
-
-
-
-        # self.gcs_bucket_name = gcs_bucket_name
-        # self.bq_project_id = bq_project_id
-        # self.bq_dataset_id = bq_dataset_id
-        # self.bq_table_name = bq_table_name
-
-        # self.bq_full_table_id = f"{self.bq_project_id}.{self.bq_dataset_id}.{self.bq_table_name}"
-        # self.temp_bq_dataset_id = temp_bq_dataset_id if temp_bq_dataset_id else bq_dataset_id
-        # self.schema = [
-        #     bigquery.SchemaField(name=field["name"], field_type=field["type"], description=field["description"])
-        #     for field in self.table_data["schema"]
-        #     ]
-        # self.is_id_cursor_field = False
-        # if not self._dependent_yaml:
-        #     self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
-        #     if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
-        #         print(f"Cursor field is {self.cursor_field}.")
-        #         self.is_id_cursor_field = True            
-
-
-        # # Cursor field in BigQuery table
-        # self.bq_cursor_field = self.get_bq_cursor_field(self.cursor_field)
-        # # Primary key in BigQuery table
-        # self.bq_primary_key = ""
-        # if isinstance(self.table_data["primary_key"], str):
-        #     self.bq_primary_key = self.table_data["primary_key"].split('.')[-1]
-        # elif isinstance(self.table_data["primary_key"], list):
-        #     self.bq_primary_key = self.table_data["primary_key"]   
-
-
-
-
     def fetch_rowcount(self):
         try:
             view = self.table_data["view"]
             model = self.table_data["model"]
             # limitation : not all systerm activity has a count_measure
             count_measure = self.table_data["count_measure"]
-            start_time = self.start_time
 
+            body = models.WriteQuery(
+                            model = model,
+                            view = view,
+                            fields = [count_measure],
+                            )
 
-            if not hasattr(self,'cursor_field'):
-                # init load
-                body = models.WriteQuery(
-                                model = model,
-                                view = view,
-                                fields = [count_measure],
-                                )
-
-            else:
-                cursor_field = self.cursor_field
-                if not self.is_id_cursor_field:
-                    filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
-                else:
-                    filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
-                filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
-                body = models.WriteQuery(
-                                model = model,
-                                view = view,
-                                fields = [count_measure],
-                                filters=filters
-                                )
             print(f'fetching rowcount for {model}.{view} : ')
             query = self.sdk.create_query(
                 body = body
