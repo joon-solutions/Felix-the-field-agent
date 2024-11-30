@@ -1,4 +1,3 @@
-
 import looker_sdk
 from datetime import datetime
 from looker_sdk.sdk.api40 import methods as methods40
@@ -19,6 +18,7 @@ from utils.enums import (ROW_LIMIT,
                          CURSOR_FIELD_NOT_PICKED
                          )
 import hashlib
+import warnings
 
 
 
@@ -34,24 +34,31 @@ class LookerWorker(Worker):
         self.row_limit = ROW_LIMIT
         self.query_timezone= QUERY_TIMEZONE
         self.datetime_format= DATETIME_FORMAT
-        self.row_count = self.fetch_rowcount()
+        self.row_count = self._fetch_rowcount()
         if self.row_count:
             self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
             self.is_id_cursor_field = False
             if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
                 print(f"Cursor field is {self.cursor_field}.")
                 self.is_id_cursor_field = True
-                self.start_time = 0 # all id fields are integers
+                # cursor field is id; assigns int type
+                self.start_time = 0 
             self.cursor_value = None
             self.is_last_batch = None
         self.file_num = 0
 
-    def fetch_rowcount(self):
+    def _fetch_rowcount(self) -> int | None:
+        """
+        executes a rowcount query on the target view's count_measure.
+        this self.row_count is the core logic of doing a full or batch extraction.
+        """
         try:
+            # limitation : not all systerm activity has a count_measure.
+            # thus we only do rowcount on views with such attr.
+            # all worker instances with row_count are set for batch extraction.
+            count_measure = self.table_data["count_measure"]
             view = self.table_data["view"]
             model = self.table_data["model"]
-            # limitation : not all systerm activity has a count_measure
-            count_measure = self.table_data["count_measure"]
 
             body = models.WriteQuery(
                             model = model,
@@ -73,6 +80,9 @@ class LookerWorker(Worker):
             row_count = int(row_count.split('\n')[1])
             return row_count
         except KeyError:
+            # catches the error & assigns None row_count to the worker.
+            # all worker instances without row_count are set for full extraction.
+
             return None
 
 
@@ -184,23 +194,25 @@ class LookerWorker(Worker):
 
             query_results = self.run_query(query_id)
             self.query_results = query_results
+            self.df = pd.read_csv(StringIO(query_results)) 
 
-                # assign the query results to the class variable
         elif self._dependent_yaml: 
             self.get_explore_label()
             self.df = self.get_explore_label()
 
-        if not self._dependent_yaml:
-            query_results = self.query_results
-            self.df = pd.read_csv(StringIO(query_results)) 
-        
         self.map_fields_name_with_config()
 
         if self.row_count:
-            # grab the cursor val
+            # grab the cursor val for batch extraction
             self.last_cursor_value = self.cursor_value if hasattr(self, 'cursor_value') else None
             self.cursor_value = self.df[self.cursor_field.split('.')[-1]].iloc[-1]
-
+        elif not self.row_count and len(self.df) == 50000:
+            warnings.warn(f"\n\n\tWARNING : this view [{self.table_name}] has more than 50000 rows " 
+                  "but there's no fields we can reliably use "
+                  "as a cursor for batch extraction.\n"
+                  "\tThis view will be truncated to 50000 rows.\n\n",
+                  category=UserWarning
+                  )
 
                 
             
@@ -251,7 +263,6 @@ class LookerWorker(Worker):
                     if len(self.df) < self.row_limit:
                         self.is_last_batch = True
                     self.dump()
-
             
 
 
