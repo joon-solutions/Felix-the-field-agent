@@ -51,7 +51,7 @@ class LookerWorker(Worker):
             ) -> None:
         super().__init__(explore_name,table_name)  
         self.sdk = looker_sdk.init40()
-        self.start_time = kwargs.get('start_time',START_TIME)
+        self.start_time: str | int | None = START_TIME
         self.row_limit = ROW_LIMIT
         self.query_timezone= QUERY_TIMEZONE
         self.datetime_format= DATETIME_FORMAT
@@ -62,6 +62,7 @@ class LookerWorker(Worker):
             if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
                 print(f"Cursor field is {self.cursor_field}.")
                 self.is_id_cursor_field = True
+                self.start_time = 0 # all id fields are integers
             self.cursor_value = None
             self.is_last_batch = None
         self.file_num = 0
@@ -152,7 +153,7 @@ class LookerWorker(Worker):
     def create_query(
             self,
             table_data,
-            start_time: str,
+            start_time: str | int | None,
             ) -> str:
         """
         Create Looker Query
