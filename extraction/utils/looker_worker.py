@@ -15,7 +15,8 @@ from utils.enums import (ROW_LIMIT,
                          START_TIME,
                          ID_CURSOR_FIELD,
                          NULL_CURSOR_FIELD,
-                         CURSOR_FIELD_NOT_PICKED
+                         CURSOR_FIELD_NOT_PICKED,
+                         START_ID
                          )
 import hashlib
 import warnings
@@ -42,7 +43,7 @@ class LookerWorker(Worker):
                 print(f"Cursor field is {self.cursor_field}.")
                 self.is_id_cursor_field = True
                 # cursor field is id; assigns int type
-                self.start_time = 0 
+                self.start_time = START_ID
             self.cursor_value = None
             self.is_last_batch = None
         self.file_num = 0
