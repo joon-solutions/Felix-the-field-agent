@@ -28,7 +28,7 @@ view: lookml_fields {
     type: string
     sql: COALESCE(${TABLE}.project, '') || COALESCE(${TABLE}.explore_name, '') || COALESCE(${TABLE}.field_name, '') || COALESCE(${TABLE}.view_name, '') ||
       COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_group_label, '') || COALESCE(${TABLE}.field_label, '') || COALESCE(${TABLE}.field_data_type, '') ||
-      COALESCE(CAST(${TABLE}.is_field_hidden AS STRING), '') || COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_filters, '') || COALESCE(${TABLE}.extends__all, '');;
+      COALESCE(CAST (${TABLE}.is_field_hidden AS STRING), '') || COALESCE(${TABLE}.field_type, '') || COALESCE(${TABLE}.field_filters, '') || COALESCE(${TABLE}.extends__all, '');;
   }
 
   dimension: model_name {
@@ -108,7 +108,7 @@ view: lookml_fields {
     type: yesno
     description: "Is the field hidden in explore?"
     group_label: "Fields"
-    sql: ${TABLE}.is_field_hidden = 'yes' ;;
+    sql: ${TABLE}.is_field_hidden ;;
   }
 
   dimension: field_filters {
