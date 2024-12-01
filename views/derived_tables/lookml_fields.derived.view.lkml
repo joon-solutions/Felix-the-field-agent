@@ -104,6 +104,13 @@ view: lookml_fields {
     sql: ${TABLE}.field_data_type ;;
   }
 
+  dimension: field_description {
+    type:  string
+    description: "The field's description"
+    group_label: " Fields"
+    sql:  ${TABLE}.field_description ;;
+  }
+
   dimension: is_field_hidden {
     type: yesno
     description: "Is the field hidden in explore?"
