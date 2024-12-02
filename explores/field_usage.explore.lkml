@@ -19,27 +19,6 @@ explore: lookml_fields {
     type: left_outer
   }
 
-  join: history {
-    sql_on: ${parsed_query.query_id} = ${history.query_id} ;;
-    relationship: many_to_many
-    type: left_outer
-  }
-
-  join: dashboard {
-    sql_on: (CASE WHEN REGEXP_CONTAINS ( ${history.dashboard_id}, '^[0-9]+$')
-          THEN CAST( ${history.dashboard_id} AS INT64)
-          ELSE 0
-          END) =  ${dashboard.id} ;;
-    relationship: many_to_one
-    type: left_outer
-  }
-
-  join: look {
-    sql_on: ${history.look_id} = ${look.id};;
-    relationship: many_to_one
-    type:  left_outer
-  }
-
   join: explore_label {
     sql_on: ${lookml_fields.explore_name} = ${explore_label.explore_name} and ${lookml_fields.model_name} = ${explore_label.model_name} ;;
     relationship: many_to_one
@@ -57,6 +36,21 @@ explore: lookml_fields {
     relationship: many_to_many
     type: left_outer
     sql_where: ${user.email} not like '%spectacles-worker%' or ${field_usage.user_id} is null;;
+  }
+
+  join: dashboard {
+    sql_on: (CASE WHEN REGEXP_CONTAINS ( ${field_usage.dashboard_id}, '^[0-9]+$')
+          THEN CAST( ${field_usage.dashboard_id} AS INT64)
+          ELSE 0
+          END) =  ${dashboard.id} ;;
+    relationship: many_to_one
+    type: left_outer
+  }
+
+  join: look {
+    sql_on: ${field_usage.look_id} = ${look.id};;
+    relationship: many_to_one
+    type:  left_outer
   }
 
   join: user_facts {
