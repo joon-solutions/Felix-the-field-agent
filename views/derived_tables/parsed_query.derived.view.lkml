@@ -5,7 +5,7 @@ view: parsed_query {
     # Can not cluster this PDT as Looker requires a partition key in conjunction with clustering keys. However Bigquery doesn't allow partition on string fields, which are all this PDT got
     sql_trigger_value:
         select floor(((timestamp_diff(timestamp_add(current_timestamp(),interval 7 hour),'1970-01-01 00:00:00',second)) - 60*60*(24*4 + 5.25))/(60*60*(24*7))) ;;
-    # partition_keys: []
+    # # partition_keys: []
     # cluster_keys: ["model", "explore"]
       sql:
       CREATE TEMPORARY FUNCTION extract_keys(infoo STRING)
@@ -67,7 +67,7 @@ view: parsed_query {
         view as explore,
         json_extract_array(fields) as fields,
         extract_keys(filters) as filters,
-        parse_json(dynamic_fields) as dynamic_fields
+        safe.parse_json(dynamic_fields) as dynamic_fields
         from  @{SCHEMA_NAME}.query
         ),
 
