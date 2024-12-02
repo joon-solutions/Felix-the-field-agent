@@ -9,7 +9,7 @@ import pandas as pd
 # ,'query_metrics']
 
 
-# these not found ? 
+# these not found ?
 # ,'user_email' <<< this not found ??
 # template : {explore : table}
 # ,'user_attribute'
@@ -46,37 +46,37 @@ if __name__ == "__main__":
     if args.all:
         report = pd.DataFrame()
         for item in hardcoded_list:
-            for k,v in item.items():
+            for explore_name,table_name in item.items():
                 print("=" * 30 + '\n\n' +
-                    f"start loading for explore: {k} table: {v}" + '\n\n' + 
+                    f"start loading for explore: {explore_name} table: {table_name}" + '\n\n' +
                     "=" * 30
                     )
-                explore = k
-                table = v
-                try: 
-                    lw = LookerWorker(explore,table)
-                    lw.fetch()
-                    lw.dump()
-                    bqw = BigQueryWorker(explore,table)
-                    bqw.fetch()
-                    bqw.dump()
-                    job = bqw.generate_summary_df()
+                explore = explore_name
+                table = table_name
+                try:
+                    looker_worker = LookerWorker(explore,table)
+                    looker_worker.fetch()
+                    looker_worker.dump()
+                    bq_worker = BigQueryWorker(explore,table)
+                    bq_worker.fetch()
+                    bq_worker.dump()
+                    job = bq_worker.generate_summary_df()
                     report = pd.concat([job,report], ignore_index=True)
                 except Exception as e:
                     print(e)
-                    print(f"Error loading for explore: {k} table: {v}")
+                    print(f"Error loading for explore: {explore_name} table: {table_name}")
                     continue
     else:
         explore = args.explore
         table = args.table
-        lw = LookerWorker(explore,table)
-        lw.fetch()
-        lw.dump()
+        looker_worker = LookerWorker(explore,table)
+        looker_worker.fetch()
+        looker_worker.dump()
 
-        bqw = BigQueryWorker(explore,table)
-        bqw.fetch()
-        bqw.dump()
-        report = bqw.generate_summary_df()
-    
+        bq_worker = BigQueryWorker(explore,table)
+        bq_worker.fetch()
+        bq_worker.dump()
+        report = bq_worker.generate_summary_df()
+
     print("\n\n\tFinished running scripts with report below:\n\n\t")
     print(report.to_markdown(index=False))
