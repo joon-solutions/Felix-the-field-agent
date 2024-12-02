@@ -35,7 +35,6 @@ explore: lookml_fields {
     sql_on: ${parsed_query.query_id} = ${field_usage.query_id} ;;
     relationship: many_to_many
     type: left_outer
-    sql_where: ${user.email} not like '%spectacles-worker%' or ${field_usage.user_id} is null;;
   }
 
   join: dashboard {

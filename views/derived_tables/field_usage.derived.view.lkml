@@ -2,7 +2,7 @@ include: "/views/refined/*.refined.view"
 include: "/views/*.view"
 
 view: field_usage {
-  view_label: "Field Usage, excluding Spectacles Queries (updated hourly)"
+  view_label: "Field Usage"
   extends: [history]
   derived_table: {
     sql:
