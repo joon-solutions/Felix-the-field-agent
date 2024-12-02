@@ -1,14 +1,14 @@
 import looker_sdk
 from datetime import datetime
 from looker_sdk.sdk.api40 import methods as methods40
-from looker_sdk import models40 as models 
+from looker_sdk import models40 as models
 import time
 import os
-from utils.worker import Worker
+from .worker import Worker
 import pandas as pd
 from io import StringIO
 import csv
-from utils.enums import (ROW_LIMIT,
+from .enums import (ROW_LIMIT,
                          QUERY_TIMEZONE,
                          QUERY_TIMEOUT,
                          DATETIME_FORMAT,
@@ -29,7 +29,7 @@ class LookerWorker(Worker):
             explore_name: str,
             table_name: str,
             ) -> None:
-        super().__init__(explore_name,table_name)  
+        super().__init__(explore_name,table_name)
         self.sdk = looker_sdk.init40()
         self.start_time: str | int | None = START_TIME
         self.row_limit = ROW_LIMIT
@@ -116,7 +116,7 @@ class LookerWorker(Worker):
             #     f" timezone [{self.query_timezone}]"
             #     f" fields [{fields}]"
             #     )
-            
+
             body = models.WriteQuery(
                     model = model,
                     view = view,
@@ -189,15 +189,15 @@ class LookerWorker(Worker):
 
     def fetch(self, **kwargs):
         if not self._dependent_yaml:
-            query_id = self.create_query(self.table_data, 
+            query_id = self.create_query(self.table_data,
                                 self.start_time,
                                 )
 
             query_results = self.run_query(query_id)
             self.query_results = query_results
-            self.df = pd.read_csv(StringIO(query_results)) 
+            self.df = pd.read_csv(StringIO(query_results))
 
-        elif self._dependent_yaml: 
+        elif self._dependent_yaml:
             self.get_explore_label()
             self.df = self.get_explore_label()
 
@@ -208,19 +208,19 @@ class LookerWorker(Worker):
             self.last_cursor_value = self.cursor_value if hasattr(self, 'cursor_value') else None
             self.cursor_value = self.df[self.cursor_field.split('.')[-1]].iloc[-1]
         elif not self.row_count and len(self.df) == 50000:
-            warnings.warn(f"\n\n\tWARNING : this view [{self.table_name}] has more than 50000 rows " 
+            warnings.warn(f"\n\n\tWARNING : this view [{self.table_name}] has more than 50000 rows "
                   "but there's no fields we can reliably use "
                   "as a cursor for batch extraction.\n"
                   "\tThis view will be truncated to 50000 rows.\n\n",
                   category=UserWarning
                   )
 
-                
-            
+
+
 
     def map_fields_name_with_config(self):
         """
-        uses the field name specified in the schema file instead 
+        uses the field name specified in the schema file instead
         of fields returned from the api.
         plus, this maps 1-1 with explore's view.
         """
@@ -248,7 +248,7 @@ class LookerWorker(Worker):
             if not os.path.exists(self.csv_target_path):
                 os.makedirs(self.csv_target_path,exist_ok=True)
 
-            self.df.to_csv(self.csv_name, 
+            self.df.to_csv(self.csv_name,
                     index=False,
                     quotechar='"',
                     quoting=csv.QUOTE_MINIMAL,
@@ -259,13 +259,13 @@ class LookerWorker(Worker):
                 )
             self.total_record += len(self.df)
 
-            if self.row_count: 
+            if self.row_count:
                 self.fetch()
                 if self.last_cursor_value != self.cursor_value:
                     if len(self.df) < self.row_limit:
                         self.is_last_batch = True
                     self.dump()
-            
+
 
 
     def transform_api_output(self,output):
@@ -308,7 +308,7 @@ class LookerWorker(Worker):
         ]
 
         return transformed_data
-    
+
     def get_explore_label(self):
         output = self.sdk.all_lookml_models()
         transformed_data = self.transform_api_output(output)

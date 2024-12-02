@@ -3,15 +3,15 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import yaml
 import os
-from utils.enums import CSV_DUMP_DIR
+from .enums import CSV_DUMP_DIR
 import pandas as pd
 
 class Worker(ABC):
     @abstractmethod
-    def __init__(self, 
+    def __init__(self,
                  explore_name: str,
                  table_name: str,
-                 schema_file: str = 'schema.yaml', 
+                 schema_file: str = 'schema.yaml',
                  *args, **kwargs) -> None:
 
         self.explore_name = explore_name
@@ -36,8 +36,8 @@ class Worker(ABC):
             self._dependent_yaml = False
         else:
             self.schema_data = dependent_schema
-            self._dependent_yaml = True        
-    
+            self._dependent_yaml = True
+
     @abstractmethod
     def fetch(self, **kwargs) -> dict | pd.DataFrame | str | None:
         """Fetch data (e.g., Looker API call)."""
