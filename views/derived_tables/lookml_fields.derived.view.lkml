@@ -107,7 +107,7 @@ view: lookml_fields {
   dimension: field_description {
     type:  string
     description: "The field's description"
-    group_label: " Fields"
+    group_label: "Fields"
     sql:  ${TABLE}.field_description ;;
   }
 

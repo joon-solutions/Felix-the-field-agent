@@ -37,6 +37,12 @@ explore: lookml_fields {
     type: left_outer
   }
 
+  join: query_metrics {
+    sql_on: ${query_metrics.query_task_id} = ${field_usage.slug} ;;
+    relationship: one_to_many
+    type: left_outer
+  }
+
   join: dashboard {
     sql_on: (CASE WHEN REGEXP_CONTAINS ( ${field_usage.dashboard_id}, '^[0-9]+$')
           THEN CAST( ${field_usage.dashboard_id} AS INT64)
