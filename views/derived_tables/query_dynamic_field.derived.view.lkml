@@ -3,7 +3,7 @@ view: query_dynamic_field {
     sql:
       with source as (
         select  id as query_id,
-                parse_json(dynamic_fields) as dynamic_fields
+                safe.parse_json(dynamic_fields) as dynamic_fields
         from @{SCHEMA_NAME}.query
         where dynamic_fields is not null and dynamic_fields != '[]'
       ),
@@ -111,7 +111,6 @@ view: query_dynamic_field {
     type: count_distinct
     description: "Count distinct dynamic fields used"
     sql: ${TABLE}.dynamic_field_identifier;;
-    drill_fields: [name, label, description, custom_logics, type]
   }
 
 }
