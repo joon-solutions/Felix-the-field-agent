@@ -10,14 +10,14 @@ import time
 
 
 from dotenv import load_dotenv
-from enums import (LOOKER_REPO_PATH,
+from .helpers import render_liquid, has_liquid_template
+from .enums import (LOOKER_REPO_PATH,
                    LOOKER_PROJECT_MAPPING_PATH,
                    FOLDERS_TO_SKIP,
                    IGNORE_FILES,
                    JOINS_KEYS,
                    DEFAULT_TIMEFRAMES,
                    DEFAULT_INTERVALS)
-from helpers import render_liquid, has_liquid_template
 
 # turn off pd.DataFrame SettingWithCopyWarning warnings
 pd.options.mode.chained_assignment = None  # default='warn'
