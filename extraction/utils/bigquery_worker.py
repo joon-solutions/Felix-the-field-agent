@@ -75,6 +75,7 @@ class BigQueryWorker(Worker):
         # Wait for the load job to complete
         job.result()
         print(f"Data loaded successfully into {table_id}.")
+        self.total_record += len(self.df)
         if not self.is_last_batch:
             self.fetch()
             self.dump()

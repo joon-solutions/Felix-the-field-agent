@@ -4,7 +4,7 @@ import pandas as pd
 import yaml
 import os
 from utils.enums import CSV_DUMP_DIR
-
+import pandas as pd
 
 class Worker(ABC):
     @abstractmethod
@@ -16,6 +16,7 @@ class Worker(ABC):
 
         self.explore_name = explore_name
         self.table_name = table_name
+        self.total_record = 0
         self._load_schema(schema_file)
         self.table_data = self.schema_data[explore_name][table_name] if not self._dependent_yaml else self.schema_data[table_name]
         self.schema_info = self.table_data['schema']
@@ -46,3 +47,26 @@ class Worker(ABC):
     def dump(self, **kwargs):
         """Save data locally (e.g., CSV file)."""
         pass
+
+    def generate_summary_df(self) -> pd.DataFrame:
+        """
+        Generate a summary table for the fetch-dump iteration.
+        """
+        # Data points for the summary
+        explore_name = self.explore_name
+        table_name = self.table_name
+        total_rows = self.total_record  # Total rows fetched in this iteration
+        data_dir = self.csv_target_path  # Folder holding dumped files
+
+        # Create a summary dictionary
+        summary_data = {
+            "Explore Name": [explore_name],
+            "Table Name": [table_name],
+            "Data Folder": [data_dir],
+            "Total Rows": [total_rows],
+        }
+
+        # Convert to a Pandas DataFrame for tabular display
+        summary_df = pd.DataFrame(summary_data)
+
+        return summary_df

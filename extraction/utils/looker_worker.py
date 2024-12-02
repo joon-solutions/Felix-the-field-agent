@@ -1,4 +1,3 @@
-
 import looker_sdk
 from datetime import datetime
 from looker_sdk.sdk.api40 import methods as methods40
@@ -16,9 +15,11 @@ from utils.enums import (ROW_LIMIT,
                          START_TIME,
                          ID_CURSOR_FIELD,
                          NULL_CURSOR_FIELD,
-                         CURSOR_FIELD_NOT_PICKED
+                         CURSOR_FIELD_NOT_PICKED,
+                         START_ID
                          )
 import hashlib
+import warnings
 
 
 
@@ -27,27 +28,6 @@ class LookerWorker(Worker):
             self,
             explore_name: str,
             table_name: str,
-
-            **kwargs
-
-            # start_time: str,
-            # row_limit: int,
-            # query_timezone: str,
-            # datetime_format: str,
-            # is_incremental: bool = True,
-
-            # gcs_bucket_name: str,
-            # looker_sdk: methods40.Looker40SDK,
-            # bq_project_id: str,
-            # bq_dataset_id: str,
-            # bq_table_name: str,
-            # file_num: int,
-            # run_time: str,
-            # is_backfill_with_offset: bool = False,
-            # bigquery_client: bigquery.Client,
-            # storage_client: storage.Client,
-            # gcs_path_prefix: str = None,
-            # temp_bq_dataset_id: str = None,
             ) -> None:
         super().__init__(explore_name,table_name)  
         self.sdk = looker_sdk.init40()
@@ -55,84 +35,38 @@ class LookerWorker(Worker):
         self.row_limit = ROW_LIMIT
         self.query_timezone= QUERY_TIMEZONE
         self.datetime_format= DATETIME_FORMAT
-        self.row_count = self.fetch_rowcount()
+        self.row_count = self._fetch_rowcount()
         if self.row_count:
             self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
             self.is_id_cursor_field = False
             if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
                 print(f"Cursor field is {self.cursor_field}.")
                 self.is_id_cursor_field = True
-                self.start_time = 0 # all id fields are integers
+                # cursor field is id; assigns int type
+                self.start_time = START_ID
             self.cursor_value = None
             self.is_last_batch = None
         self.file_num = 0
 
-
-
-
-
-
-        # self.gcs_bucket_name = gcs_bucket_name
-        # self.bq_project_id = bq_project_id
-        # self.bq_dataset_id = bq_dataset_id
-        # self.bq_table_name = bq_table_name
-
-        # self.bq_full_table_id = f"{self.bq_project_id}.{self.bq_dataset_id}.{self.bq_table_name}"
-        # self.temp_bq_dataset_id = temp_bq_dataset_id if temp_bq_dataset_id else bq_dataset_id
-        # self.schema = [
-        #     bigquery.SchemaField(name=field["name"], field_type=field["type"], description=field["description"])
-        #     for field in self.table_data["schema"]
-        #     ]
-        # self.is_id_cursor_field = False
-        # if not self._dependent_yaml:
-        #     self.cursor_field: str = self.table_data["cursor_field"] or (self.table_data["primary_key"] if not isinstance(self.table_data["primary_key"], list) else self.table_data["batch_cursor_field"])  # Cursor field in Looker query
-        #     if self.cursor_field and (self.cursor_field == ID_CURSOR_FIELD or self.cursor_field.split(".")[1] == ID_CURSOR_FIELD):
-        #         print(f"Cursor field is {self.cursor_field}.")
-        #         self.is_id_cursor_field = True            
-
-
-        # # Cursor field in BigQuery table
-        # self.bq_cursor_field = self.get_bq_cursor_field(self.cursor_field)
-        # # Primary key in BigQuery table
-        # self.bq_primary_key = ""
-        # if isinstance(self.table_data["primary_key"], str):
-        #     self.bq_primary_key = self.table_data["primary_key"].split('.')[-1]
-        # elif isinstance(self.table_data["primary_key"], list):
-        #     self.bq_primary_key = self.table_data["primary_key"]   
-
-
-
-
-    def fetch_rowcount(self):
+    def _fetch_rowcount(self) -> int | None:
+        """
+        executes a rowcount query on the target view's count_measure.
+        this self.row_count is the core logic of doing a full or batch extraction.
+        """
         try:
+            # limitation : not all systerm activity has a count_measure.
+            # thus we only do rowcount on views with such attr.
+            # all worker instances with row_count are set for batch extraction.
+            count_measure = self.table_data["count_measure"]
             view = self.table_data["view"]
             model = self.table_data["model"]
-            # limitation : not all systerm activity has a count_measure
-            count_measure = self.table_data["count_measure"]
-            start_time = self.start_time
 
+            body = models.WriteQuery(
+                            model = model,
+                            view = view,
+                            fields = [count_measure],
+                            )
 
-            if not hasattr(self,'cursor_field'):
-                # init load
-                body = models.WriteQuery(
-                                model = model,
-                                view = view,
-                                fields = [count_measure],
-                                )
-
-            else:
-                cursor_field = self.cursor_field
-                if not self.is_id_cursor_field:
-                    filters = {cursor_field: f"after {start_time}"} if cursor_field else {}
-                else:
-                    filters = {cursor_field: f">= {start_time}"} if cursor_field else {}
-                filters.update(self.table_data['filters'] if self.table_data['filters'] else {})
-                body = models.WriteQuery(
-                                model = model,
-                                view = view,
-                                fields = [count_measure],
-                                filters=filters
-                                )
             print(f'fetching rowcount for {model}.{view} : ')
             query = self.sdk.create_query(
                 body = body
@@ -147,6 +81,9 @@ class LookerWorker(Worker):
             row_count = int(row_count.split('\n')[1])
             return row_count
         except KeyError:
+            # catches the error & assigns None row_count to the worker.
+            # all worker instances without row_count are set for full extraction.
+
             return None
 
 
@@ -258,23 +195,25 @@ class LookerWorker(Worker):
 
             query_results = self.run_query(query_id)
             self.query_results = query_results
+            self.df = pd.read_csv(StringIO(query_results)) 
 
-                # assign the query results to the class variable
         elif self._dependent_yaml: 
             self.get_explore_label()
             self.df = self.get_explore_label()
 
-        if not self._dependent_yaml:
-            query_results = self.query_results
-            self.df = pd.read_csv(StringIO(query_results)) 
-        
         self.map_fields_name_with_config()
 
         if self.row_count:
-            # grab the cursor val
+            # grab the cursor val for batch extraction
             self.last_cursor_value = self.cursor_value if hasattr(self, 'cursor_value') else None
             self.cursor_value = self.df[self.cursor_field.split('.')[-1]].iloc[-1]
-
+        elif not self.row_count and len(self.df) == 50000:
+            warnings.warn(f"\n\n\tWARNING : this view [{self.table_name}] has more than 50000 rows " 
+                  "but there's no fields we can reliably use "
+                  "as a cursor for batch extraction.\n"
+                  "\tThis view will be truncated to 50000 rows.\n\n",
+                  category=UserWarning
+                  )
 
                 
             
@@ -318,6 +257,7 @@ class LookerWorker(Worker):
                 f"total rows extracted: {len(self.df)}. \n"
                 f"output file: '{self.csv_name}' \n"
                 )
+            self.total_record += len(self.df)
 
             if self.row_count: 
                 self.fetch()
@@ -325,7 +265,6 @@ class LookerWorker(Worker):
                     if len(self.df) < self.row_limit:
                         self.is_last_batch = True
                     self.dump()
-
             
 
 
