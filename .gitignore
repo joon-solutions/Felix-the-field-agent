@@ -5,7 +5,7 @@ venv
 .venv
 looker.ini
 out/
-
+repos.txt
 __pycache__/
 *.pyc
 *.pyo
