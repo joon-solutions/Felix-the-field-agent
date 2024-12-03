@@ -1,5 +1,5 @@
 view: explore_label {
-  sql_table_name: `joon-sandbox.looker_hackathon.explore_label` ;;
+  sql_table_name: @{SCHEMA_NAME}.explore_label ;;
   drill_fields: [id]
 
   dimension: id {

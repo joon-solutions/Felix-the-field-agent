@@ -1,5 +1,5 @@
 view: history {
-  sql_table_name: `joon-sandbox.looker_hackathon.history` ;;
+  sql_table_name: @{SCHEMA_NAME}.history ;;
   drill_fields: [id]
 
   dimension: id {
@@ -197,15 +197,15 @@ view: history {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	connection_name,
-	created_time,
-	query.created_time,
-	query.id,
-	look.created_time,
-	look.id,
-	query_metrics.count
-	]
+  id,
+  connection_name,
+  created_time,
+  query.created_time,
+  query.id,
+  look.created_time,
+  look.id,
+  query_metrics.count
+  ]
   }
 
 }

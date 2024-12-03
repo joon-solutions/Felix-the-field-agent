@@ -82,7 +82,6 @@ explore: query_metrics {
   }
 
   join: user_facts {
-    view_label: "User Facts (updated hourly)"
     sql_on: ${history.user_id} = ${user_facts.user_id};;
     relationship: many_to_one
     type: left_outer
@@ -91,7 +90,6 @@ explore: query_metrics {
 
   join: dashboard_creator {
     from: user
-    view_label: "Dashboard Creator (updated hourly)"
     sql_on: ${dashboard.user_id} = ${dashboard_creator.id} ;;
     relationship: many_to_one
     type: left_outer
@@ -99,7 +97,6 @@ explore: query_metrics {
 
   join: dashboard_creator_facts {
     from: user_facts
-    view_label: "Dashboard Creator Facts (updated hourly)"
     sql_on: ${dashboard.user_id} = ${dashboard_creator_facts.user_id} ;;
     relationship: one_to_many
     type: left_outer
@@ -107,7 +104,6 @@ explore: query_metrics {
 
   join: look_creator {
     from: user
-    view_label: "Look Creator (updated hourly)"
     sql_on: ${look.user_id} = ${look_creator.id};;
     relationship: many_to_one
     type: left_outer
@@ -115,7 +111,6 @@ explore: query_metrics {
 
   join: look_creator_facts {
     from: user_facts
-    view_label: "Look Creator Facts (updated hourly)"
     sql_on: ${look.user_id} = ${look_creator_facts.user_id};;
     relationship: one_to_many
     type: left_outer
@@ -124,7 +119,6 @@ explore: query_metrics {
 
   join: dashboard_last_updater {
     from: user
-    view_label: "Dashboard Last Updater (updated hourly)"
     sql_on: ${dashboard.last_updater_id} = ${dashboard_last_updater.id} ;;
     relationship: many_to_one
     type: left_outer
@@ -132,7 +126,6 @@ explore: query_metrics {
 
   join: dashboard_last_updater_facts {
     from: user_facts
-    view_label: "Dashboard Last Updater Facts (updated hourly)"
     sql_on: ${dashboard.last_updater_id} = ${dashboard_last_updater_facts.user_id} ;;
     relationship: many_to_one
     type: left_outer
@@ -140,7 +133,6 @@ explore: query_metrics {
 
   join: look_last_updater {
     from: user
-    view_label: "Look Last Updater (updated hourly)"
     sql_on: ${look.last_updater_id} = ${look_last_updater.id};;
     relationship: many_to_one
     type: left_outer
@@ -148,7 +140,6 @@ explore: query_metrics {
 
   join: look_last_updater_facts {
     from: user_facts
-    view_label: "Look Last Updater Facts (updated hourly)"
     sql_on: ${look.last_updater_id} = ${look_last_updater_facts.user_id};;
     relationship: one_to_many
     type: left_outer
