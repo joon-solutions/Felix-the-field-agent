@@ -29,16 +29,37 @@ parser = argparse.ArgumentParser(
                     description='This script helps you extract data from looker system activity.'
                     )
 
-parser.add_argument('-e', '--explore', help='system activity explore name')
+
 parser.add_argument('-t', '--table', help='table name from the explore')
 parser.add_argument('-m', '--mapping-file', help='Path to Looker project mapping JSON file.')
-parser.add_argument('-a', '--all', help='loads all required tables', action='store_true')
-parser.add_argument('-f', '--full-refresh', help='drops table before reload', action='store_true')
 
 args = parser.parse_args()
 
+def extract(table_name:str):
+    print("=" * 30 + '\n\n' +
+                f"Start extracting {table_name} table" + '\n\n' +
+                "=" * 30
+                )
+    table = table_name
+    project_mapping_path = args.mapping_file if args.mapping_file else LOOKER_PROJECT_MAPPING_PATH
+    try:
+        looker_worker = LookerWorker(table_name = table)
+        if table == 'lookml_fields':
+            looker_worker.set_project_mapping(project_mapping_path)
+        looker_worker.fetch()
+        looker_worker.dump()
+        bq_worker = BigQueryWorker(table_name = table)
+        bq_worker.truncate_table() # full refresh
+        bq_worker.fetch()
+        bq_worker.dump()
+    except Exception as e:
+        print(e)
+        print(f"Error while extracting {table_name} table")
 
 if __name__ == "__main__":
+    # make output path if not exist
+    if not os.path.exists(CSV_DUMP_DIR):
+        os.makedirs(CSV_DUMP_DIR)
     # clear the output path
     for filename in os.listdir(CSV_DUMP_DIR):
         file_path = os.path.join(CSV_DUMP_DIR, filename)
@@ -47,41 +68,20 @@ if __name__ == "__main__":
         elif os.path.isdir(file_path):
             shutil.rmtree(file_path)
 
-    if args.all:
+    if not (args.table):
         report = pd.DataFrame()
         for table_name in hardcoded_list:
-            print("=" * 30 + '\n\n' +
-                f"Start extracting {table_name} table" + '\n\n' +
-                "=" * 30
-                )
-            table = table_name
-            project_mapping_path = args.mapping_file if args.mapping_file else LOOKER_PROJECT_MAPPING_PATH
             try:
-                looker_worker = LookerWorker(table_name = table)
-                if table == 'lookml_fields':
-                    looker_worker.set_project_mapping(project_mapping_path)
-                looker_worker.fetch()
-                looker_worker.dump()
-                bq_worker = BigQueryWorker(explore,table)
-                bq_worker.fetch()
-                bq_worker.dump()
-                job = bq_worker.generate_summary_df()
-                report = pd.concat([job,report], ignore_index=True)
+                extract(table_name)
             except Exception as e:
-                print(e)
-                print(f"Error while extracting {table_name} table")
-                continue
+                raise Exception(f"Error while extracting {table_name} table.\nError: {e}")
     else:
-        explore = args.explore
-        table = args.table
-        looker_worker = LookerWorker(explore,table)
-        looker_worker.fetch()
-        looker_worker.dump()
-
-        bq_worker = BigQueryWorker(explore,table)
-        bq_worker.fetch()
-        bq_worker.dump()
-        report = bq_worker.generate_summary_df()
+        table_name = args.table
+        try:
+            extract(args.table)
+        except Exception as e:
+            print(e)
+            print(f"Error while extracting {table_name} table")
 
     print("\n\n\tFinished running scripts with report below:\n\n\t")
-    print(report.to_markdown(index=False))
+    # print(report.to_markdown(index=False))

@@ -32,7 +32,7 @@ class Worker(ABC):
             raise KeyError(f"Table {self.table_name} is not found in {schema_file} file.")
 
     @abstractmethod
-    def fetch(self, **kwargs) -> dict | pd.DataFrame | str | None:
+    def fetch(self, **kwargs):
         """Fetch data (e.g., Looker API call)."""
         pass
 
@@ -40,26 +40,3 @@ class Worker(ABC):
     def dump(self, **kwargs):
         """Save data locally (e.g., CSV file)."""
         pass
-
-    def generate_summary_df(self) -> pd.DataFrame:
-        """
-        Generate a summary table for the fetch-dump iteration.
-        """
-        # Data points for the summary
-        explore_name = self.explore_name
-        table_name = self.table_name
-        total_rows = self.total_record  # Total rows fetched in this iteration
-        data_dir = self.csv_target_path  # Folder holding dumped files
-
-        # Create a summary dictionary
-        summary_data = {
-            "Explore Name": [explore_name],
-            "Table Name": [table_name],
-            "Data Folder": [data_dir],
-            "Total Rows": [total_rows],
-        }
-
-        # Convert to a Pandas DataFrame for tabular display
-        summary_df = pd.DataFrame(summary_data)
-
-        return summary_df
