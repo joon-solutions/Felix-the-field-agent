@@ -1,7 +1,6 @@
 import argparse
 import os
 import shutil
-import pandas as pd
 
 from utils.looker_worker import  LookerWorker
 from utils.bigquery_worker import  BigQueryWorker
@@ -69,7 +68,6 @@ if __name__ == "__main__":
             shutil.rmtree(file_path)
 
     if not (args.table):
-        report = pd.DataFrame()
         for table_name in hardcoded_list:
             try:
                 extract(table_name)
@@ -82,6 +80,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(e)
             print(f"Error while extracting {table_name} table")
-
-    print("\n\n\tFinished running scripts with report below:\n\n\t")
-    # print(report.to_markdown(index=False))
