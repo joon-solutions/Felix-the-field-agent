@@ -1,0 +1,6 @@
+BQ_PROJECT_ID="joon-sandbox"
+BQ_DATASET_ID="looker_hackathon_dev"
+CSV_DUMP_DIR="out"
+LOOKER_REPO_PATH="./repo/"
+LOOKER_PROJECT_MAPPING_PATH="./looker_project.json"
+START_TIME="2024-05-01 00:00:00"
