@@ -83,7 +83,7 @@
     listen: {}
     row: 0
     col: 0
-    width: 22
+    width: 24
     height: 8
   - title: Fields that are mostly used in filters
     name: Fields that are mostly used in filters
@@ -169,7 +169,7 @@
     listen: {}
     row: 8
     col: 0
-    width: 22
+    width: 18
     height: 8
   - title: Fields in the longest-running queries
     name: Fields in the longest-running queries
@@ -254,5 +254,31 @@
     listen: {}
     row: 16
     col: 0
-    width: 22
-    height: 9
+    width: 18
+    height: 8
+  - name: Recommended Actions (Copy)
+    type: text
+    title_text: Recommended Actions (Copy)
+    subtitle_text: ''
+    body_text: |-
+      ### - Leverage partitioning and clustering on these fields where possible in DWH design to minize the run time of queries
+
+      ### - Avoid querying unnecessary fields by explicitly selecting only the ones required.
+
+      ### - Rewrite queries to minimize complexity, reduce nested queries, and limit data processed.
+    row: 16
+    col: 18
+    width: 6
+    height: 8
+  - name: Recommended Actions
+    type: text
+    title_text: Recommended Actions
+    subtitle_text: ''
+    body_text: |-
+      ### - Add the partitioning keys for datetime/timestamp fields in DWH design
+
+      ### - Add the clustering keys for dimension fields in DWH design
+    row: 8
+    col: 18
+    width: 6
+    height: 8
