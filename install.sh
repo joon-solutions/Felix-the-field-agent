@@ -67,11 +67,11 @@ print_header "Welcome to the $repo_name Setup Script 🚀"
 echo -e "\033[1;33mThis is a one-click install script that sets up your environment and extracts Looker data.\033[0m"
 echo -e "\nPress any key to start..."
 read -s -n 1
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 # Check if required files exist
 print_header "Checking for Required Files"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 required_files=("extraction/.env" "extraction/looker.ini" "extraction/looker_project.json" "extraction/repos.txt")
 missing_files=()
@@ -95,7 +95,7 @@ echo "All required files exist."
 
 # Create and activate Python virtual environment
 print_header "Setting Up Python Virtual Environment"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 if [[ ! -d ".venv" ]]; then
     echo "Creating virtual environment in '.venv'..."
     python -m venv .venv || exit_with_prompt "ERROR: Failed to create virtual environment."
@@ -112,7 +112,7 @@ pip install -r extraction/requirements.txt || exit_with_prompt "ERROR: Failed to
 
 # Change to the extraction directory and load the .env file
 print_header "Loading .env and Setting Up Environment Variables"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 cd extraction || exit_with_prompt "ERROR: Directory 'extraction' not found."
 
@@ -128,7 +128,7 @@ fi
 
 # Ensure the repository folder exists
 print_header "Creating Repository Folder"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 repo_folder="./repo"
 if [[ ! -d $repo_folder ]]; then
@@ -140,7 +140,7 @@ echo "Repository folder created: $repo_folder"
 
 # Parse each line in repos.txt and git clone each repo into repo_folder
 print_header "Cloning Repositories from repos.txt"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 echo "Processing repositories listed in repos.txt..."
 while IFS= read -r repo_url || [[ -n "$repo_url" ]]; do
@@ -161,7 +161,7 @@ done < repos.txt
 
 # Run the Python script
 print_header "Running Python Script"
-sleep 1s  # Pause for 1 second
+sleep 1  # Pause for 1 second
 
 echo "Running the Python script: main.py..."
 if [[ -f "main.py" ]]; then
