@@ -20,7 +20,7 @@ This is a python script that extract:
 # 1. Prerequisite
 ## 1.1. Roles and permissions
 ### Looker
-This script extract [Looker System Activity](https://cloud.google.com/looker/docs/system-activity-pages) data so at the minimum [the API client ID and secret](#263-replace-the-your_api3_client_id--and-your_api3_client_secret-with-your-api-client-id-and-secret) need to have `see_system_activity` permission and view access to `i__looker` models.
+This script extract [Looker System Activity](https://cloud.google.com/looker/docs/system-activity-pages) data so at the minimum [the API client ID and secret](#263-replace-the-your_api3_client_id--and-your_api3_client_secret-with-your-api-client-id-and-secret) need to have `see_system_activity` permission.
 ### GCP
 This script will ingest extracted data to a BigQuery dataset so make sure that the roles `BigQuery Data Editor` and `BigQuery Job User` is granted to the appropriate GCP projects.
 ### LookML project repositories
@@ -38,7 +38,7 @@ gcloud auth application-default login
 cd extraction
 ```
 
-## 2.3. Set up Python environment and install requirements 
+## 2.3. Set up Python environment and install requirements
 *(this step is optional if you use our [quickstart](#31-quick-start-way) script - we'll create a virtual environment for you.)*
 
 
