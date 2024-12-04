@@ -10,12 +10,22 @@ explore: lookml_fields {
   }
 
   join: parsed_query {
-    view_label: "LookML fields"
+    view_label: "LookML Fields"
     sql_on: ${lookml_fields.field_name} = ${parsed_query.field}
             and ${lookml_fields.view_name} = ${parsed_query.view}
             and ${lookml_fields.explore_name} = ${parsed_query.explore}
             ;;
     relationship: one_to_many
+    type: left_outer
+  }
+
+  join: unused_fields {
+    view_label: "LookML Fields"
+    sql_on: ${lookml_fields.field_name} = ${unused_fields.field_name}
+            and ${lookml_fields.view_name} = ${unused_fields.view_name}
+            and ${lookml_fields.explore_name} = ${unused_fields.explore_name}
+            ;;
+    relationship: one_to_one
     type: left_outer
   }
 

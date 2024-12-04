@@ -10,7 +10,7 @@ view: lookml_fields {
             replace(explore_name, '+', '') as explore_name, -- clean refinement's names
             row_number() over(partition by project, replace(explore_name, '+', ''), field_name, replace(view_name, '+', ''), field_type, field_group_label , field_label, field_data_type, is_field_hidden, field_filters) as rnk
         from  @{SCHEMA_NAME}.lookml_fields as fields
-        qualify rnk = 1 -- deduplicate data, details see this data test doc https://docs.google.com/document/d/1SdGWYGbRo28ZPlc_OwSYC-KzXXUxFe8aHUn5tuvY7Ug/edit
+        qualify rnk = 1
         ;;
   }
 
