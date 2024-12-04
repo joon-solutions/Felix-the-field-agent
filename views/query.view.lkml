@@ -1,5 +1,5 @@
 view: query {
-  sql_table_name: `joon-sandbox.looker_hackathon.query` ;;
+  sql_table_name: @{SCHEMA_NAME}.query ;;
   drill_fields: [id]
 
   dimension: id {

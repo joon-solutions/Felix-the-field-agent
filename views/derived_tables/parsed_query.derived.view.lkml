@@ -1,12 +1,8 @@
 view: parsed_query {
   fields_hidden_by_default: yes
   derived_table: {
-    # refresh PDT at 05:15 AM UTC+7 every Monday (prod pipeline runs at 05:00 AM UTC+7) -- ref https://www.googlecloudcommunity.com/gc/Technical-Tips-Tricks/PDT-trigger-value-at-a-specific-time-and-day-of-week-once-a-week/ta-p/588208
-    # Can not cluster this PDT as Looker requires a partition key in conjunction with clustering keys. However Bigquery doesn't allow partition on string fields, which are all this PDT got
     sql_trigger_value:
         select floor(((timestamp_diff(timestamp_add(current_timestamp(),interval 7 hour),'1970-01-01 00:00:00',second)) - 60*60*(24*4 + 5.25))/(60*60*(24*7))) ;;
-    # # partition_keys: []
-    # cluster_keys: ["model", "explore"]
       sql:
       CREATE TEMPORARY FUNCTION extract_keys(infoo STRING)
       RETURNS Array<String>

@@ -4,10 +4,12 @@ beck-test*
 venv
 .venv
 looker.ini
+looker_project.json
+repos.txt
 out/
-
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 test_final.csv
+extraction/repo/*

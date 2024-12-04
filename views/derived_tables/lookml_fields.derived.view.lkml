@@ -1,20 +1,12 @@
 view: lookml_fields {
   label: "LookML fields"
   derived_table: {
-    # refresh PDT at 05:15 AM UTC+7 every Monday (prod pipeline runs at 05:00 AM UTC+7) -- ref https://www.googlecloudcommunity.com/gc/Technical-Tips-Tricks/PDT-trigger-value-at-a-specific-time-and-day-of-week-once-a-week/ta-p/588208
-    # Can not cluster this PDT as Looker requires a partition key in conjunction with clustering keys. However Bigquery doesn't allow partition on string fields, which are all this PDT got
     sql_trigger_value:
         select floor(((timestamp_diff(timestamp_add(current_timestamp(),interval 7 hour),'1970-01-01 00:00:00',second)) - 60*60*(24*4 + 5.25))/(60*60*(24*7))) ;;
     sql:
         select
             * except (view_name, explore_name),
-            replace(
-                    case  when view_name_param is not null and join_param is null then view_name_param  -- if base view has view_name param then view_name takes value from view_name param
-                          when join_from_param is not null then join_param -- if join view has from param then view_name takes value from join param
-                          else view_name
-                    end,
-                    '+', '' -- clean refinement's names
-                  ) as view_name,
+            replace(view_name,'+', '' ) as view_name, -- clean refinement's names
             replace(explore_name, '+', '') as explore_name, -- clean refinement's names
             row_number() over(partition by project, replace(explore_name, '+', ''), field_name, replace(view_name, '+', ''), field_type, field_group_label , field_label, field_data_type, is_field_hidden, field_filters) as rnk
         from  @{SCHEMA_NAME}.lookml_fields as fields
