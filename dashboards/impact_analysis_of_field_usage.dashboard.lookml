@@ -8,15 +8,14 @@
   elements:
   - title: Field metadata
     name: Field metadata
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_single_record
     fields: [lookml_fields.field_name, lookml_fields.field_label, lookml_fields.field_description,
-      lookml_fields.field_type, lookml_fields.is_field_hidden, explore_label.explore_name,
-      explore_label.explore_label, explore_label.project_name, field_usage.count,
-      lookml_fields.field_filters, lookml_fields.field_group_label, lookml_fields.field_group_item_label,
-      explore_label.model_name, explore_label.is_explore_hidden, dashboard.count,
-      look.count]
+      lookml_fields.field_type, explore_label.explore_name, explore_label.explore_label,
+      explore_label.project_name, field_usage.count, lookml_fields.field_filters,
+      lookml_fields.field_group_label, lookml_fields.field_group_item_label, explore_label.model_name,
+      explore_label.is_explore_hidden, dashboard.count, look.count]
     filters: {}
     sorts: [field_usage.count desc]
     limit: 500
@@ -39,7 +38,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Field Name: lookml_fields.field_name
     row: 2
     col: 0
@@ -47,7 +45,7 @@
     height: 11
   - title: List of dashboards using a specific field
     name: List of dashboards using a specific field
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: table
     fields: [field_usage.count, dashboard.title, dashboard.link]
@@ -76,7 +74,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Field Name: lookml_fields.field_name
     row: 2
     col: 8
@@ -84,7 +81,7 @@
     height: 11
   - title: List of looks using a specific field
     name: List of looks using a specific field
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: table
     fields: [field_usage.count, look.title, look.link]
@@ -113,7 +110,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Field Name: lookml_fields.field_name
     row: 2
     col: 16
@@ -122,7 +118,6 @@
   - name: " (Copy)"
     type: text
     title_text: " (Copy)"
-    subtitle_text: ''
     body_text: '[{"type":"h1","children":[{"text":"Analysis of a specific dashboard/
       look"}],"align":"center"},{"type":"p","children":[{"text":"Please use "},{"text":"Dashboard
       Title","code":true},{"text":" or "},{"text":"Look Title","code":true},{"text":"
@@ -135,7 +130,6 @@
   - name: ''
     type: text
     title_text: ''
-    subtitle_text: ''
     body_text: '[{"type":"h1","children":[{"text":"Analysis of a specific field"}],"align":"center"},{"type":"p","children":[{"text":"Please
       use "},{"text":"Field Name","code":true},{"text":" filter"}],"id":"nw97t","align":"center"}]'
     rich_content_json: '{"format":"slate"}'
@@ -145,7 +139,7 @@
     height: 2
   - title: Number of fields used by dashboards
     name: Number of fields used by dashboards
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_bar
     fields: [dashboard.title, lookml_fields.count]
@@ -203,7 +197,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Dashboard Title: dashboard.title
     row: 15
     col: 0
@@ -211,13 +204,13 @@
     height: 7
   - title: Field usage of a specific dashboard/ look
     name: Field usage of a specific dashboard/ look
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: table
     fields: [dashboard.title, dashboard.link, look.title, look.link, lookml_fields.field_name,
       lookml_fields.field_label, lookml_fields.view_name, lookml_fields.view_label,
       lookml_fields.explore_name, lookml_fields.model_name, lookml_fields.project_name,
-      lookml_fields.field_description, lookml_fields.is_field_hidden, field_usage.count]
+      lookml_fields.field_description, field_usage.count]
     filters:
       parsed_query.field_type_in_query: ''
       look.id: ''
@@ -244,7 +237,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Dashboard Title: dashboard.title
       Look Title: look.title
     row: 22
@@ -253,7 +245,7 @@
     height: 13
   - title: Number of fields used by looks
     name: Number of fields used by looks
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_bar
     fields: [lookml_fields.count, look.title]
@@ -310,7 +302,6 @@
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Look Title: look.title
     row: 15
     col: 12
@@ -326,7 +317,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.project_name
@@ -339,7 +330,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.explore_name
@@ -352,7 +343,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.view_label
@@ -365,7 +356,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_name
@@ -378,7 +369,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: field_usage.query_completed_date
@@ -391,23 +382,10 @@
     ui_config:
       type: dropdown_menu
       display: inline
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_type
-  - name: Is Field Hidden (Yes / No)
-    title: Is Field Hidden (Yes / No)
-    type: field_filter
-    default_value: ''
-    allow_multiple_values: true
-    required: false
-    ui_config:
-      type: advanced
-      display: popover
-    model: looker_hackathon_2024
-    explore: lookml_fields
-    listens_to_filters: []
-    field: lookml_fields.is_field_hidden
   - name: Dashboard Title
     title: Dashboard Title
     type: field_filter
@@ -417,7 +395,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: dashboard.title
@@ -430,7 +408,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: look.title

@@ -8,7 +8,7 @@
   elements:
   - title: Top 20 mostly used dynamic fields
     name: Top 20 mostly used dynamic fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: looker_grid
     fields: [query_dynamic_field.name, query_dynamic_field.type, query_dynamic_field.description,
@@ -60,7 +60,7 @@
     height: 12
   - title: Dynamic fields usage in Dashboards
     name: Dynamic fields usage in Dashboards
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: looker_grid
     fields: [dashboard.title, dashboard.link, query_dynamic_field.count_dynamic_field]
@@ -108,7 +108,7 @@
     height: 6
   - title: Dynamic fields usage in Looks
     name: Dynamic fields usage in Looks
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: looker_grid
     fields: [query_dynamic_field.count_dynamic_field, look.title, look.link]
@@ -148,7 +148,7 @@
     height: 6
   - title: Total Dynamic Fields Used
     name: Total Dynamic Fields Used
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: single_value
     fields: [history.count, query_dynamic_field.count_dynamic_field]
@@ -191,7 +191,7 @@
     height: 6
   - title: Number of Dashboards using Dynamic Fields
     name: Number of Dashboards using Dynamic Fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: single_value
     fields: [dashboard.count]
@@ -242,7 +242,7 @@
     height: 2
   - title: Number of Looks using Dynamic Fields
     name: Number of Looks using Dynamic Fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     type: single_value
     fields: [look.count]
@@ -293,7 +293,7 @@
       type: advanced
       display: popover
       options: []
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     listens_to_filters: []
     field: query_metrics.created_at_time
@@ -307,7 +307,7 @@
       type: advanced
       display: popover
       options: []
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     listens_to_filters: []
     field: history.created_date
@@ -321,7 +321,7 @@
       type: advanced
       display: popover
       options: []
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     listens_to_filters: []
     field: dashboard.id
@@ -335,7 +335,7 @@
       type: advanced
       display: popover
       options: []
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: query_metrics
     listens_to_filters: []
     field: look.id

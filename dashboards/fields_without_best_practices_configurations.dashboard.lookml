@@ -7,7 +7,7 @@
   elements:
   - title: Fields that do not have descriptions
     name: Fields that do not have descriptions
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_name, lookml_fields.field_name]
@@ -77,7 +77,7 @@
     height: 9
   - title: Fields that have both Group Item Label & Label
     name: Fields that have both Group Item Label & Label
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_label, lookml_fields.field_name]
@@ -173,7 +173,7 @@
     height: 8
   - title: Fields that have Group Item Label but not Group Label
     name: Fields that have Group Item Label but not Group Label
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_label, lookml_fields.field_name,
@@ -261,7 +261,7 @@
     height: 8
   - title: Fields that do not specify types
     name: Fields that do not specify types
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [explore_label.explore_name, lookml_fields.view_name, lookml_fields.field_name]
@@ -343,7 +343,7 @@
     height: 9
   - title: Total fields that do not have Descriptions
     name: Total fields that do not have Descriptions
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count]
@@ -435,7 +435,7 @@
     height: 5
   - title: Total fields that do not specify types
     name: Total fields that do not specify types
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count]
@@ -527,7 +527,7 @@
     height: 5
   - title: Total fields that have both Group Label and Group item Label
     name: Total fields that have both Group Label and Group item Label
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count]
@@ -620,7 +620,7 @@
     height: 5
   - title: Total fields that have Group Item Label but not Group Label
     name: Total fields that have Group Item Label but not Group Label
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count]
@@ -721,7 +721,7 @@
     ui_config:
       type: tag_list
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: explore_label.project_name
@@ -735,7 +735,7 @@
       type: advanced
       display: popover
       options: []
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: field_usage.query_completed_date
@@ -748,7 +748,7 @@
     ui_config:
       type: tag_list
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.view_name
@@ -761,7 +761,7 @@
     ui_config:
       type: tag_list
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_name

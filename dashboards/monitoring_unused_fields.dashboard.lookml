@@ -8,13 +8,13 @@
   elements:
   - title: Detailed list of unused fields
     name: Detailed list of unused fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.project_name, explore_label.model_name, explore_label.model_label,
       lookml_fields.explore_name, lookml_fields.view_name, lookml_fields.field_label,
       lookml_fields.field_name, lookml_fields.field_filters, lookml_fields.field_type,
-      lookml_fields.is_field_hidden, field_usage.count, lookml_fields.field_description]
+      field_usage.count, lookml_fields.field_description]
     filters:
       field_usage.count: '0'
     sorts: [lookml_fields.field_name]
@@ -45,7 +45,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -57,7 +56,7 @@
     height: 9
   - title: Top 5 Views having the most unused fields
     name: Top 5 Views having the most unused fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_bar
     fields: [lookml_fields.view_name, lookml_fields.count]
@@ -113,7 +112,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -125,7 +123,7 @@
     height: 9
   - title: Total of unused fields (of all time)
     name: Total of unused fields (of all time)
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count]
@@ -185,7 +183,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -197,7 +194,7 @@
     height: 4
   - title: Top 5 Projects having the most unused fields
     name: Top 5 Projects having the most unused fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_bar
     fields: [lookml_fields.count, lookml_fields.project_name]
@@ -253,7 +250,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -265,7 +261,7 @@
     height: 9
   - title: Top 5 Explores having the most unused fields
     name: Top 5 Explores having the most unused fields
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_bar
     fields: [lookml_fields.count, lookml_fields.explore_name]
@@ -321,7 +317,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -333,7 +328,7 @@
     height: 9
   - title: "% Unused / total LookML fields (of all time)"
     name: "% Unused / total LookML fields (of all time)"
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: single_value
     fields: [lookml_fields.count, unused_fields.is_unused_field]
@@ -411,7 +406,6 @@
       Project Name: lookml_fields.project_name
       Query Completed Date: field_usage.query_completed_date
       Is Explore Hidden (Yes / No): explore_label.is_explore_hidden
-      Is Field Hidden (Yes / No): lookml_fields.is_field_hidden
       Explore Name: lookml_fields.explore_name
       View Label: lookml_fields.view_label
       Field Type: lookml_fields.field_type
@@ -431,7 +425,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.project_name
@@ -444,7 +438,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.explore_name
@@ -457,7 +451,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.view_label
@@ -470,7 +464,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_name
@@ -483,7 +477,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_label
@@ -496,7 +490,7 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: field_usage.query_completed_date
@@ -509,23 +503,10 @@
     ui_config:
       type: advanced
       display: popover
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: explore_label.is_explore_hidden
-  - name: Is Field Hidden (Yes / No)
-    title: Is Field Hidden (Yes / No)
-    type: field_filter
-    default_value: ''
-    allow_multiple_values: true
-    required: false
-    ui_config:
-      type: advanced
-      display: popover
-    model: looker_hackathon_2024
-    explore: lookml_fields
-    listens_to_filters: []
-    field: lookml_fields.is_field_hidden
   - name: Field Type
     title: Field Type
     type: field_filter
@@ -535,7 +516,7 @@
     ui_config:
       type: dropdown_menu
       display: inline
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     listens_to_filters: []
     field: lookml_fields.field_type

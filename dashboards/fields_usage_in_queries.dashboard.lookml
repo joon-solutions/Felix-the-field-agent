@@ -7,7 +7,7 @@
   elements:
   - title: Field Usage by Source
     name: Field Usage by Source
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_name, lookml_fields.field_name,
@@ -87,7 +87,7 @@
     height: 8
   - title: Fields that are mostly used in filters
     name: Fields that are mostly used in filters
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_name, lookml_fields.field_name,
@@ -173,7 +173,7 @@
     height: 8
   - title: Fields in the longest-running queries
     name: Fields in the longest-running queries
-    model: looker_hackathon_2024
+    model: felix_the_field_agent
     explore: lookml_fields
     type: looker_grid
     fields: [lookml_fields.explore_name, lookml_fields.view_name, lookml_fields.field_name,
