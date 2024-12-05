@@ -1,4 +1,10 @@
-# Field Usage Monitoring and Optimization
+<p align="center">
+  <img src="assets/README/image.png" width="200" alt="Logo">
+</p>
+
+---
+
+# Felix the field agent
 
 ## I. Overview
 Have you ever wondered which LookML fields are completely unused and could benefit from cleanup? 
