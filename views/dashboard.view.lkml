@@ -47,7 +47,10 @@ view: dashboard {
   }
   dimension: link {
     type: string
-    sql: ${TABLE}.link ;;
+    sql: ${TABLE}.id ;;
+    link:{
+      label:"Go to Looker Dashboard"
+      url:"https://@{LOOKER_HOST}.cloud.looker.com/dashboards/{{value}}"}
   }
   dimension: load_configuration {
     type: string

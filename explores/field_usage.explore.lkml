@@ -10,12 +10,22 @@ explore: lookml_fields {
   }
 
   join: parsed_query {
-    view_label: "LookML fields"
+    view_label: "LookML Fields"
     sql_on: ${lookml_fields.field_name} = ${parsed_query.field}
             and ${lookml_fields.view_name} = ${parsed_query.view}
             and ${lookml_fields.explore_name} = ${parsed_query.explore}
             ;;
     relationship: one_to_many
+    type: left_outer
+  }
+
+  join: unused_fields {
+    view_label: "LookML Fields"
+    sql_on: ${lookml_fields.field_name} = ${unused_fields.field_name}
+            and ${lookml_fields.view_name} = ${unused_fields.view_name}
+            and ${lookml_fields.explore_name} = ${unused_fields.explore_name}
+            ;;
+    relationship: one_to_one
     type: left_outer
   }
 
@@ -35,7 +45,27 @@ explore: lookml_fields {
     sql_on: ${parsed_query.query_id} = ${field_usage.query_id} ;;
     relationship: many_to_many
     type: left_outer
-    # sql_where: ${user.email} not like '%spectacles-worker%' or ${field_usage.user_id} is null;;
+  }
+
+  join: query_metrics {
+    sql_on: ${query_metrics.query_task_id} = ${field_usage.slug} ;;
+    relationship: one_to_many
+    type: left_outer
+  }
+
+  join: dashboard {
+    sql_on: (CASE WHEN REGEXP_CONTAINS ( ${field_usage.dashboard_id}, '^[0-9]+$')
+          THEN CAST( ${field_usage.dashboard_id} AS INT64)
+          ELSE 0
+          END) =  ${dashboard.id} ;;
+    relationship: many_to_one
+    type: left_outer
+  }
+
+  join: look {
+    sql_on: ${field_usage.look_id} = ${look.id};;
+    relationship: many_to_one
+    type:  left_outer
   }
 
   join: user_facts {

@@ -1,5 +1,5 @@
 view: look {
-  sql_table_name: `joon-sandbox.looker_hackathon.look` ;;
+  sql_table_name: @{SCHEMA_NAME}.look ;;
   drill_fields: [id]
 
   dimension: id {
@@ -39,7 +39,10 @@ view: look {
   }
   dimension: link {
     type: string
-    sql: ${TABLE}.link ;;
+    sql: ${TABLE}.id ;;
+    link:{
+      label:"Go to Looker Look"
+      url:"https://@{LOOKER_HOST}.cloud.looker.com/looks/{{value}}"}
   }
   dimension: moved_to_trash {
     type: yesno

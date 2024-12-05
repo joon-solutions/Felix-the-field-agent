@@ -13,3 +13,9 @@ constant: SCHEMA_NAME {
   value: "joon-sandbox.looker_hackathon"
   export: override_required
 }
+
+## Used in ga_sessions.view sql_table_name
+constant: LOOKER_HOST {
+  value: "joonpartner"
+  export: override_required
+}
