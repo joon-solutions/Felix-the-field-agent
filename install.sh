@@ -165,8 +165,7 @@ sleep 1  # Pause for 1 second
 
 echo "Running the Python script: main.py..."
 if [[ -f "main.py" ]]; then
-    python main.py -t user || exit_with_prompt "ERROR: Python script 'main.py' failed."
-    # python main.py || exit_with_prompt "ERROR: Python script 'main.py' failed."
+    python main.py || exit_with_prompt "ERROR: Python script 'main.py' failed."
 else
     exit_with_prompt "ERROR: 'main.py' not found in 'extraction' directory."
 fi
