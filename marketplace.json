@@ -7,11 +7,17 @@
     },
 
     "constants": {
+        "PROJECT_NAME": {
+            "label": "Looker Project name"
+        },
+        "LOOKER_HOST": {
+            "label": "Name of your Looker instance"
+        },
         "CONNECTION_NAME": {
-            "label": "Connection Name"
+            "label": "Looker Connection Name"
         },
         "SCHEMA_NAME": {
-            "label": "Schema Name"
+            "label": "BQ Dataset + schema name containing the extracted system activity data i.e. 'demo.extracted_system_activity'"
         }
     },
 
