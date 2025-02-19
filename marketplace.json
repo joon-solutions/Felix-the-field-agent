@@ -3,13 +3,7 @@
     "category_label": "Models",
     "branding": {
         "image_uri": "https://partners.getdbt.com/partner_content/75/1517875/logo300x300.png?t=8da9af0ae3513d0",
-        "tagline": "This Looker Block is designed to help Looker Admins gain deep insights into field usage within the System Activity data, enabling them to monitor and optimize instance performance:
-          \n - Unused LookML Fields: Identify LookML fields that are never queried by users, allowing for model simplification.
-          \n - Granular Field Usage: View LookML field usage across Dashboards, Looks, and Sources.
-          \n - Custom fields: Detect custom dimensions, measures, and table calculations that are repeatedly used.
-          \n - Best Practices Compliance: Highlight fields that do not adhere to LookML best practices for easier maintenance.
-          \n - Fields Used in Filters: Identify fields most commonly used in filters to fine-tune models.
-          \n - Performance Insights: Analyze fields involved in the longest-running queries for optimization."
+        "tagline": "This Looker Block is designed to help Looker Admins gain deep insights into field usage within the System Activity data, enabling them to monitor and optimize instance performance:\n - Unused LookML Fields: Identify LookML fields that are never queried by users, allowing for model simplification.\n - Granular Field Usage: View LookML field usage across Dashboards, Looks, and Sources.\n - Custom fields: Detect custom dimensions, measures, and table calculations that are repeatedly used.\n - Best Practices Compliance: Highlight fields that do not adhere to LookML best practices for easier maintenance.\n - Fields Used in Filters: Identify fields most commonly used in filters to fine-tune models.\n - Performance Insights: Analyze fields involved in the longest-running queries for optimization."
     },
 
     "constants": {
