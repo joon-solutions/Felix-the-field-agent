@@ -1,5 +1,5 @@
 view: history {
-  sql_table_name: @{SCHEMA_NAME}.history ;;
+  sql_table_name: @{GCP_PROJECT}.@{DATASET}.history ;;
   drill_fields: [id]
 
   dimension: id {

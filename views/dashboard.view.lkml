@@ -1,5 +1,5 @@
 view: dashboard {
-  sql_table_name: @{SCHEMA_NAME}.dashboard ;;
+  sql_table_name: @{GCP_PROJECT}.@{DATASET}.dashboard ;;
   drill_fields: [id]
 
   dimension: id {

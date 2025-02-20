@@ -4,7 +4,7 @@ view: query_dynamic_field {
       with source as (
         select  id as query_id,
                 safe.parse_json(dynamic_fields) as dynamic_fields
-        from @{SCHEMA_NAME}.query
+        from @{GCP_PROJECT}.@{DATASET}.query
         where dynamic_fields is not null and dynamic_fields != '[]'
       ),
 
