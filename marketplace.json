@@ -1,5 +1,5 @@
 {
-    "label": "Field Usage Monitoring and Optimization",
+    "label": "Felix - Field Usage Monitoring and Optimization",
     "category_label": "Models",
     "branding": {
         "image_uri": "https://partners.getdbt.com/partner_content/75/1517875/logo300x300.png?t=8da9af0ae3513d0",
@@ -8,20 +8,23 @@
 
     "constants": {
         "LOOKER_HOST": {
-            "label": "Name of your Looker instance"
+            "label": "Name of your Looker instance i.e. 'joonpartner' if url is joonpartner.cloud.looker.com"
         },
         "CONNECTION_NAME": {
-            "label": "Looker Connection Name",
+            "label": "Name of your Bigquery connection containing the extracted looker data",
             "value_constraint": "connection"
         },
-        "SCHEMA_NAME": {
-            "label": "BQ Dataset + schema name containing the extracted system activity data i.e. 'demo.extracted_system_activity'"
+        "GCP_PROJECT": {
+            "label": "GCP project containing the extracted looker data"
+        },
+        "DATASET": {
+            "label": "Bigquery dataset containing the extracted looker data"
         }
     },
 
     "models": [
         {
-            "name": "looker_hackathon_2024",
+            "name": "felix_the_field_agent",
             "connection_constant": "CONNECTION_NAME"
         }
     ]

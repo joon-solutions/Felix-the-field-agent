@@ -7,7 +7,7 @@ view: field_usage {
   derived_table: {
     sql:
       select *
-      from  @{SCHEMA_NAME}.history
+      from  @{GCP_PROJECT}.@{DATASET}.history
       where completed_time >= coalesce({% date_start query_completed_date %}, cast('1970-01-01' as timestamp format 'YYYY-MM-DD')) and completed_time <= coalesce({% date_end query_completed_date %}, current_timestamp())
             {% if field_usage.filter_issuer_source._is_filtered %}
                and issuer_source in ({{ _filters['field_usage.filter_issuer_source'] | split:"," | sql_quote | join:"," }})

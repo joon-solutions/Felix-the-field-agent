@@ -64,7 +64,7 @@ view: parsed_query {
         json_extract_array(fields) as fields,
         extract_keys(filters) as filters,
         safe.parse_json(dynamic_fields) as dynamic_fields
-        from  @{SCHEMA_NAME}.query
+        from  @{GCP_PROJECT}.@{DATASET}.query
         ),
 
         pjson_fields as (

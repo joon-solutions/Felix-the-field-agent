@@ -1,5 +1,5 @@
 view: user_facts_role {
-  sql_table_name: @{SCHEMA_NAME}.user_facts_role ;;
+  sql_table_name: @{GCP_PROJECT}.@{DATASET}.user_facts_role ;;
 
   dimension: role_id {
     type: number

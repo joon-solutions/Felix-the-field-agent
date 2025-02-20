@@ -1,5 +1,5 @@
 view: look {
-  sql_table_name: @{SCHEMA_NAME}.look ;;
+  sql_table_name: @{GCP_PROJECT}.@{DATASET}.look ;;
   drill_fields: [id]
 
   dimension: id {

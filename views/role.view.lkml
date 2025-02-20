@@ -1,5 +1,5 @@
 view: role {
-  sql_table_name: @{SCHEMA_NAME}.role ;;
+  sql_table_name: @{GCP_PROJECT}.@{DATASET}.role ;;
   drill_fields: [id]
 
   dimension: id {
