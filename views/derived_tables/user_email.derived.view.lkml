@@ -4,9 +4,9 @@ view: user_email {
     sql: SELECT
           user.email  AS email,
           logical_or(user_facts.is_embed) AS has_embed_account
-      FROM  @{SCHEMA_NAME}.user
+      FROM  @{GCP_PROJECT}.@{DATASET}.user
            AS user
-      LEFT JOIN  @{SCHEMA_NAME}.user_facts
+      LEFT JOIN  @{GCP_PROJECT}.@{DATASET}.user_facts
            AS user_facts ON user.id = user_facts.user_id
       GROUP BY
           1 ;;

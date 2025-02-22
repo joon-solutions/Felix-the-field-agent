@@ -7,11 +7,11 @@ include: "/views/derived_tables/*.derived.view"
 include: "/explores/*.explore.lkml"
 include: "/dashboards/*.dashboard.lookml"
 
-datagroup: looker_hackathon_2024_default_datagroup {
+datagroup: felix_the_field_agent_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: looker_hackathon_2024_default_datagroup
+persist_with: felix_the_field_agent_datagroup
 
-label: "Looker Hackathon 2024"
+label: "Felix - Field Usage Monitoring and Optimization"
