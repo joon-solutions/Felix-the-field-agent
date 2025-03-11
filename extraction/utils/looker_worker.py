@@ -193,7 +193,7 @@ class LookerWorker(Worker):
 
         return task_result
 
-
+# TODO @minh check this part out - remove the filter for looker repo (i.e. we need ALL the data)
     def fetch(self, **kwargs):
         if self.table_name == 'explore_label': # explore_label use a different API to extract from Looker
             self.get_explore_label()
