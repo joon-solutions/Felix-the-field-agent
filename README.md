@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/README/image.png" width="200" alt="Logo">
+  <img src="assets/README/image.png" style="width: 100%; max-width: 400px;" alt="Logo">
 </p>
 
 ---
